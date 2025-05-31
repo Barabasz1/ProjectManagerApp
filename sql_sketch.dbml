@@ -1,0 +1,130 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// https://dbdiagram.io/d/JezykiSkryptoweKanbanProject-683ae542bd74709cb76df6d8
+
+// Uwaga:
+// Liczności nie zostały przemyślane i nie zamierzam ich przemyślać dopóki
+// nie okaże się to naprawdę potrzebne - chyba w sqllite3 nie trzeba definiować
+// żadnej liczności foreign keysów 
+
+// Zmiany:
+// Czy drużyny są wgl potrzebne?
+// Imo to co jest teraz jest okej
+
+
+Table account {
+  id integer [pk, increment]
+  login string [not null,unique]
+  password string [not null,note: 'SHA256']
+  creation_date datetime
+
+  Note: 'Stores user login data'
+}
+
+Table user {
+  id integer [pk,ref: > account.id]
+  f_name string [null,note: 'first name']
+  l_name string [null,note: 'last name']
+  email string [null]
+  description string [null]
+
+  Note: 'Stores user personal info'
+}
+
+
+Table project {
+  id integer [pk, increment]
+  name string [not null]
+  manager integer [not null,ref: > user.id, note: 'user that created the project']
+  description string [null]
+  creation_date datetime
+  version string [null] // defined by user however they want 
+  deadline datetime [null] // current main deadline
+
+  Note: 'Stores basic project data'
+}
+
+
+Table team {
+  id integer [pk, increment]
+  name string [not null]
+
+  Note: 'Stores team data'
+}
+
+
+Table participation {
+  project integer [pk,ref: > project.id]
+  team integer [pk,ref: > team.id]
+
+  Note: 'Links teams to projects'
+}
+
+
+Table team_composition {
+  team integer [pk,ref: > team.id]
+  user integer [pk,ref: > user.id]
+  role string [null]
+  
+  Note: 'Stores team members'
+}
+
+
+Table task {
+  id integer [pk, increment]
+  project integer [ref: > project.id]
+  name string  [not null]
+  description string [null]
+  creation_date datetime
+  deadline datetime [null] 
+  status integer [not null,note: 'look kanban_status'] 
+  priority integer [null,note: 'look task_priority']
+
+  Note: 'Stores task info'
+}
+
+// when a team has task to do
+Table task_team_assignment {
+  task integer [pk,ref: > task.id]
+  team integer [pk,ref: > team.id]
+
+  Note: 'Links a task to a team'
+}
+
+// when a single user has task to do - no need to create
+// temporary single user team
+Table task_user_assignment {
+  task integer [pk,ref: > task.id]
+  user integer [pk,ref: > user.id]
+
+  Note: 'Links a task to a user'
+}
+
+Table task_status_history {
+  id integer [pk, increment]
+  task integer [ref: > task.id]
+  old_status integer [not null,note: 'look kanban_status'] 
+  new_status integer [not null,note: 'look kanban_status'] 
+  changed_at datetime
+
+  Note: 'Tracks when a task changed statuse'
+}
+
+// kanban status
+Enum kanban_status {
+  unassigned// 0
+  backlog//1
+  in_progress// 2
+  completed// 3
+  testing// 4
+  todo// 5
+}
+
+Enum task_priority {
+  unassigned//0
+  low//1
+  medium//2
+  high//3
+}
+
