@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../../Context/UserContext';
 
-const NavigationMenu = () => {
+const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
      const userContext = useContext(UserContext);
       if (!userContext) {
       return <div>Błąd: brak UserProvider w drzewie komponentów</div>;
@@ -12,8 +12,8 @@ const NavigationMenu = () => {
       const { user, setUser } = userContext;
 
   return (
-    <Box className="bg-indigo-950 p-4 text-center">
-      
+    <Box className="bg-indigo-950 p-4 text-center flex">
+      {children}
       <Box 
         className="flex justify-center items-center gap-4 mt-4"
         sx={{ 
