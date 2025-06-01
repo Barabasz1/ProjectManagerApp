@@ -10,19 +10,19 @@ import { UserProvider } from './Context/UserContext.tsx';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#BF755A', 
+      main: '#4f46e5', 
     },
     secondary: {
-      main: '#BF8450', 
+      main: '#6366f1', 
     },
     
     background: {
-      default: '#D7D9CC', 
+      default: '#e0e7ff', 
       paper: '#ffffff',    
     },
     text: {
-      primary: '#D7D9CC', 
-      secondary: '#400101', 
+      primary: '#e0e7ff', 
+      secondary: '#1e1b4b', 
     },
   },
   typography: {
