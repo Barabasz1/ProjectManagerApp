@@ -12,7 +12,7 @@ const NavigationMenu = () => {
       const { user, setUser } = userContext;
 
   return (
-    <Box className="bg-gradient-to-t from-[var(--c6)] to-[var(--c6)] p-4 text-center">
+    <Box className="bg-indigo-950 p-4 text-center">
       
       <Box 
         className="flex justify-center items-center gap-4 mt-4"
