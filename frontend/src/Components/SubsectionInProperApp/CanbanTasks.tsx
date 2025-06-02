@@ -30,7 +30,7 @@ const CanbanTasks = () => {
       <ResizableHandle withHandle/>
       <ResizablePanel>
         <HeaderCanban text={"2 - designing"} index={1}/>
-        <ScrollArea className="h-[calc(100%-40px)]">
+          <ScrollArea className="h-[calc(80%)]">
           <div className='flex flex-col gap-2 p-2'>
             <TaskElement/>
           </div>
@@ -39,21 +39,21 @@ const CanbanTasks = () => {
       <ResizableHandle withHandle/>
       <ResizablePanel>
         <HeaderCanban text={"3 - coding"} index={2}/>
-        <ScrollArea className="h-[calc(100%-40px)]">
+          <ScrollArea className="h-[calc(80%)]">
           <div className='flex flex-col gap-2 p-2'></div>
         </ScrollArea>
       </ResizablePanel>
       <ResizableHandle withHandle/>
       <ResizablePanel>
         <HeaderCanban text={"4 - in test"} index={3}/>
-        <ScrollArea className="h-[calc(100%-40px)]">
+          <ScrollArea className="h-[calc(80%)]">
           <div className='flex flex-col gap-2 p-2'></div>
         </ScrollArea>
       </ResizablePanel>
       <ResizableHandle withHandle/>
       <ResizablePanel>
         <HeaderCanban text={"5 - finished"} index={4}/>
-        <ScrollArea className="h-[calc(100%-40px)]">
+          <ScrollArea className="h-[calc(80%)]">
           <div className='flex flex-col gap-2 p-2'></div>
         </ScrollArea>
       </ResizablePanel>

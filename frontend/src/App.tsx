@@ -20,7 +20,7 @@ function App() {
 
   return (
     <>
-    <div className="flex flex-col min-h-screen bg-[var(--c3)]">
+    <div className="flex flex-col h-screen bg-[var(--c3)] overflow-hidden">
       <main className='flex-grow'>
         {user==-1 &&<StartingPage></StartingPage>}
         {user!= -1 && <ProperApp></ProperApp> }
