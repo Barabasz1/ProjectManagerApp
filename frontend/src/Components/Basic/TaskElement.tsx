@@ -19,7 +19,7 @@ const TaskElement = () => {
   return (
     <>
           <div className='min-h-14  w-[calc(100%-2rem)] mx-4 bg-indigo-600 rounded-2xl hover:bg-indigo-950 hover:text-indigo-200 hover:rounded-4xl transition-all duration-700 flex flex-col '>
-      <h1 className='text-center text-indigo-50 text-xl px-2'> Twoim zadaniem jest zrobienie Frontendu </h1>
+      <h1 className='text-center text-indigo-50 text-xl px-2'>  Twoim zadaniem jest zrobienie Frontendu </h1>
       <p className='text-center text-indigo-100 pt-2'> deadline: 10.06.2025</p>
       <div className="flex justify-between w-full  px-2 py-2 text-indigo-950">
         <button onClick={leftClick} className='bg-indigo-50 hover:bg-indigo-950 hover:text-indigo-50 px-4 py-2 transition duration-700 rounded-full border'> <GoArrowLeft /> </button>

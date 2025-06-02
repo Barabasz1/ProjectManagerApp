@@ -7,7 +7,9 @@ import StartingPage from './Components/StartingPage/StartingPage';
 import ProperApp from './Components/ProperApp/ProperApp';
 
 
-
+// do usuniecia====================================
+import { fetchFromApi } from './utils';
+//===================================================
 
 
 function App() {
@@ -17,6 +19,20 @@ function App() {
   return <div>Błąd: brak UserProvider w drzewie komponentów</div>;
   }
   const { user } = userContext;
+
+  // do usuniecia=======================================
+
+  fetchFromApi("hello_world").then((data) => {
+    if (data) {
+      console.log("Message:", data.message);
+    } else {
+      console.log("Failed to fetch data.");
+    }
+  });
+
+  // ===================================================
+
+
 
   return (
     <>
@@ -32,5 +48,6 @@ function App() {
     </>
   );
 }
+
 
 export default App;
