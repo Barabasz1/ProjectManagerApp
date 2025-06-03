@@ -1,7 +1,7 @@
 import os
 from backend.utils import get_master_dir
 import sqlite3
-
+from typing import List, Tuple, Any
 
 
 class DbManager:
@@ -161,13 +161,9 @@ class DbManager:
 
         self.connection.commit()
 
-    def execute(self,sql_command:str):
-        self.cursor.execute(sql_command)
-        self.connection.commit()
-
-    def select(self,sql_command:str):
-        self.cursor.execute(sql_command)
-        return self.cursor.fetchall()
+    # def select(self,sql_command:str):
+    #     self.cursor.execute(sql_command)
+    #     return self.cursor.fetchall()
 
 
     def save_to_csv(self, output_dir_path):
@@ -184,7 +180,17 @@ class DbManager:
         fields = ', '.join(raw)
         values = ', '.join([':'+x for x in raw])
         return f'INSERT INTO {table_name} ({fields}) VALUES ({values})'
-    
+
+    def _get_select_command(self,table_name:str,columns:list,where: List[Tuple[str, str, Any]]):
+        pass
+
+    # def select_single_table(self,table_name:str,columns:list,where:str | None = None):
+    #     command = f'SELECT {','.join(columns)} FROM {table_name}'
+    #     if where is not None:
+    #         command += f' WHERE {where}'
+    #     self.cursor.execute(command)
+    #     return self.cursor.fetchall()
+        
 
 
     # inserts a single new row into any table, 
@@ -192,7 +198,24 @@ class DbManager:
     def _insert_single(self,table_name:str,data:dict):
         self.cursor.execute(self._get_insert_command(table_name),data)
 
+    def select_single_table(self,table_name:str,columns:list,where: List[Tuple[str, str, Any]] | None = None):
+        command = f'SELECT {','.join(columns)} FROM {table_name}'
+        if where is not None:
+            command += ' WHERE '
 
+            conditions = [f'{column} {operator} ?' for column,operator,_ in where]
+
+            command += conditions
+            data = [value for _,_,value in where]
+            self.cursor.execute(command,data)
+        else:
+            self.cursor.execute(command)
+            
+        return self.cursor.fetchall()
+
+
+    def commit(self):
+        self.connection.commit()
 
 
 

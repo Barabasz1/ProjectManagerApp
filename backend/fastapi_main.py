@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from controller import Controller
+
 app = FastAPI()
+
+controller = Controller()
 
 
 app.add_middleware(
