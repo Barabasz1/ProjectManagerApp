@@ -1,7 +1,6 @@
 import os
 from backend.utils import get_master_dir
 import sqlite3
-from typing import List, Tuple, Any
 
 
 class DbManager:
@@ -181,43 +180,36 @@ class DbManager:
         values = ', '.join([':'+x for x in raw])
         return f'INSERT INTO {table_name} ({fields}) VALUES ({values})'
 
-    def _get_select_command(self,table_name:str,columns:list,where: List[Tuple[str, str, Any]]):
-        pass
-
-    # def select_single_table(self,table_name:str,columns:list,where:str | None = None):
-    #     command = f'SELECT {','.join(columns)} FROM {table_name}'
-    #     if where is not None:
-    #         command += f' WHERE {where}'
-    #     self.cursor.execute(command)
-    #     return self.cursor.fetchall()
-        
-
+    def _get_select_command(self,table_name:str,columns:list,where: str):
+        command = f'SELECT {', '.join(columns)} FROM {table_name}'
+        if where is not None:
+            command += f' WHERE {where}'
+        return command
+    
 
     # inserts a single new row into any table, 
     # data dictionary must contain each field defined in TABLES_INSERT_FIELDS
-    def _insert_single(self,table_name:str,data:dict):
+    def _insert_single(self,table_name:str,data:dict):  
         self.cursor.execute(self._get_insert_command(table_name),data)
 
-    def select_single_table(self,table_name:str,columns:list,where: List[Tuple[str, str, Any]] | None = None):
-        command = f'SELECT {','.join(columns)} FROM {table_name}'
-        if where is not None:
-            command += ' WHERE '
 
-            conditions = [f'{column} {operator} ?' for column,operator,_ in where]
-
-            command += conditions
-            data = [value for _,_,value in where]
-            self.cursor.execute(command,data)
-        else:
-            self.cursor.execute(command)
-            
-        return self.cursor.fetchall()
+    def select_single_table(self,table_name:str,columns:list,where: str | None = None,where_values = None):
+        command = self._get_select_command(table_name,columns,where)
+        self.cursor.execute(command,where_values)
 
 
     def commit(self):
         self.connection.commit()
 
+    def execute(self,command,params):
+        self.cursor.execute(command,params)
 
+
+    def fetchall(self):
+        return self.cursor.fetchall()
+
+    def fetchone(self):
+        return self.cursor.fetchone()
 
 
 

@@ -1,0 +1,4 @@
+# prehashed passwords:
+
+- Chlebek - 'password' - '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+- User314031431 - 'abcdefg' - '7d1a54127b222502f5b79b5fb0803061152a44f92b37e23c6527baf665d4da9a'

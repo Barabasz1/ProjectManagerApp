@@ -15,7 +15,7 @@ def main():
     backend_dir = os.path.abspath(os.path.join(os.getcwd(), "../backend"))
     frontend_dir = os.path.abspath(os.path.join(os.getcwd(), "../frontend"))
 
-    fastapi_cmd = "fastapi dev fastapi_main.py"
+    fastapi_cmd = "fastapi dev main.py"
     npm_cmd = "npm run dev"
 
     backend_proc = run_hidden(fastapi_cmd, cwd=backend_dir)

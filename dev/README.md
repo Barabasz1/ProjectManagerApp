@@ -20,4 +20,5 @@ Useful scripts for testing and data setup during development
 
 # run_appy.py 
 
-to samo co run_appy.bat
+to samo co run_appy.bat - ale NIE jestem pewien tego skryptu - nie wygląda groźnie i procesy w tle się włączają zamiast w cmd
+.bat jest prosty i bardziej pewien go jestem

@@ -49,9 +49,7 @@ if __name__ == "__main__":
             dbm._insert_single(table,x)
 
     dbm.commit()
-    
-    print(dbm.select_single_table('account',['COUNT(*)']))
-    print(dbm.select_single_table('account',['*']))
-    # dbm.save_to_csv(os.path.join(get_master_dir(),'dev','db_review'))
+
+    dbm.save_to_csv(os.path.join(get_master_dir(),'dev','db_review'))
 
     dbm.close()
