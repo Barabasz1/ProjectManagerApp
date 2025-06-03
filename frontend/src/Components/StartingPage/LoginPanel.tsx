@@ -21,7 +21,7 @@ const LoginPanel = () => {
       </Typography>
       
       <div className="w-full space-y-4">
-        {/* Username Field */}
+        
         <div className="relative">
           <input
             type="text"
@@ -35,7 +35,7 @@ const LoginPanel = () => {
          
         </div>
 
-        {/* Password Field */}
+        
         <div className="relative">
           <input
             type="password"
@@ -49,7 +49,7 @@ const LoginPanel = () => {
          
         </div>
 
-        {/* Login Button */}
+        
         <button 
           className={`w-full py-3 rounded-lg font-medium text-white transition-all duration-300
             ${username && password 

@@ -24,6 +24,15 @@ const CanbanTasks = () => {
             <TaskElement/>
             <TaskElement/>
             <TaskElement/>
+            <TaskElement/>
+            <TaskElement/>
+            <TaskElement/>
+            <TaskElement/>
+            <TaskElement/>
+            <TaskElement/>
+            <TaskElement/>
+            <TaskElement/>
+            <TaskElement/>
           </div>
         </ScrollArea>
       </ResizablePanel>

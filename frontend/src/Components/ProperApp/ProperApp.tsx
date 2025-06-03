@@ -4,6 +4,8 @@ import CanbanTasks from '../SubsectionInProperApp/CanbanTasks';
 
 import { SidebarProvider, SidebarTrigger } from '../ui/sidebar';
 import { AppSidebar } from '../Basic/app-sidebar';
+import TeamsComponent from '../SubsectionInProperApp/TeamsComponent';
+import UserComponent from '../SubsectionInProperApp/UserComponent';
 
 
 
@@ -31,8 +33,8 @@ const ProperApp = () => {
             <div className="w-screen h-full bg-indigo-100 md:rounded-tl-3xl md:rounded-bl-3xl">
               <Routes>
                 <Route path='/' element={<div>dasddsad </div>} />
-                <Route path='/teams' element={<div> teams</div>} />
-                <Route path='/users' element={<div> users</div>} />
+                <Route path='/teams' element={<TeamsComponent></TeamsComponent>} />
+                <Route path='/users' element={<UserComponent></UserComponent>} />
                 <Route path='/tasks' element={<CanbanTasks></CanbanTasks>} />
                 <Route path='/account' element={<div> account</div>} />
               </Routes>
