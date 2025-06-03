@@ -1,5 +1,5 @@
 
-import {  useContext} from 'react';
+import {  useContext,useEffect} from 'react';
 import {UserContext} from './Context/UserContext'
 import './App.css';
 import Footer from './Components/Basic/Footer';
@@ -11,6 +11,16 @@ import ProperApp from './Components/ProperApp/ProperApp';
 import { fetchFromApi } from './utils';
 //===================================================
 
+async function fetchToken(username: string, password: string) {
+  const response = await fetch("http://localhost:8000/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ username, password }),
+  });
+
+  if (!response.ok) throw new Error("Login failed");
+  return await response.json(); // { access_token: ..., token_type: ... }
+}
 
 function App() {
 
@@ -22,14 +32,22 @@ function App() {
 
   // do usuniecia=======================================
 
-  fetchFromApi("hello_world").then((data) => {
-    if (data) {
-      console.log("Message:", data.message);
-    } else {
-      console.log("Failed to fetch data.");
-    }
-  });
+    useEffect(() => {
+    const testApi = async () => {
+      try {
+        const hello = await fetch("http://localhost:8000/hello_world");
+        const helloData = await hello.json();
+        console.log("Message:", helloData.message);
 
+        const token = await fetchToken("Chlebek", "password");
+        console.log("Access Token:", token.access_token);
+      } catch (error) {
+        console.error("Error during test fetch:", error);
+      }
+    };
+
+    testApi();
+  }, []);
   // ===================================================
 
 
