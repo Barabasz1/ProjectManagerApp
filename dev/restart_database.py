@@ -33,9 +33,6 @@ def get_data(dir_path):
 
     return data
 
-def trace_callback(statement):
-    print("Executing SQL:", statement)
-
 if __name__ == "__main__":
     dbm = DbManager(trace_callback)
     dbm.create(DbManager.DEFAULT_DB_PATH,overwrite=True)
@@ -51,6 +48,7 @@ if __name__ == "__main__":
         for x in data[table]:
             dbm._insert_single(table,x)
 
+    dbm.commit()
 
     dbm.save_to_csv(os.path.join(get_master_dir(),'dev','db_review'))
 

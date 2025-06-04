@@ -3,7 +3,6 @@ from backend.utils import get_master_dir
 import sqlite3
 
 
-
 class DbManager:
 
     DEFAULT_DB_PATH = os.path.join(get_master_dir(),'data','db.sql')
@@ -161,13 +160,9 @@ class DbManager:
 
         self.connection.commit()
 
-    def execute(self,sql_command:str):
-        self.cursor.execute(sql_command)
-        self.connection.commit()
-
-    def select(self,sql_command:str):
-        self.cursor.execute(sql_command)
-        return self.cursor.fetchall()
+    # def select(self,sql_command:str):
+    #     self.cursor.execute(sql_command)
+    #     return self.cursor.fetchall()
 
 
     def save_to_csv(self, output_dir_path):
@@ -184,17 +179,37 @@ class DbManager:
         fields = ', '.join(raw)
         values = ', '.join([':'+x for x in raw])
         return f'INSERT INTO {table_name} ({fields}) VALUES ({values})'
-    
 
+    def _get_select_command(self,table_name:str,columns:list,where: str):
+        command = f'SELECT {', '.join(columns)} FROM {table_name}'
+        if where is not None:
+            command += f' WHERE {where}'
+        return command
+    
 
     # inserts a single new row into any table, 
     # data dictionary must contain each field defined in TABLES_INSERT_FIELDS
-    def _insert_single(self,table_name:str,data:dict):
+    def _insert_single(self,table_name:str,data:dict):  
         self.cursor.execute(self._get_insert_command(table_name),data)
 
 
+    def select_single_table(self,table_name:str,columns:list,where: str | None = None,where_values = None):
+        command = self._get_select_command(table_name,columns,where)
+        self.cursor.execute(command,where_values)
 
 
+    def commit(self):
+        self.connection.commit()
+
+    def execute(self,command,params):
+        self.cursor.execute(command,params)
+
+
+    def fetchall(self):
+        return self.cursor.fetchall()
+
+    def fetchone(self):
+        return self.cursor.fetchone()
 
 
 
