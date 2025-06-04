@@ -199,13 +199,12 @@ async def get_tasks(
         return ctrl.get_tasks(current_user.id)
 
 
+@app.get('/get_projects')
+async def get_projects(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+):
+    with get_controller() as ctrl:
+        return ctrl.get_tasks(current_user.id)
 
 
-
-
-# @app.get("/users/me/", response_model=User)
-# async def read_users_me(
-#     current_user: Annotated[User, Depends(get_current_active_user)],
-# ):
-#     return current_user
 

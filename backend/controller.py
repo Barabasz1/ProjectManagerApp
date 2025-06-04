@@ -9,7 +9,8 @@ def trace_callback(statement):
 
 class Controller:
     def __init__(self):
-        self.dbm = DbManager(None)
+        self.dbm = DbManager(trace_callback)
+        # self.dbm = DbManager(None)
         self.dbm.open(DbManager.DEFAULT_DB_PATH)
 
     def close(self) -> None:
@@ -48,5 +49,25 @@ class Controller:
         
         self.dbm.execute(user_tasks_fetch_command,(account_id,))
         return self.dbm.fetchall()
+    
+    def get_projects(self,user_id):
+        command = 'SELECT ' \
+        'project.id, project.name, project.manager, project.description, project.creation_date, project.version, project.deadline ' \
+        'FROM project ' \
+        'INNER JOIN team_composition ' \
+        'ON team_composition.user = ? ' \
+        'INNER JOIN participation ' \
+        'ON project.id = participation.project '  \
+        'UNION ' \
+        'SELECT ' \
+        'project.id, project.name, project.manager, project.description, project.creation_date, project.version, project.deadline ' \
+        'FROM project ' \
+        'WHERE project.manager = ? ' \
+        'ORDER BY project.name ASC'
+
+        
+        self.dbm.execute(command,(user_id,user_id))
+        return self.dbm.fetchall()
+    
 
 

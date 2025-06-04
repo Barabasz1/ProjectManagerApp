@@ -1,3 +1,11 @@
 id,name,manager,description,creation_date,version,deadline
 1,Website Redesign,1,Redesigning company website,2025-01-01 10:00:00,v1.0,2025-03-31 23:59:59
 2,Mobile App Launch,2,Launching new mobile app,2025-01-09 14:30:00,v0.9,2025-06-15 17:00:00
+3,Cloud Migration,3,Migrating services to cloud infrastructure,2025-01-15 09:00:00,v2.1,2025-04-30 18:00:00
+4,CRM Integration,2,Integrating CRM system with current platform,2025-02-05 11:15:00,v1.3,2025-05-20 12:00:00
+5,Security Audit,4,Conducting full system security audit,2025-02-20 08:45:00,v1.0,2025-03-15 17:30:00
+6,Marketing Campaign,1,Launching new product marketing campaign,2025-03-01 10:30:00,v1.2,2025-06-01 23:59:59
+7,Data Warehouse Upgrade,3,Upgrading to new data warehouse solution,2025-03-12 13:00:00,v0.8,2025-07-01 18:00:00
+8,Customer Portal Revamp,2,Enhancing customer self-service portal,2025-03-25 16:00:00,v1.1,2025-06-30 17:00:00
+9,AI Chatbot Deployment,5,Deploying AI chatbot on main website,2025-04-01 09:45:00,v1.0-beta,2025-07-15 23:59:59
+10,Compliance Update,4,Implementing new regulatory compliance updates,2025-04-18 10:00:00,v2.0,2025-05-31 18:00:00
