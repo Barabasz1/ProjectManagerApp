@@ -1,51 +1,44 @@
-import { Table2 } from 'lucide-react';
 import React, { createContext, useContext, useState } from 'react';
-
 
 const TasksContext = createContext(null);
 
-
-export const MyDataProvider = ({ children }) => {
+export const TaskDataProvider = ({ children }) => {
   const [taskdata, setTaskData] = useState([]);
-  const [taskData1]
+  const [taskData1, setTaskData1] = useState([]);
 
-  
   const fetchTasks = (token) => {
-    //podajesz id i dostaje wszystkie taski ze statusami
-
-    tab1
-    tab2 
-    tab3 
-    tab4 
-    tab5 
+    // Logika pobierania zadań (np. zapytanie do API)
   };
 
-  
   const removeTask = (idTask, token) => {
-    //podajesz idtaska i sie usuwa
+    // Logika usuwania zadania
   };
 
-  const createTask = (token, idprojekt, nazwa, opis, deadline, idTeam) =>{
-    //NIE WIEM jak zrobic przydzielanie i jakie jeszcze argumenty
-  }
-  const editTask = (updatedtask, id) =>{
-    //NIEWIEM CZY ID JEST OK?
-  }
+  const createTask = (token, idprojekt, nazwa, opis, deadline, idTeam) => {
+    // Logika tworzenia zadania (przydzielanie, itp.)
+  };
 
-  const IncreaseStatus = (token, IdTask) =>{
+  const editTask = (updatedtask, id) => {
+    // Logika edytowania zadania
+  };
 
-  }
-   const DecreaseStatus = (token, IdTask) =>{
-    
-  }
+  const IncreaseStatus = (token, IdTask) => {
+    // Logika zwiększania statusu zadania
+    console.log("increase status")
+    console.log(IdTask)
+  };
 
+  const DecreaseStatus = (token, IdTask) => {
+    // Logika zmniejszania statusu zadania
+     console.log("decrease status")
+     console.log(IdTask)
+  };
 
   return (
-    <TasksContext.Provider value={{  taskdata, fetchTasks, removeTask,createTask }}>
+    <TasksContext.Provider value={{ taskdata, fetchTasks, removeTask, createTask, editTask, IncreaseStatus, DecreaseStatus }}>
       {children}
     </TasksContext.Provider>
   );
 };
 
-
-export const UseUserContext = () => useContext(TasksContext);
+export const useTasksContext = () => useContext(TasksContext);

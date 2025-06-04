@@ -39,12 +39,14 @@ export const TeamDataProvider = ({ children }) => {
     <TeamsContext.Provider
       value={{
         teamData,
-        selectedTeamID,
-        setSelectedTeamID,
         fetchTeams,
         removeTeam,
         createTeam,
         editTeam,
+        AssignUserToTeam,
+        UnassignUserToTeam,
+        fetchnotteammembers,
+        fetchteammembers
       }}
     >
       {children}
