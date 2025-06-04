@@ -12,7 +12,7 @@ const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
       const { user, setUser } = userContext;
 
   return (
-    <Box className="bg-indigo-950 p-4 text-center flex">
+    <Box className="bg-indigo-950 p-4 text-center flex flex-wrap">
       {children}
       <Box 
         className="flex justify-center items-center gap-4 mt-4"
@@ -69,7 +69,7 @@ const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
         >
           tasks
         </Button>
-         <Button
+          {1==2 &&  <Button
           component={Link}
           to="/account"
           variant="contained"
@@ -82,7 +82,7 @@ const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
           }}
         >
           account
-        </Button>
+        </Button>}
         <Button
           component={Link}
           to="/"

@@ -1,0 +1,12 @@
+  TABLES_INSERT_FIELDS = {
+        'account': ['login', 'password', 'creation_date'],
+        'user': ['f_name', 'l_name', 'email', 'description'],
+        'project': ['name', 'manager', 'description', 'creation_date', 'version', 'deadline'],
+        'team': ['name'],
+        'participation': ['project', 'team'],
+        'team_composition': ['team', 'user', 'role'],
+        'task': ['project', 'name', 'description', 'creation_date', 'deadline', 'status', 'priority'],
+        'task_team_assignment': ['task', 'team'],
+        'task_user_assignment': ['task', 'user'],
+        'task_status_history': ['task', 'old_status', 'new_status', 'changed_at']
+    }
