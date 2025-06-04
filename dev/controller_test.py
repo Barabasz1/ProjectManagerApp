@@ -11,8 +11,10 @@ from backend.controller import Controller
 if __name__ == "__main__":
     controller = Controller()
 
-    
-    for x in controller.get_projects(1):
+
+    fetch = controller.get_teams(1)
+
+    for x in fetch:
         print(x)
 
 

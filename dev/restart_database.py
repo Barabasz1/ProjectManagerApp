@@ -7,6 +7,13 @@ sys.path.append(os.path.abspath(os.path.join(__file__, '..','..')))
 from backend.db_manager import *
 from backend.utils import get_master_dir
 
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash(input):
+    return pwd_context.hash(input)
+
 def trace_callback(statement):
     print("Executing SQL:", statement)
 
@@ -26,6 +33,9 @@ def get_data(dir_path):
         df = pd.read_csv(filepath)
 
         df = df.convert_dtypes()  
+        
+        if file == "account.csv":
+            df['password'] = df['password'].transform(hash)
 
         records = df.to_dict(orient='records')
 
@@ -42,11 +52,11 @@ if __name__ == "__main__":
 
     data = get_data(os.path.join(get_master_dir(),'dev','example_data'))
 
-    insertion_order = ['account','user','project','team','participation','team_composition','task','task_team_assignment','task_user_assignment','task_status_history']
+    insertion_order = ['account','user','project','team','team_composition','task','task_team_assignment','task_user_assignment','task_status_history']
 
     for table in insertion_order:
-        for x in data[table]:
-            dbm._insert_single(table,x)
+        dbm._insert_multiple_raw(table,data[table])
+        dbm.commit()
 
     dbm.commit()
 

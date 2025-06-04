@@ -31,7 +31,8 @@ export const TeamDataProvider = ({ children }) => {
 
   }
   const fetchnotteammembers = (token, idteam) =>{
-
+    // w sumie to to jest useless  (?)
+    // jesli kogos nie ma w projekcie, a chce go dodać, to wprowadzam jego globalny username, i bum, już jest
   }
   
 

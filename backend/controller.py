@@ -25,18 +25,7 @@ class Controller:
         if fetch is None:
             return ReturnCode.Auth.LOGIN_NOT_FOUND
         return fetch
-
-
-    # def authorize(self,login:str,password:str) -> int | ReturnCode:
-    #     self.dbm.select_single_table('account',['id','password'],'login = ?',(login,))
-    #     fetch = self.dbm.fetchone()
-    #     if fetch is None:
-    #         return ReturnCode.Auth.LOGIN_NOT_FOUND
-    #     if fetch[1] == password:
-    #         return fetch[0]
-    #     return ReturnCode.Auth.WRONG_PASSWORD
     
-
 
     def get_tasks(self,account_id):
 
@@ -54,20 +43,74 @@ class Controller:
         command = 'SELECT ' \
         'project.id, project.name, project.manager, project.description, project.creation_date, project.version, project.deadline ' \
         'FROM project ' \
+        'INNER JOIN team ' \
+        'ON team.project = project.id ' \
         'INNER JOIN team_composition ' \
-        'ON team_composition.user = ? ' \
-        'INNER JOIN participation ' \
-        'ON project.id = participation.project '  \
+        'ON team_composition.team = team.id ' \
+        'WHERE team_composition.user = ? ' \
         'UNION ' \
         'SELECT ' \
         'project.id, project.name, project.manager, project.description, project.creation_date, project.version, project.deadline ' \
         'FROM project ' \
         'WHERE project.manager = ? ' \
-        'ORDER BY project.name ASC'
+        'ORDER BY project.id ASC'
 
-        
         self.dbm.execute(command,(user_id,user_id))
         return self.dbm.fetchall()
     
+    def get_teams(self,project_id):
+        command = 'SELECT team.id, team.name' \
+        'FROM team ' \
+        'WHERE team.project = ? ' \
+        'ORDER BY team.id'
+
+        self.dbm.execute(command,(project_id,))
+        return self.dbm.fetchall()
+
+    
+    def get_teammembers(self,team_id):
+        command = 'SELECT team_composition.user ' \
+        'FROM team_composition ' \
+        'INNER JOIN team ' \
+        'ON team.id = team_composition.team ' \
+        'WHERE team.id = ? ' \
+        'ORDER BY team_composition.user'
+
+        self.dbm.execute(command,(team_id,))
+        return self.dbm.fetchall()
+
+    # same project - but not in the team
+    def get_non_teammembers(self,team_id):
+        command = 'SELECT team_composition.user ' \
+        'FROM team_composition ' \
+        'INNER JOIN team ' \
+        'ON team.id = team_composition.team ' \
+        'INNER JOIN project ' \
+        'ON project.id = team.project ' \
+        'WHERE team.id <> ? ' \
+        'AND team.project = (SELECT project FROM team WHERE id = ?) ' \
+        'ORDER BY team_composition.user'
+
+        self.dbm.execute(command,(team_id,team_id))
+        return self.dbm.fetchall()
+    
+
+    def is_login_unique(self,login):
+        command = 'SELECT COUNT(*) FROM account WHERE account.login = ?'
+        self.dbm.execute(command,(login,))
+        return self.dbm.fetchone()[0] == 0 
+    
+
+    # returns id of newly created user
+    def register_account(self,login,password_hashed) -> int:
+        self.dbm._insert_single('account',{
+            'login':login,
+            'password':password_hashed
+        })
+        self.dbm.commit()
+
+        self.dbm.execute('SELECT id FROM account WHERE login = ?',(login,))
+        return self.dbm.fetchone()[0]
+        
 
 

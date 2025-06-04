@@ -64,10 +64,6 @@ class UserCon(User):
     hashed_password: str
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -176,6 +172,31 @@ async def login_for_access_token(
     return Token(access_token=access_token, token_type="bearer")
 
 
+# returns token
+@app.post("/register")
+async def register(
+    login:str,
+    password:str
+):
+    with get_controller() as ctrl:
+        if not ctrl.is_login_unique(login):
+            raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail="Username already exists",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+        password_hashed = get_password_hash(password)
+
+        new_user_id = ctrl.register_account(login,password_hashed)
+        user = User(id=new_user_id,username=login)
+
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": user.username}, expires_delta=access_token_expires
+        )
+        return Token(access_token=access_token, token_type="bearer")
 
 
 
