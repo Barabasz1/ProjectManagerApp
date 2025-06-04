@@ -36,7 +36,7 @@ const ProperApp = () => {
                 <Route path='/teams' element={<TeamsComponent></TeamsComponent>} />
                 <Route path='/users' element={<UserComponent></UserComponent>} />
                 <Route path='/tasks' element={<CanbanTasks></CanbanTasks>} />
-                {1==2 && <Route path='/account' element={<div> account</div>} />}
+                <Route path='/account' element={<div> account</div>} />
               </Routes>
             </div>
           </div>

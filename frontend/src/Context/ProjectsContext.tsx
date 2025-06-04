@@ -4,25 +4,25 @@ const ProjectsContext = createContext(null);
 
 export const ProjectDataProvider = ({ children }) => {
   const [projectData, setProjectData] = useState([]);
-
-  const fetchProjects = (userId) => {
+  const [selectedProjectID, SetSelectedProjectID] = useState(null)
+  const fetchProjects = (token) => {
     // logika fetchowania projetu
   };
 
-  const removeProject = (projectId) => {
-    // tego chyba nie?
+  const removeProjects = (projectId, token) => {
+    // czy na pewno?
   };
 
-  const createProject = (newProject) => {
+  const createProjects = (token, nazwe, opis) => {
     // logika tworzenia projektu
   };
 
-  const editProject = (updatedProject) => {
-    // nie wiem co edytowac
+  const editProjects = (token, nazwe, opis) => {
+    // malo wazne ale do zrobienia
   };
 
   return (
-    <ProjectsContext.Provider value={{ projectData, fetchProjects, removeProject, createProject, editProject }}>
+    <ProjectsContext.Provider value={{ projectData, fetchProjects, removeProjects, createProjects, editProjects }}>
       {children}
     </ProjectsContext.Provider>
   );
