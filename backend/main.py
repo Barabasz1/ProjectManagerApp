@@ -5,14 +5,15 @@ from passlib.context import CryptContext
 from pydantic import BaseModel
 import jwt
 from jwt.exceptions import InvalidTokenError
+from contextlib import contextmanager
 
-from typing import Annotated
+from typing import Annotated, Tuple
 from datetime import datetime, timedelta, timezone
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(__file__, '..','..')))
 
-from const import ReturnCode
+from backend.const import ReturnCode
 from controller import Controller
 
 
@@ -25,24 +26,16 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-
 app = FastAPI()
 
-controller = Controller()
-
+@contextmanager
 def get_controller():
     controller = Controller()
     try:
         yield controller
     finally:
         controller.close()
+
 
 
 app.add_middleware(
@@ -52,12 +45,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-
-
-
-
 
 class Token(BaseModel):
     access_token: str
@@ -69,10 +56,11 @@ class TokenData(BaseModel):
 
 
 class User(BaseModel):
-    username: str
+    id: int # account id
+    username: str 
 
-
-class UserInDB(User):
+# user confidential
+class UserCon(User):
     hashed_password: str
 
 
@@ -81,26 +69,29 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def get_password_hash(password):
+def get_password_hash(password) -> str:
     return pwd_context.hash(password)
 
+def get_user(controller:Controller, username: str) -> UserCon | ReturnCode.Auth:
+    res = controller.get_account(username)
+    if res == ReturnCode.Auth.LOGIN_NOT_FOUND:
+        return res
+    return UserCon(id=res[0],username=res[1],hashed_password=res[2])
 
-def get_user(controller:Controller, username: str):
-    return controller.get_account(username)
+
     
 
-def authenticate_user(controller, username: str, password: str):
+def authenticate_user(controller, username: str, password: str) -> UserCon | ReturnCode.Auth:
     _user = get_user(controller,username)
     if _user == ReturnCode.Auth.LOGIN_NOT_FOUND:
-        return False
-    user = UserInDB(username=_user[0],hashed_password=_user[1])
-    if not verify_password(password, user.hashed_password):
-        return False
+        return _user
+
+    if not verify_password(password, _user.hashed_password):
+        return ReturnCode.Auth.WRONG_PASSWORD
     return _user
 
 
@@ -129,8 +120,10 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
-    user = get_user(get_controller(), username=token_data.username)
-    if user is None:
+    with get_controller() as ctrl:
+        user = get_user(ctrl, username=token_data.username)
+
+    if user == ReturnCode.Auth.LOGIN_NOT_FOUND:
         raise credentials_exception
     return user
 
@@ -138,22 +131,44 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 async def get_current_active_user(
     current_user: Annotated[User, Depends(get_current_user)],
 ):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
+    # check if user is disabled here
     return current_user
 
 
+
+
+
+
+# ================================================================================================================================
+#                                                               POSTS
+# ================================================================================================================================
+
+
+
+
+# returns:
+#   token
+#   HTTPexception - incorrect password/incorrect username(username not found)
 @app.post("/token")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
-    user = authenticate_user(get_controller(), form_data.username, form_data.password)
-    if not user:
+    with get_controller() as control:
+        user = authenticate_user(control, form_data.username, form_data.password)
+
+    if user == ReturnCode.Auth.LOGIN_NOT_FOUND:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Incorrect username",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    if user == ReturnCode.Auth.WRONG_PASSWORD:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
@@ -161,25 +176,13 @@ async def login_for_access_token(
     return Token(access_token=access_token, token_type="bearer")
 
 
-@app.get("/users/me/", response_model=User)
-async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_active_user)],
-):
-    return current_user
-
-
-@app.get("/users/me/items/")
-async def read_own_items(
-    current_user: Annotated[User, Depends(get_current_active_user)],
-):
-    return [{"item_id": "Foo", "owner": current_user.username}]
 
 
 
 
-
-
-
+# ================================================================================================================================
+#                                                               GETS
+# ================================================================================================================================
 
 
 @app.get('/hello_world')
@@ -188,45 +191,21 @@ async def hello_world():
 
 
 
+@app.get('/get_tasks')
+async def get_tasks(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+):
+    with get_controller() as ctrl:
+        return ctrl.get_tasks(current_user.id)
 
 
 
 
 
 
+# @app.get("/users/me/", response_model=User)
+# async def read_users_me(
+#     current_user: Annotated[User, Depends(get_current_active_user)],
+# ):
+#     return current_user
 
-
-
-
-
-
-
-
-
-
-# # if successful - logs in
-# # else 
-# @app.get('/login')
-# async def login(login,password_hashed):
-#     result = controller.authorize(login,password_hashed)
-    
-#     match result:
-#         case ReturnCode.Auth.LOGIN_NOT_FOUND:
-#             return {'message':'Login not found'}
-#         case ReturnCode.Auth.WRONG_PASSWORD:
-#             return {'message':'Wrong password'}
-#         case _:
-#             controller.login(result)
-#             return {'message':'Login successful'}
-
-
-
-# @app.post('/logout')
-# async def logout():
-#     controller.logout()
-
-
-# # gets tasks of the current user
-# @app.get('/get_tasks')
-# async def get_tasks():
-#     return controller.get_tasks()

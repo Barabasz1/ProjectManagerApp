@@ -8,19 +8,9 @@ import ProperApp from './Components/ProperApp/ProperApp';
 
 
 // do usuniecia====================================
-import { fetchFromApi } from './utils';
+import { authorize_main_test} from './test';
 //===================================================
 
-async function fetchToken(username: string, password: string) {
-  const response = await fetch("http://localhost:8000/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ username, password }),
-  });
-
-  if (!response.ok) throw new Error("Login failed");
-  return await response.json(); // { access_token: ..., token_type: ... }
-}
 
 function App() {
 
@@ -31,23 +21,8 @@ function App() {
   const { user } = userContext;
 
   // do usuniecia=======================================
+  authorize_main_test()
 
-    useEffect(() => {
-    const testApi = async () => {
-      try {
-        const hello = await fetch("http://localhost:8000/hello_world");
-        const helloData = await hello.json();
-        console.log("Message:", helloData.message);
-
-        const token = await fetchToken("Chlebek", "password");
-        console.log("Access Token:", token.access_token);
-      } catch (error) {
-        console.error("Error during test fetch:", error);
-      }
-    };
-
-    testApi();
-  }, []);
   // ===================================================
 
 
