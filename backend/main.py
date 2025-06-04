@@ -225,7 +225,14 @@ async def get_projects(
     current_user: Annotated[User, Depends(get_current_active_user)],
 ):
     with get_controller() as ctrl:
-        return ctrl.get_tasks(current_user.id)
+        return ctrl.get_projects(current_user.id)
+    
 
-
-
+@app.get('/get_teams')
+async def get_teams(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    project_id
+):
+    with get_controller() as ctrl:
+        return ctrl.get_teams(project_id)
+    

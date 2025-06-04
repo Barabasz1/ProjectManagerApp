@@ -14,8 +14,7 @@ if __name__ == "__main__":
 
     fetch = controller.get_teams(1)
 
-    for x in fetch:
-        print(x)
+    print(fetch)
 
 
     controller.close()

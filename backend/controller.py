@@ -1,7 +1,7 @@
 from backend.db_manager import DbManager
 from backend.const import ReturnCode
 
-from typing import Tuple
+from typing import Tuple, List
 
 def trace_callback(statement):
     print("Executing SQL:", statement)
@@ -27,7 +27,7 @@ class Controller:
         return fetch
     
 
-    def get_tasks(self,account_id):
+    def get_tasks(self,account_id) -> List[Tuple[int,int,str,str,str,str,int,int]]:
 
         user_tasks_fetch_command = 'SELECT ' \
         'task.id, task.project, task.name, task.description, task.creation_date, task.deadline, task.status, task.priority ' \
@@ -39,7 +39,7 @@ class Controller:
         self.dbm.execute(user_tasks_fetch_command,(account_id,))
         return self.dbm.fetchall()
     
-    def get_projects(self,user_id):
+    def get_projects(self,user_id) -> List[Tuple[int,str,int,str,str,str,str]]:
         command = 'SELECT ' \
         'project.id, project.name, project.manager, project.description, project.creation_date, project.version, project.deadline ' \
         'FROM project ' \
@@ -58,10 +58,11 @@ class Controller:
         self.dbm.execute(command,(user_id,user_id))
         return self.dbm.fetchall()
     
-    def get_teams(self,project_id):
-        command = 'SELECT team.id, team.name' \
+    
+    def get_teams(self,project_id) -> List[Tuple[int,str]]:
+        command = 'SELECT id, name ' \
         'FROM team ' \
-        'WHERE team.project = ? ' \
+        'WHERE project = ? ' \
         'ORDER BY team.id'
 
         self.dbm.execute(command,(project_id,))
