@@ -3,7 +3,6 @@ from backend.utils import get_master_dir
 import sqlite3
 
 
-
 class DbManager:
 
     DEFAULT_DB_PATH = os.path.join(get_master_dir(),'data','db.sql')
@@ -13,7 +12,6 @@ class DbManager:
         "user",
         "project",
         "team",
-        "participation",
         "team_composition",
         "task",
         "task_team_assignment",
@@ -21,17 +19,30 @@ class DbManager:
         "task_status_history"
     ]
 
+    # skipped autoincrements etc
     TABLES_INSERT_FIELDS = {
         'account': ['login', 'password', 'creation_date'],
         'user': ['f_name', 'l_name', 'email', 'description'],
         'project': ['name', 'manager', 'description', 'creation_date', 'version', 'deadline'],
-        'team': ['name'],
-        'participation': ['project', 'team'],
+        'team': ['name','project'],
         'team_composition': ['team', 'user', 'role'],
         'task': ['project', 'name', 'description', 'creation_date', 'deadline', 'status', 'priority'],
         'task_team_assignment': ['task', 'team'],
         'task_user_assignment': ['task', 'user'],
         'task_status_history': ['task', 'old_status', 'new_status', 'changed_at']
+    }
+
+    # raw columns
+    TABLES_FIELDS = {
+        'account': ['id','login', 'password', 'creation_date'],
+        'user': ['id','f_name', 'l_name', 'email', 'description'],
+        'project': ['id','name', 'manager', 'description', 'creation_date', 'version', 'deadline'],
+        'team': ['id','name','project'],
+        'team_composition': ['team', 'user', 'role'],
+        'task': ['id','project', 'name', 'description', 'creation_date', 'deadline', 'status', 'priority'],
+        'task_team_assignment': ['task', 'team'],
+        'task_user_assignment': ['task', 'user'],
+        'task_status_history': ['id','task', 'old_status', 'new_status', 'changed_at']
     }
 
 
@@ -101,15 +112,9 @@ class DbManager:
 
         CREATE TABLE IF NOT EXISTS team (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS participation (
+            name TEXT NOT NULL,
             project INTEGER NOT NULL,
-            team INTEGER NOT NULL,
-            PRIMARY KEY (project, team),
-            FOREIGN KEY(project) REFERENCES project(id),
-            FOREIGN KEY(team) REFERENCES team(id)
+            FOREIGN KEY(project) REFERENCES project(id)
         );
 
         CREATE TABLE IF NOT EXISTS team_composition (
@@ -161,13 +166,9 @@ class DbManager:
 
         self.connection.commit()
 
-    def execute(self,sql_command:str):
-        self.cursor.execute(sql_command)
-        self.connection.commit()
-
-    def select(self,sql_command:str):
-        self.cursor.execute(sql_command)
-        return self.cursor.fetchall()
+    # def select(self,sql_command:str):
+    #     self.cursor.execute(sql_command)
+    #     return self.cursor.fetchall()
 
 
     def save_to_csv(self, output_dir_path):
@@ -179,22 +180,47 @@ class DbManager:
             pd.read_sql_query(f"SELECT * FROM {table}", self.connection).to_csv(os.path.join(output_dir_path,table+'.csv'), index=False)
 
             
-    def _get_insert_command(self,table_name:str):
-        raw = DbManager.TABLES_INSERT_FIELDS[table_name]
+    def _get_insert_command(self,table_name:str,fields):
+        raw = fields[table_name]
         fields = ', '.join(raw)
         values = ', '.join([':'+x for x in raw])
         return f'INSERT INTO {table_name} ({fields}) VALUES ({values})'
-    
 
+    def _get_select_command(self,table_name:str,columns:list,where: str):
+        command = f'SELECT {', '.join(columns)} FROM {table_name}'
+        if where is not None:
+            command += f' WHERE {where}'
+        return command
+    
 
     # inserts a single new row into any table, 
     # data dictionary must contain each field defined in TABLES_INSERT_FIELDS
-    def _insert_single(self,table_name:str,data:dict):
-        self.cursor.execute(self._get_insert_command(table_name),data)
+    def _insert_single(self,table_name:str,data:dict):  
+        self.cursor.execute(self._get_insert_command(table_name,DbManager.TABLES_INSERT_FIELDS),data)
+
+    def _insert_single_raw(self,table_name,data:dict):
+        self.cursor.execute(self._get_insert_command(table_name,DbManager.TABLES_FIELDS),data)
+
+    def _insert_multiple_raw(self,table_name,data:list[dict]):
+        self.cursor.executemany(self._get_insert_command(table_name,DbManager.TABLES_FIELDS),data)
+
+    def select_single_table(self,table_name:str,columns:list,where: str | None = None,where_values = None):
+        command = self._get_select_command(table_name,columns,where)
+        self.cursor.execute(command,where_values)
 
 
+    def commit(self):
+        self.connection.commit()
+
+    def execute(self,command,params):
+        self.cursor.execute(command,params)
 
 
+    def fetchall(self):
+        return self.cursor.fetchall()
+
+    def fetchone(self):
+        return self.cursor.fetchone()
 
 
 
