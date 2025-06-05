@@ -6,11 +6,17 @@ import { SidebarProvider, SidebarTrigger } from '../ui/sidebar';
 import { AppSidebar } from '../Basic/app-sidebar';
 import TeamsComponent from '../SubsectionInProperApp/TeamsComponent';
 import UserComponent from '../SubsectionInProperApp/UserComponent';
+import { useTeamContext } from '@/Context/TeamsContext';
+import { useEffect } from 'react';
 
 
 
 const ProperApp = () => {
- 
+ const {fetchTeams} = useTeamContext();
+
+ useEffect(()=>{
+  console.log("dasd")
+ }, [])
 
   return ( 
 

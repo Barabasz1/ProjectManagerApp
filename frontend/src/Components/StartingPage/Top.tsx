@@ -6,6 +6,7 @@ import  Image from '../../assets/logo.png'
 import { UserContext } from '../../Context/UserContext';
 import LoginPanel from './LoginPanel';
 import RegisterPanel from './RegisterPanel';
+import { useUserContext } from '@/Context/UserContext';
 const Top = () => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -25,6 +26,7 @@ const Top = () => {
     return <div>Błąd: brak UserProvider w drzewie komponentów</div>;
     }
     const {  setUser } = userContext;
+    const {loginUser} = useUserContext();
 
   return (
     <>
@@ -73,7 +75,10 @@ const Top = () => {
             <Button
               variant="contained"
               color="secondary"
-              onClick={()=>{setUser(1)}}
+              onClick={()=>{
+                loginUser("Chlebek", "password")
+              
+              }}
               className="mt-4"
               fullWidth
             >
