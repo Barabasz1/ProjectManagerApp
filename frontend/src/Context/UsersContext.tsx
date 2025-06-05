@@ -6,8 +6,12 @@ export const UserDataProvider = ({ children }) => {
   const [userData, setUserData] = useState([]);
   const [selectedUserID, setSelectedUserID] = useState(null);
 
-  const fetchUsers = () => {
-    // logika pobierania użytkowników
+  const fetchUsers = async () => {
+    const response = await fetch(`http://localhost:8000/get_users`)
+  if (!response.ok) {
+    throw new Error("Failed to fetch teams");
+  }
+  return await response.json();
   };
 
   const removeUser = (userId) => {

@@ -198,7 +198,7 @@ async def register(
         )
         return Token(access_token=access_token, token_type="bearer")
 
-@app.post('/create_project'):
+@app.post('/create_project')
 async def create_project(
     current_user: Annotated[User, Depends(get_current_active_user)],
     project_name:str,
@@ -248,9 +248,7 @@ async def get_teams(
 
 
 @app.get('/get_users')
-async def get_users(
-    current_user: Annotated[User, Depends(get_current_active_user)],
-):
+async def get_users():
     with get_controller() as ctrl:
         return ctrl.get_users()
     
