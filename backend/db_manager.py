@@ -45,6 +45,23 @@ class DbManager:
         'task_status_history': ['id','task', 'old_status', 'new_status', 'changed_at']
     }
 
+    # // kanban status
+    # Enum kanban_status {
+    #   unassigned// 0
+    #   backlog//1
+    #   in_progress// 2
+    #   completed// 3
+    #   testing// 4
+    #   todo// 5
+    # }
+
+    # Enum task_priority {
+    #   unassigned//0
+    #   low//1
+    #   medium//2
+    #   high//3
+    # }
+
 
     def __init__(self,trace_callback=None):
         self.connection = None
@@ -208,7 +225,9 @@ class DbManager:
     def select_single_table(self,table_name:str,columns:list,where: str | None = None,where_values = None):
         command = self._get_select_command(table_name,columns,where)
         self.cursor.execute(command,where_values)
-
+    
+    def get_lastrowid(self):
+        return self.cursor.lastrowid
 
     def commit(self):
         self.connection.commit()

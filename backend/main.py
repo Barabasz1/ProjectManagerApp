@@ -7,7 +7,7 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 from contextlib import contextmanager
 
-from typing import Annotated, Tuple
+from typing import Annotated, Tuple, List
 from datetime import datetime, timedelta, timezone
 import sys
 import os
@@ -209,6 +209,25 @@ async def create_project(
         ctrl.insert_from_list('project',data)
 
 
+@app.post('/create_task')
+async def create_task(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    project_id:int,
+    task_name:str,
+    description:str,
+    deadline:datetime,
+    team_id: int | None = None 
+):
+    with get_controller() as ctrl:
+        data = [project_id,task_name,description,get_now(),deadline,1,0]
+        added_task = ctrl.insert_from_list('task',data)
+        print(added_task)
+        if team_id:
+            added_assignment = ctrl.insert_from_list('task_team_assignment',[added_task['id'],team_id])
+            print(f' ADDED NEW ASSIGNMENT {added_assignment}')
+
+
+
 
 # ================================================================================================================================
 #                                                               GETS
@@ -246,10 +265,24 @@ async def get_teams(
         return ctrl.get_teams(project_id)
     
 
-
+# returns [account_id,username]
 @app.get('/get_users')
 async def get_users():
     with get_controller() as ctrl:
-        return ctrl.get_users()
+        # return ctrl.get_users()
+        return [list(vals.values()) for vals in ctrl.get_users()]
     
     
+
+# ================================================================================================================================
+#                                                           DELETES
+# ================================================================================================================================
+
+
+@app.delete('/delete_project')
+async def delete_project(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    project_id
+):
+    with get_controller() as ctrl:
+        ctrl.delete_project(project_id)

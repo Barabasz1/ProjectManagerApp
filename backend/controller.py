@@ -125,11 +125,18 @@ class Controller:
 
     def insert_from_dict(self,table_name:str,data:dict):
         self.dbm._insert_single(table_name,data)
+        new_row = self.dbm.get_lastrowid()
         self.dbm.commit()
+        return new_row
 
     def insert_from_list(self,table_name:str,data):
         dictionary = dict(zip(DbManager.TABLES_INSERT_FIELDS[table_name],data))
         self.dbm._insert_single(table_name,dictionary)
+        new_row = self.dbm.get_lastrowid()
         self.dbm.commit()
+        return new_row
 
-
+    def delete_project(self,project_id):
+        command = 'DELETE FROM project WHERE project.id = ?'
+        self.dbm.execute(command,(project_id,))
+        self.dbm.commit()
