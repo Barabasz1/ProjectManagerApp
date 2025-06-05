@@ -11,6 +11,7 @@ const LoginPanel = () => {
    
     try {
       loginUser(username, password)
+      
     }
     catch(error){
       console.log("Failed")
@@ -69,6 +70,7 @@ const LoginPanel = () => {
 
         
          <button 
+         
           className={`w-full py-3 rounded-lg font-medium text-white transition-all duration-300
             ${username && password 
               ? 'bg-indigo-600 hover:bg-indigo-700 shadow-md' 
