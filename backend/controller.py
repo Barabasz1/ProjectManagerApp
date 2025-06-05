@@ -97,6 +97,12 @@ class Controller:
         self.dbm.execute(command,(team_id,team_id))
         return self.dbm.fetchall()
     
+    def get_users(self) -> List[dict]:
+        command = 'SELECT id, login FROM account ORDER BY login, id'
+
+        self.dbm.execute(command,())
+        return self.dbm.fetchall()
+    
 
     def is_login_unique(self,login) -> dict | None:
         command = 'SELECT COUNT(*) AS count FROM account WHERE account.login = ?'
@@ -115,6 +121,15 @@ class Controller:
         self.dbm.execute('SELECT id FROM account WHERE login = ?',(login,))
         fetch = self.dbm.fetchone()
         return fetch['id']
-        
+    
+
+    def insert_from_dict(self,table_name:str,data:dict):
+        self.dbm._insert_single(table_name,data)
+        self.dbm.commit()
+
+    def insert_from_list(self,table_name:str,data):
+        dictionary = dict(zip(DbManager.TABLES_INSERT_FIELDS[table_name],data))
+        self.dbm._insert_single(table_name,dictionary)
+        self.dbm.commit()
 
 

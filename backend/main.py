@@ -15,7 +15,7 @@ sys.path.append(os.path.abspath(os.path.join(__file__, '..','..')))
 
 from backend.const import ReturnCode
 from controller import Controller
-
+from backend.utils import get_current_datetime
 
 SECRET_KEY = 'bae0a9511295b4d7243684f9eb2ddf92bce396a2dbca2302b1688b28bfe5c853'
 ALGORITHM = 'HS256'
@@ -198,6 +198,15 @@ async def register(
         )
         return Token(access_token=access_token, token_type="bearer")
 
+@app.post('/create_project'):
+async def create_project(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    project_name:str,
+    project_description:str
+):
+    with get_controller() as ctrl:
+        data = [project_name,current_user.id,project_description,get_current_datetime()]
+        ctrl.insert_from_list('project',data)
 
 
 
@@ -235,4 +244,14 @@ async def get_teams(
 ):
     with get_controller() as ctrl:
         return ctrl.get_teams(project_id)
+    
+
+
+@app.get('/get_users')
+async def get_users(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+):
+    with get_controller() as ctrl:
+        return ctrl.get_users()
+    
     
