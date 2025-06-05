@@ -9,8 +9,8 @@ def trace_callback(statement):
 
 class Controller:
     def __init__(self):
-        self.dbm = DbManager(trace_callback)
-        # self.dbm = DbManager(None)
+        # self.dbm = DbManager(trace_callback)
+        self.dbm = DbManager(None)
         self.dbm.open(DbManager.DEFAULT_DB_PATH)
 
     def close(self) -> None:
@@ -19,15 +19,17 @@ class Controller:
 
 
 
-    def get_account(self,login) -> Tuple[int,str,str] | ReturnCode.Auth:
-        self.dbm.select_single_table('account',['id','login','password'],'login = ?',(login,))
+    def get_account(self,login) -> dict | ReturnCode.Auth:
+        # self.dbm.select_single_table('account',['id','login','password'],'login = ?',(login,))
+        command = 'SELECT id, login, password FROM account WHERE login = ?'
+        self.dbm.execute(command,(login,))
         fetch = self.dbm.fetchone()
         if fetch is None:
             return ReturnCode.Auth.LOGIN_NOT_FOUND
         return fetch
     
 
-    def get_tasks(self,account_id) -> List[Tuple[int,int,str,str,str,str,int,int]]:
+    def get_tasks(self,account_id) -> List[dict]:
 
         user_tasks_fetch_command = 'SELECT ' \
         'task.id, task.project, task.name, task.description, task.creation_date, task.deadline, task.status, task.priority ' \
@@ -39,7 +41,7 @@ class Controller:
         self.dbm.execute(user_tasks_fetch_command,(account_id,))
         return self.dbm.fetchall()
     
-    def get_projects(self,user_id) -> List[Tuple[int,str,int,str,str,str,str]]:
+    def get_projects(self,user_id) -> List[dict]:
         command = 'SELECT ' \
         'project.id, project.name, project.manager, project.description, project.creation_date, project.version, project.deadline ' \
         'FROM project ' \
@@ -59,7 +61,7 @@ class Controller:
         return self.dbm.fetchall()
     
     
-    def get_teams(self,project_id) -> List[Tuple[int,str]]:
+    def get_teams(self,project_id) -> List[dict]:
         command = 'SELECT id, name ' \
         'FROM team ' \
         'WHERE project = ? ' \
@@ -69,7 +71,7 @@ class Controller:
         return self.dbm.fetchall()
 
     
-    def get_teammembers(self,team_id):
+    def get_teammembers(self,team_id) -> List[dict]:
         command = 'SELECT team_composition.user ' \
         'FROM team_composition ' \
         'INNER JOIN team ' \
@@ -81,7 +83,7 @@ class Controller:
         return self.dbm.fetchall()
 
     # same project - but not in the team
-    def get_non_teammembers(self,team_id):
+    def get_non_teammembers(self,team_id) -> List[dict]:
         command = 'SELECT team_composition.user ' \
         'FROM team_composition ' \
         'INNER JOIN team ' \
@@ -96,10 +98,10 @@ class Controller:
         return self.dbm.fetchall()
     
 
-    def is_login_unique(self,login):
-        command = 'SELECT COUNT(*) FROM account WHERE account.login = ?'
+    def is_login_unique(self,login) -> dict | None:
+        command = 'SELECT COUNT(*) AS count FROM account WHERE account.login = ?'
         self.dbm.execute(command,(login,))
-        return self.dbm.fetchone()[0] == 0 
+        return self.dbm.fetchone()['count'] == 0 
     
 
     # returns id of newly created user
@@ -111,7 +113,8 @@ class Controller:
         self.dbm.commit()
 
         self.dbm.execute('SELECT id FROM account WHERE login = ?',(login,))
-        return self.dbm.fetchone()[0]
+        fetch = self.dbm.fetchone()
+        return fetch['id']
         
 
 

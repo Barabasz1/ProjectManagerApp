@@ -1,7 +1,7 @@
 import os
 from backend.utils import get_master_dir
 import sqlite3
-
+from typing import List
 
 class DbManager:
 
@@ -69,6 +69,7 @@ class DbManager:
             raise FileNotFoundError(f"Database not found at {path}")
         
         self.connection = sqlite3.connect(path)
+        self.connection.row_factory = sqlite3.Row
         self.cursor = self.connection.cursor()
         self.path = path
         self.connection.set_trace_callback(self.trace_callback)
@@ -216,11 +217,11 @@ class DbManager:
         self.cursor.execute(command,params)
 
 
-    def fetchall(self):
-        return self.cursor.fetchall()
-
-    def fetchone(self):
-        return self.cursor.fetchone()
+    def fetchall(self) -> List[dict]:
+        return [dict(row) for row in (self.cursor.fetchall())]
+    def fetchone(self) -> dict | None:
+        row = self.cursor.fetchone()
+        return dict(row) if row else None
 
 
 
