@@ -8,14 +8,29 @@ import TeamsComponent from '../SubsectionInProperApp/TeamsComponent';
 import UserComponent from '../SubsectionInProperApp/UserComponent';
 import { useTeamContext } from '@/Context/TeamsContext';
 import { useEffect } from 'react';
+import { useUserContext } from '@/Context/UserContext';
 
 
 
 const ProperApp = () => {
  const {fetchTeams} = useTeamContext();
+ const {token} = useUserContext()
+ 
 
  useEffect(()=>{
-  console.log("dasd")
+  const loadTeams = async () => {
+      const tokenToSend = token; // Get from auth context or storage
+      const projectId = 1; // Get from props or state
+      
+      try {
+        await fetchTeams(tokenToSend, projectId);
+        
+      } catch (error) {
+        console.error("Failed to load teams:", error);
+      }
+    };
+    
+    loadTeams();
  }, [])
 
   return ( 

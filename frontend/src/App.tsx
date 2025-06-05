@@ -31,7 +31,7 @@ function App() {
           <ProjectDataProvider>
             <TeamDataProvider>
               <UserDataProvider>
-                {user!= -1 && <ProperApp></ProperApp> }   
+                {(user!= -1   )&& <ProperApp></ProperApp> }   
 
               </UserDataProvider>
             </TeamDataProvider>

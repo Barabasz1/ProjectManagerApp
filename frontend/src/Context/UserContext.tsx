@@ -4,6 +4,7 @@ export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(-1);
+  const [error, setError] = useState(0);
   const [token, setToken] = useState(null)
   
   
@@ -12,12 +13,16 @@ export const UserProvider = ({ children }) => {
     // logika usuwania użytkownika
   };
 
-  const createUser = async (token, username, email, password) => {
-    // logika tworzenia użytkownika
+  const createUser = async ( name, login, password) => {
+    console.log(name)
+    console.log(login)
+    console.log(password)
+
+    // i potem robimy loginUser(login, password)
   };
 
   const loginUser = async (username, password) => {
-    console.log(username)
+    
      const response = await fetch("http://localhost:8000/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -25,17 +30,25 @@ export const UserProvider = ({ children }) => {
   });
 
   if (!response.ok) {
+    
     const error_data = await response.json().catch(() => null);
     const error_detail= error_data.detail || "Login failed";
+    console.log("dsad")
+    setError(1)
     throw new Error(error_detail);
   }
-  const token= response.json();
-  console.log(token)
+  const token= await response.json();
+  
+  setToken(token.access_token)
+  setUser(1)
+  setError(0)
 
   };
 
-  const logoutUser = () => {
-    // logika wylogowywania użytkownika
+  const logOut = () => {
+    setUser(-1)
+    setError(0)
+    setToken(null)
    
   };
 
@@ -44,7 +57,13 @@ export const UserProvider = ({ children }) => {
       value={{ 
         user, 
         setUser,
-        loginUser
+        loginUser,
+        token,
+        setToken,
+        error,
+        setError,
+        logOut,
+        createUser
       }}
     >
       {children}

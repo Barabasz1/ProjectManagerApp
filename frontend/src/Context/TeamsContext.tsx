@@ -19,7 +19,8 @@ export const TeamDataProvider = ({ children }) => {
     throw new Error("Failed to fetch teams");
   }
 
-  console.log(response.json());
+  const result = await response.json();
+  console.log(result)
   };
 
   const removeTeam = (idteam, token) => {

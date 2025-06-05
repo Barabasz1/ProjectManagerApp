@@ -26,7 +26,7 @@ const Top = () => {
     return <div>Błąd: brak UserProvider w drzewie komponentów</div>;
     }
     const {  setUser } = userContext;
-    const {loginUser} = useUserContext();
+
 
   return (
     <>
@@ -59,10 +59,10 @@ const Top = () => {
     </button>
         </DialogTitle>
         <DialogContent >
-         {/*<LoginPanel>
+         <LoginPanel>
 
-         </LoginPanel>v*/}
-         <Box
+         </LoginPanel>
+         {/*<Box
             display="flex"
             flexDirection="column"
             justifyContent="center"
@@ -112,8 +112,8 @@ const Top = () => {
               fullWidth
             >
               Exit
-            </Button>
-          </Box>  
+            </Button> 
+          </Box>  */}
         </DialogContent>
       </Dialog>
 
