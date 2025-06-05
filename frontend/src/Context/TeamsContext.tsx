@@ -20,7 +20,7 @@ export const TeamDataProvider = ({ children }) => {
   }
 
   const result = await response.json();
-  console.log(result)
+  setTeamData(result)
   };
 
   const removeTeam = (idteam, token) => {

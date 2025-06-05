@@ -9,18 +9,20 @@ import UserComponent from '../SubsectionInProperApp/UserComponent';
 import { useTeamContext } from '@/Context/TeamsContext';
 import { useEffect } from 'react';
 import { useUserContext } from '@/Context/UserContext';
+import { useProjectContext } from '@/Context/ProjectsContext';
 
 
 
 const ProperApp = () => {
  const {fetchTeams} = useTeamContext();
  const {token} = useUserContext()
+ const {selectedProjectID} = useProjectContext()
  
 
  useEffect(()=>{
   const loadTeams = async () => {
       const tokenToSend = token; // Get from auth context or storage
-      const projectId = 1; // Get from props or state
+      const projectId = selectedProjectID; // Get from props or state
       
       try {
         await fetchTeams(tokenToSend, projectId);
@@ -31,7 +33,7 @@ const ProperApp = () => {
     };
     
     loadTeams();
- }, [])
+ }, [selectedProjectID])
 
   return ( 
 

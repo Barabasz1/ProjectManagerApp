@@ -11,9 +11,7 @@ import { TeamDataProvider } from './Context/TeamsContext';
 import { UserDataProvider } from './Context/UsersContext';
 
 
-// do usuniecia====================================
-import { authorize_main_test} from './test';
-//===================================================
+
 
 
 function App() {
@@ -24,10 +22,6 @@ function App() {
   }
   const { user } = userContext;
 
-  // do usuniecia=======================================
-  authorize_main_test()
-
-  // ===================================================
 
 
 
