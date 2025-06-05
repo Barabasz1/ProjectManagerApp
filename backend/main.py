@@ -76,7 +76,7 @@ def get_user(controller:Controller, username: str) -> UserCon | ReturnCode.Auth:
     res = controller.get_account(username)
     if res == ReturnCode.Auth.LOGIN_NOT_FOUND:
         return res
-    return UserCon(id=res[0],username=res[1],hashed_password=res[2])
+    return UserCon(id=res['id'],username=res['login'],hashed_password=res['password'])
 
 
     

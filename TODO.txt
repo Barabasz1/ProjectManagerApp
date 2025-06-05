@@ -1,0 +1,4 @@
+fetche
+
+testy jednostkowe
+docker
