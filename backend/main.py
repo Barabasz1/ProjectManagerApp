@@ -205,7 +205,7 @@ async def create_project(
     project_description:str
 ):
     with get_controller() as ctrl:
-        data = [project_name,current_user.id,project_description,get_now(),]
+        data = [project_name,current_user.id,project_description,get_now(),None,None]
         ctrl.insert_from_list('project',data)
 
 
