@@ -18,10 +18,10 @@ const TeamsComponent = () => {
       
      
       <button 
-        className="fixed text-5xl hover:text-5xl bottom-10 right-10 w-20 h-20 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full shadow-lg flex items-center justify-center z-20 transition-all duration-400 transform hover:scale-110"
+        className="fixed text-5xl bottom-10 right-10 w-20 h-20 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full shadow-lg flex items-center justify-center z-20 transition-all duration-400 transform hover:scale-110"
         onClick={() => console.log('Add new team')}
       >
-        <span className=" font-semibold">+</span>
+        <span className="font-semibold leading-none flex items-center justify-center pb-2" >+</span>
       </button>
     </div>
   )
