@@ -15,7 +15,7 @@ sys.path.append(os.path.abspath(os.path.join(__file__, '..','..')))
 
 from backend.const import ReturnCode
 from controller import Controller
-from backend.utils import get_current_datetime
+from backend.utils import get_now,get_now_str
 
 SECRET_KEY = 'bae0a9511295b4d7243684f9eb2ddf92bce396a2dbca2302b1688b28bfe5c853'
 ALGORITHM = 'HS256'
@@ -205,7 +205,7 @@ async def create_project(
     project_description:str
 ):
     with get_controller() as ctrl:
-        data = [project_name,current_user.id,project_description,get_current_datetime()]
+        data = [project_name,current_user.id,project_description,get_now(),]
         ctrl.insert_from_list('project',data)
 
 
