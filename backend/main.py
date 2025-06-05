@@ -234,5 +234,9 @@ async def get_teams(
     project_id
 ):
     with get_controller() as ctrl:
-        return ctrl.get_teams(project_id)
+        get = ctrl.get_teams(project_id)
+        return {
+            'team_id':get[0],
+            'team_name':get[1]
+        }
     
