@@ -12,12 +12,13 @@ if __name__ == "__main__":
     controller = Controller()
 
 
-    print(controller.get_account('Chlebeks'))
-    print(controller.get_non_teammembers(1))
-    print(controller.get_teammembers(1))
-    print(controller.get_teams(1))
-    print(controller.get_projects(1))
-    print(controller.get_tasks(1))
+    # print(controller.get_account('Chlebeks'))
+    # print(controller.get_non_teammembers(1))
+    # print(controller.get_teammembers(1))
+    # print(controller.get_teams(1))
+    # print(controller.get_projects(1))
+    # print(controller.get_tasks(1))
 
+    print(controller.get_users())
 
     controller.close()

@@ -181,7 +181,7 @@ class DbManager:
             pd.read_sql_query(f"SELECT * FROM {table}", self.connection).to_csv(os.path.join(output_dir_path,table+'.csv'), index=False)
 
             
-    def _get_insert_command(self,table_name:str,fields):
+    def _get_insert_command(self,table_name:str,fields:List[str]):
         raw = fields[table_name]
         fields = ', '.join(raw)
         values = ', '.join([':'+x for x in raw])
