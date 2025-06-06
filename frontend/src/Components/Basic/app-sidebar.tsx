@@ -55,15 +55,15 @@ export function AppSidebar() {
   
   const handleCreateProject = () => {
     console.log("Creating new project:", newProjectName);
-    // Here you can add actual project creation logic later
+    
     handleCloseCreateDialog();
   };
 
   return (
     <>
-    <Sidebar variant="sidebar">
+    <Sidebar variant="sidebar" >
       <SidebarContent>
-        <SidebarHeader className="bg-indigo-500 border-0">Projects:</SidebarHeader>
+        <SidebarHeader className="shadow-xl to-indigo-300 text-3xl font-bold">Projects:</SidebarHeader>
        
             <SidebarMenu>
               {items.map((item) => (
@@ -79,7 +79,7 @@ export function AppSidebar() {
               <div className="w-full flex justify-center items-center">
                 <button 
                   onClick={handleOpenCreateDialog}
-                  className="bg-indigo-700 mt-4 text-indigo-50 text-3xl pb-1 hover:cursor-pointer rounded-full hover:bg-indigo-500 hover:scale-110 duration-700 font-bold w-16 h-16"
+                  className="bg-indigo-700 mt-4 text-indigo-50 text-4xl pb-2 hover:cursor-pointer rounded-full hover:bg-indigo-500 hover:scale-110 duration-700 font-bold w-16 h-16"
                 >
                   +
                 </button>
@@ -88,12 +88,10 @@ export function AppSidebar() {
             </SidebarMenu>
         
       </SidebarContent>
-      <SidebarFooter>
-        <p>footer</p>
-      </SidebarFooter>
+   
     </Sidebar>
 
-    {/* Create Project Dialog */}
+   
     <Dialog open={createDialogOpen} onClose={handleCloseCreateDialog}>
       <DialogTitle className="bg-indigo-100">
         <div className="flex justify-between items-center">
