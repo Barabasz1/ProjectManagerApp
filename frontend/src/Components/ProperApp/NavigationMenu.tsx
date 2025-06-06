@@ -26,7 +26,7 @@ const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
         
          <Button
           component={Link}
-          to="/teams"
+          to="/"
           variant="contained"
           color="primary"
           sx={{ 

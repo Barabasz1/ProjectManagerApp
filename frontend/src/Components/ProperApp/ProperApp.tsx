@@ -55,8 +55,8 @@ const ProperApp = () => {
           <div className="flex h-screen w-full flex-col md:flex-row bg-[var(--c6)]"> 
             <div className="w-screen h-full bg-indigo-100 md:rounded-tl-3xl md:rounded-bl-3xl">
               <Routes>
-                <Route path='/' element={<div>dasddsad </div>} />
-                <Route path='/teams' element={<TeamsComponent></TeamsComponent>} />
+              
+                <Route path='/' element={<TeamsComponent></TeamsComponent>} />
 
                 <Route path='/tasks' element={<CanbanTasks></CanbanTasks>} />
        
