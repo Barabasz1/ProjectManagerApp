@@ -14,7 +14,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(__file__, '..','..')))
 
 from backend.const import ReturnCode
-from controller import Controller
+from backend.controller import Controller
 from backend.utils import get_now,get_now_str
 from backend.request_structs.requests import *
 
@@ -80,7 +80,12 @@ def get_user(controller:Controller, username: str) -> UserCon | ReturnCode.Auth:
     return UserCon(id=res['id'],username=res['login'],hashed_password=res['password'])
 
 
-    
+def get_not_found_exception():
+    return HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Data not found"
+            )
+
 
 def authenticate_user(controller, username: str, password: str) -> UserCon | ReturnCode.Auth:
     _user = get_user(controller,username)
@@ -168,7 +173,7 @@ async def login_for_access_token(
     
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.username,"user_id":user.id}, expires_delta=access_token_expires
     )
     return Token(access_token=access_token, token_type="bearer")
 
@@ -194,7 +199,7 @@ async def register(
 
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-            data={"sub": user.username}, expires_delta=access_token_expires
+            data={"sub": user.username,"user_id":user.id}, expires_delta=access_token_expires
         )
         return Token(access_token=access_token, token_type="bearer")
 
@@ -204,7 +209,9 @@ async def create_project(
     data:ProjectCreationReq
 ):
     with get_controller() as ctrl:
-        data = [data.project_name,current_user.id,data.project_description,get_now(),None,None]
+        if not ctrl.user_exists(data.manager):
+            raise get_not_found_exception()
+        data = [data.project_name,data.manager,data.project_description,get_now(),None,None]
         ctrl.insert_from_list('project',data)
 
 
@@ -214,11 +221,15 @@ async def create_task(
     data: TaskCreationReq
 ):
     with get_controller() as ctrl:
-        data = [data.project_id,data.name,data.description,get_now(),data.deadline,1,0]
-        added_task = ctrl.insert_from_list('task',data)
+        if not ctrl.project_exists(data.project_id):
+           raise get_not_found_exception()
+        _data = [data.project_id,data.name,data.description,get_now(),data.deadline,1,0]
+        added_task_id = ctrl.insert_from_list('task',_data)
         # print(added_task)
         if data.team_id:
-            added_assignment = ctrl.insert_from_list('task_team_assignment',[added_task['id'],data.team_id])
+            if not ctrl.team_exists(data.team_id):
+                raise get_not_found_exception()
+            added_assignment = ctrl.insert_from_list('task_team_assignment',[added_task_id,data.team_id])
             # print(f' ADDED NEW ASSIGNMENT {added_assignment}')
 
 
@@ -228,6 +239,8 @@ async def create_team(
     data: TeamCreationReq
 ):
     with get_controller() as ctrl:
+        if not ctrl.project_exists(data.project_id):
+            raise get_not_found_exception()
         ctrl.insert_from_list('team',[data.name,data.project_id])
 
 
@@ -237,6 +250,8 @@ async def add_user_to_team(
     data: UserTeamAssignReq
 ):
     with get_controller() as ctrl:
+        if not ctrl.user_exists(data.user_id) or not ctrl.team_exists(data.team_id):
+            raise get_not_found_exception()
         ctrl.insert_from_list('team_composition',[data.user_id,data.team_id,data.role])
 
 @app.post('/add_task_to_team')
@@ -245,6 +260,8 @@ async def add_task_to_team(
     data: TaskTeamAssignReq
 ):
     with get_controller() as ctrl:
+        if not ctrl.task_exists(data.task_id) or not ctrl.team_exists(data.team_id):
+            raise get_not_found_exception()
         ctrl.insert_from_list('task_team_assignment',[data.task_id,data.team_id])
 
 # ================================================================================================================================
@@ -258,29 +275,41 @@ async def hello_world():
 
 
 
-@app.get('/get_tasks_of_user')
+@app.get('/get_tasks_of_user/{user_id}')
 async def get_tasks_of_user(
     current_user: Annotated[User, Depends(get_current_active_user)],
+    user_id:int
 ):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized request")
     with get_controller() as ctrl:
-        return ctrl.get_tasks_of_user(current_user.id)
+        if not ctrl.user_exists(user_id):
+            raise get_not_found_exception()
+        return ctrl.get_tasks_of_user(user_id)
     
 
-@app.get('/get_tasks_of_project')
+@app.get('/get_tasks_of_project/{project_id}')
 async def get_tasks_of_project(
     current_user: Annotated[User, Depends(get_current_active_user)],
     project_id:int
 ):
     with get_controller() as ctrl:
+        if not ctrl.team_exists(project_id):
+            raise get_not_found_exception()
         return ctrl.get_tasks_of_project(project_id)
 
 
-@app.get('/get_projects')
+@app.get('/get_projects/{user_id}')
 async def get_projects(
     current_user: Annotated[User, Depends(get_current_active_user)],
+    user_id:int
 ):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized request")
     with get_controller() as ctrl:
-        return ctrl.get_projects(current_user.id)
+        if not ctrl.user_exists(user_id):
+            raise get_not_found_exception()
+        return ctrl.get_projects(user_id)
     
 
 @app.get('/get_teams/{project_id}')
@@ -289,6 +318,8 @@ async def get_teams(
     project_id
 ):
     with get_controller() as ctrl:
+        if not ctrl.team_exists(project_id):
+            raise get_not_found_exception()
         return ctrl.get_teams(project_id)
     
 
@@ -305,8 +336,10 @@ async def get_teammembers(
     team_id:int
 ):
     with get_controller() as ctrl:
+        if not ctrl.team_exists(team_id):
+            raise get_not_found_exception()
         # return ctrl.get_users()
-        return [vals.values()[0] for vals in ctrl.get_teammembers(team_id)]
+        return [list(vals.values())[0] for vals in ctrl.get_teammembers(team_id)]
     
 @app.get('/get_nonteammembers/{team_id}')
 async def get_nonteammembers(
@@ -314,8 +347,10 @@ async def get_nonteammembers(
     team_id:int
 ):
     with get_controller() as ctrl:
+        if not ctrl.team_exists(team_id):
+            raise get_not_found_exception()
         # return ctrl.get_users()
-        return [vals.values()[0] for vals in ctrl.get_non_teammembers(team_id)]
+        return [list(vals.values())[0] for vals in ctrl.get_non_teammembers(team_id)]
 
 # ================================================================================================================================
 #                                                           DELETES
@@ -328,6 +363,8 @@ async def delete_project(
     project_id:int
 ):
     with get_controller() as ctrl:
+        if not ctrl.project_exists(project_id):
+            raise get_not_found_exception()
         ctrl.delete_project(project_id)
 
 
@@ -338,6 +375,8 @@ async def delete_task(
     task_id:int
 ):
     with get_controller() as ctrl:
+        if not ctrl.task_exists(task_id):
+            raise get_not_found_exception()
         ctrl.delete_task(task_id)
 
 
@@ -349,6 +388,8 @@ async def delete_user(
 ):
     if current_user.id == user_id:
         with get_controller() as ctrl:
+            if not ctrl.user_exists(user_id):
+                raise get_not_found_exception()
             ctrl.delete_user(user_id)
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized deletion of a user")
@@ -361,7 +402,9 @@ async def remove_user_from_team(
     user_id:int
 ):
     with get_controller() as ctrl:
-        ctrl.remvoe_user_from_team(user_id,team_id)
+        if not ctrl.team_exists(team_id) and not ctrl.user_exists(user_id):
+            raise get_not_found_exception()
+        ctrl.remove_user_from_team(user_id,team_id)
 
 
 
@@ -377,4 +420,6 @@ async def increase_task_status(
     data:TaskStatusChangeReq
 ):
     with get_controller() as ctrl:
+        if not ctrl.task_exists(task_id):
+            raise get_not_found_exception()
         ctrl.increase_task_status(task_id,data.amount)

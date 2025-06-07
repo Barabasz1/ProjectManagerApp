@@ -9,8 +9,8 @@ def trace_callback(statement):
 
 class Controller:
     def __init__(self):
-        # self.dbm = DbManager(trace_callback)
-        self.dbm = DbManager(None)
+        self.dbm = DbManager(trace_callback)
+        # self.dbm = DbManager(None)
         self.dbm.open(DbManager.DEFAULT_DB_PATH)
 
     def close(self) -> None:
@@ -119,6 +119,22 @@ class Controller:
         self.dbm.execute(command,(login,))
         return self.dbm.fetchone()['count'] == 0 
     
+    def check_existence(self,table_name,column_name,value):
+        command = f'SELECT COUNT(*) AS count FROM {table_name} WHERE {column_name} = ?'
+        self.dbm.execute(command,(value,))
+        return self.dbm.fetchone()['count'] > 0 
+    
+    def project_exists(self,id):
+        return self.check_existence('project','id',id)
+    
+    def task_exists(self,id):
+        return self.check_existence('task','id',id)
+    
+    def user_exists(self,id):
+        return self.check_existence('account','id',id)
+    
+    def team_exists(self,id):
+        return self.check_existence('team','id',id)
 
     # returns id of newly created user
     def register_account(self,login,password_hashed) -> int:
@@ -157,14 +173,16 @@ class Controller:
         self.dbm.commit()
 
     def increase_task_status(self,task_id:int,amount:int):
-        self.dbm.execute('SELECT status FROM status WHERE id = ?',(task_id,)) 
-        current_status = self.dbm.fetchone().values()[0]
+        self.dbm.execute('SELECT status FROM task WHERE id = ?',(task_id,)) 
+        current_status = list(self.dbm.fetchone().values())[0]
+        print(f"old = {current_status}")
         new_status = max(min(current_status + amount,DbManager.KANBAN_STATUS_MAX),DbManager.KANBAN_STATUS_MIN)
+        print(f"new: {new_status}")
         command = 'UPDATE task SET status = ? WHERE id = ?'
         self.dbm.execute(command,(new_status,task_id))
         self.dbm.commit()
 
-    def remvoe_user_from_team(self,user_id:int,team_id:int):
+    def remove_user_from_team(self,user_id:int,team_id:int):
         command = 'DELETE FROM team_composition WHERE team = ? AND user = ?'
         self.dbm.execute(command,(team_id,user_id))
         self.dbm.commit()

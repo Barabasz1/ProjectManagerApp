@@ -7,8 +7,8 @@ export const ProjectDataProvider = ({ children }) => {
   const [projectData, setProjectData] = useState([]);
   const [selectedProjectID, SetSelectedProjectID] = useState(1) //do zmiany
 
-  const fetchProjects = (token) => {
-    return get('get_projects',token)
+  const fetchProjects = (token,user_id) => {
+    return get(`get_projects/${user_id}`,token)
   };
 
   const removeProjects = (projectId, token) => {
@@ -16,7 +16,7 @@ export const ProjectDataProvider = ({ children }) => {
   };
 
   const createProjects = (token, nazwa, opis) => {
-    return post('create_project',token,{project_name:nazwa,description:opis})
+    return post('create_project',token,{project_name:nazwa,description:opis,manager:1// swap for current user id})
   };
 
   const editProjects = (token, nazwe, opis) => {

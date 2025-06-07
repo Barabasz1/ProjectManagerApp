@@ -7,10 +7,10 @@ export const TaskDataProvider = ({ children }) => {
   const [taskData1, setTaskData1] = useState([]);
 
   const fetchTasksOfProejct = (token,project_id) => {
-    return get(`get_tasks_of_project?project_id=${project_id}`,token)
+    return get(`get_tasks_of_project/${project_id}`,token)
   };
   const fetchTasksOfUser= (token,user_id) => {
-    return get(`get_tasks_of_project?user_id=${user_id}`,token)
+    return get(`get_tasks_of_user/${user_id}`,token)
   };
 
   const removeTask = (idTask, token) => {

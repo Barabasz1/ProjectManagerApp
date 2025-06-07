@@ -8,6 +8,7 @@ class RegisterReq(BaseModel):
 class ProjectCreationReq(BaseModel):
     project_name:str
     project_description:str
+    manager:int
 
 class TaskCreationReq(BaseModel):
     project_id:int
