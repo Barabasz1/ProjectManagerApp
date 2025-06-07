@@ -2,14 +2,12 @@ import { Box, Button} from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import { useContext } from 'react';
-import { UserContext } from '../../Context/UserContext';
+import { UserContext, useUserContext } from '../../Context/UserContext';
 
 const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
-     const userContext = useContext(UserContext);
-      if (!userContext) {
-      return <div>Błąd: brak UserProvider w drzewie komponentów</div>;
-      }
-      const { user, setUser } = userContext;
+     
+      const { user, setUser, logOut } = useUserContext();
+      
 
   return (
     <Box className="bg-indigo-950 p-4 text-center flex flex-wrap">
@@ -28,7 +26,7 @@ const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
         
          <Button
           component={Link}
-          to="/teams"
+          to="/"
           variant="contained"
           color="primary"
           sx={{ 
@@ -41,20 +39,7 @@ const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
           teams
         </Button>
 
-         <Button
-          component={Link}
-          to="/users"
-          variant="contained"
-          color="primary"
-          sx={{ 
-            flex: 1,
-            fontWeight: 'bold',
-            '&:hover': { transform: 'translateY(-2px)' },
-            transition: 'transform 0.2s'
-          }}
-        >
-          users
-        </Button>
+
         <Button
           component={Link}
           to="/tasks"
@@ -69,20 +54,7 @@ const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
         >
           tasks
         </Button>
-          {1==2 &&  <Button
-          component={Link}
-          to="/account"
-          variant="contained"
-          color="primary"
-          sx={{ 
-            flex: 1,
-            fontWeight: 'bold',
-            '&:hover': { transform: 'translateY(-2px)' },
-            transition: 'transform 0.2s'
-          }}
-        >
-          account
-        </Button>}
+         
         <Button
           component={Link}
           to="/"
@@ -95,7 +67,7 @@ const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
             '&:hover': { transform: 'translateY(-2px)' },
             transition: 'transform 0.2s'
           }}
-          onClick={() =>setUser(-1)}
+          onClick={() =>{setUser(-1)}}
         >
           Log out
         </Button>
