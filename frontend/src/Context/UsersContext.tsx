@@ -2,24 +2,22 @@ import React, { createContext, useContext, useState } from 'react';
 
 const UsersContext = createContext(null);
 
+import {get,post,del} from './api_request'
+
 export const UserDataProvider = ({ children }) => {
   const [userData, setUserData] = useState([]);
   const [selectedUserID, setSelectedUserID] = useState(null);
 
   const fetchUsers = async () => {
-    const response = await fetch(`http://localhost:8000/get_users`)
-  if (!response.ok) {
-    throw new Error("Failed to fetch teams");
-  }
-  return await response.json();
+    return await get('get_users',null)
   };
 
-  const removeUser = (userId) => {
-    // logika usuwania użytkownika
+  const removeUser = (token,userId) => {
+      del(`delete_user/${userId}`,token)
   };
 
-  const createUser = (newUser) => {
-    // logika tworzenia nowego użytkownika
+  const createUser = (login,password) => {
+      post('register',token,{login:login,password:password})
   };
 
   const editUser = (updatedUser) => {

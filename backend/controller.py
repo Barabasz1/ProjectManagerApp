@@ -29,16 +29,25 @@ class Controller:
         return fetch
     
 
-    def get_tasks(self,account_id) -> List[dict]:
+    def get_tasks_of_user(self,account_id) -> List[dict]:
 
-        user_tasks_fetch_command = 'SELECT ' \
+        command = 'SELECT ' \
         'task.id, task.project, task.name, task.description, task.creation_date, task.deadline, task.status, task.priority ' \
         'FROM task_user_assignment ' \
         'INNER JOIN task ' \
         'ON task_user_assignment.task = task.id ' \
         f'WHERE task_user_assignment.user = ?'
         
-        self.dbm.execute(user_tasks_fetch_command,(account_id,))
+        self.dbm.execute(command,(account_id,))
+        return self.dbm.fetchall()
+
+    def get_tasks_of_project(self,project_id) -> List[dict]:
+        command = 'SELECT ' \
+        'task.id, task.name, task.description, task.creation_date, task.deadline, task.status, task.priority ' \
+        'FROM task ' \
+        'WHERE task.project = ?'
+        
+        self.dbm.execute(command,(project_id,))
         return self.dbm.fetchall()
     
     def get_projects(self,user_id) -> List[dict]:
@@ -102,6 +111,7 @@ class Controller:
 
         self.dbm.execute(command,())
         return self.dbm.fetchall()
+
     
 
     def is_login_unique(self,login) -> dict | None:
@@ -136,7 +146,31 @@ class Controller:
         self.dbm.commit()
         return new_row
 
-    def delete_project(self,project_id):
+    def delete_project(self,project_id:int):
         command = 'DELETE FROM project WHERE project.id = ?'
         self.dbm.execute(command,(project_id,))
+        self.dbm.commit()
+
+    def delete_task(self,task_id:int):
+        command = 'DELETE FROM task WHERE task.id = ?'
+        self.dbm.execute(command,(task_id,))
+        self.dbm.commit()
+
+    def increase_task_status(self,task_id:int,amount:int):
+        self.dbm.execute('SELECT status FROM status WHERE id = ?',(task_id,)) 
+        current_status = self.dbm.fetchone().values()[0]
+        new_status = max(min(current_status + amount,DbManager.KANBAN_STATUS_MAX),DbManager.KANBAN_STATUS_MIN)
+        command = 'UPDATE task SET status = ? WHERE id = ?'
+        self.dbm.execute(command,(new_status,task_id))
+        self.dbm.commit()
+
+    def remvoe_user_from_team(self,user_id:int,team_id:int):
+        command = 'DELETE FROM team_composition WHERE team = ? AND user = ?'
+        self.dbm.execute(command,(team_id,user_id))
+        self.dbm.commit()
+
+
+    def delete_user(self,user_id):
+        command = 'DELETE FROM account WHERE id = ?'
+        self.dbm.execute(command,(user_id,))
         self.dbm.commit()

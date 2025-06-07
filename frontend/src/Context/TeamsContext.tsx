@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
+import {get,post,del} from './api_request'
+
 const TeamsContext = createContext(null);
 
 export const TeamDataProvider = ({ children }) => {
@@ -8,43 +10,40 @@ export const TeamDataProvider = ({ children }) => {
 
   const fetchTeams = async (token, project_id) => {
     // logika fetchowania zespołów
-    const response = await fetch(`http://localhost:8000/get_teams?project_id=${project_id}`, {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch teams");
-  }
-
-  return await response.json();
+    return get(`get_teams/${project_id}`)
   };
 
   const removeTeam = (idteam, token) => {
-    // czy chcemy
+    return del(`delete_team/${idteam}`,token)
   };
 
-  const createTeam = (nazwe, token) => {
-    // logika tworzenia nowego zespołu
+  const createTeam = (token,nazwa,project_id) => {
+    return post(`create_team`,token,{
+      name:nazwa,
+      project_id:project_id
+    })
   };
 
   const editTeam = (nazwa, token) => {
     // chyba tylko nazwe edytujemy?
   };
-  const AssignUserToTeam = (idTeam, idUser, token) =>{
-    //to do 
+  const AssignUserToTeam = (token,idTeam, idUser, role) =>{
+    return post(`add_user_to_team`,token,{
+      user_id:idUser,
+      team_id:idTeam,
+      role:role
+    })
   }
     const UnassignUserToTeam = (idTeam, idUser, token) =>{
-    //to do 
+    return del(`remove_user_from_team/${idTeam}/${idUser}`,token)
   }
   const fetchteammembers = (token, idteam) =>{
-
+    return get(`get_teammembers/${idteam}`,token)
   }
   const fetchnotteammembers = (token, idteam) =>{
     // w sumie to to jest useless  (?)
     // jesli kogos nie ma w projekcie, a chce go dodać, to wprowadzam jego globalny username, i bum, już jest
+    return get(`get_nonteammembers/${idteam}`,token)
   }
   
 

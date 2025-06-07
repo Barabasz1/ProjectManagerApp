@@ -45,6 +45,12 @@ class DbManager:
         'task_status_history': ['id','task', 'old_status', 'new_status', 'changed_at']
     }
 
+    KANBAN_STATUS_MIN = 0
+    KANBAN_STATUS_MAX = 5
+
+    TASK_PRIORITY_MIN = 0
+    TASK_PRIORITY_MAX = 3
+
     # // kanban status
     # Enum kanban_status {
     #   unassigned// 0

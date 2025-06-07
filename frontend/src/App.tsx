@@ -7,11 +7,6 @@ import StartingPage from './Components/StartingPage/StartingPage';
 import ProperApp from './Components/ProperApp/ProperApp';
 
 
-// do usuniecia====================================
-import { authorize_main_test} from './test';
-//===================================================
-
-
 function App() {
 
   const userContext = useContext(UserContext);
@@ -20,10 +15,6 @@ function App() {
   }
   const { user } = userContext;
 
-  // do usuniecia=======================================
-  authorize_main_test()
-
-  // ===================================================
 
 
 

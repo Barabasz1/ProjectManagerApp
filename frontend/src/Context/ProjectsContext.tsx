@@ -1,20 +1,23 @@
 import React, { createContext, useContext, useState } from 'react';
 
+import {get,post,del} from './api_request'
+
 const ProjectsContext = createContext(null);
 
 export const ProjectDataProvider = ({ children }) => {
   const [projectData, setProjectData] = useState([]);
   const [selectedProjectID, SetSelectedProjectID] = useState(null)
+
   const fetchProjects = (token) => {
-    // logika fetchowania projetu
+      return get('get_projects',token)
   };
 
-  const removeProjects = (projectId, token) => {
-    // czy na pewno?
+  const removeProjects = (token,project_id:number) => {
+    return del(`delete_project/${project_id}`,token)
   };
 
-  const createProjects = (token, nazwe, opis) => {
-    // logika tworzenia projektu
+  const createProjects = (token, name:string, description:string) => {
+    return post('create_project',token,{project_name:name,description:description})
   };
 
   const editProjects = (token, nazwe, opis) => {

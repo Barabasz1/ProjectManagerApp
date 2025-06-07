@@ -16,6 +16,7 @@ sys.path.append(os.path.abspath(os.path.join(__file__, '..','..')))
 from backend.const import ReturnCode
 from controller import Controller
 from backend.utils import get_now,get_now_str
+from backend.request_structs.requests import *
 
 SECRET_KEY = 'bae0a9511295b4d7243684f9eb2ddf92bce396a2dbca2302b1688b28bfe5c853'
 ALGORITHM = 'HS256'
@@ -175,11 +176,10 @@ async def login_for_access_token(
 # returns token
 @app.post("/register")
 async def register(
-    login:str,
-    password:str
+    data: RegisterReq
 ):
     with get_controller() as ctrl:
-        if not ctrl.is_login_unique(login):
+        if not ctrl.is_login_unique(data.login):
             raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE,
             detail="Username already exists",
@@ -187,10 +187,10 @@ async def register(
         )
 
 
-        password_hashed = get_password_hash(password)
+        password_hashed = get_password_hash(data.password)
 
-        new_user_id = ctrl.register_account(login,password_hashed)
-        user = User(id=new_user_id,username=login)
+        new_user_id = ctrl.register_account(data.login,password_hashed)
+        user = User(id=new_user_id,username=data.login)
 
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
@@ -201,33 +201,51 @@ async def register(
 @app.post('/create_project')
 async def create_project(
     current_user: Annotated[User, Depends(get_current_active_user)],
-    project_name:str,
-    project_description:str
+    data:ProjectCreationReq
 ):
     with get_controller() as ctrl:
-        data = [project_name,current_user.id,project_description,get_now(),None,None]
+        data = [data.project_name,current_user.id,data.project_description,get_now(),None,None]
         ctrl.insert_from_list('project',data)
 
 
 @app.post('/create_task')
 async def create_task(
     current_user: Annotated[User, Depends(get_current_active_user)],
-    project_id:int,
-    task_name:str,
-    description:str,
-    deadline:datetime,
-    team_id: int | None = None 
+    data: TaskCreationReq
 ):
     with get_controller() as ctrl:
-        data = [project_id,task_name,description,get_now(),deadline,1,0]
+        data = [data.project_id,data.name,data.description,get_now(),data.deadline,1,0]
         added_task = ctrl.insert_from_list('task',data)
-        print(added_task)
-        if team_id:
-            added_assignment = ctrl.insert_from_list('task_team_assignment',[added_task['id'],team_id])
-            print(f' ADDED NEW ASSIGNMENT {added_assignment}')
+        # print(added_task)
+        if data.team_id:
+            added_assignment = ctrl.insert_from_list('task_team_assignment',[added_task['id'],data.team_id])
+            # print(f' ADDED NEW ASSIGNMENT {added_assignment}')
 
 
+@app.post('/create_team')
+async def create_team(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    data: TeamCreationReq
+):
+    with get_controller() as ctrl:
+        ctrl.insert_from_list('team',[data.name,data.project_id])
 
+
+@app.post('/add_user_to_team')
+async def add_user_to_team(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    data: UserTeamAssignReq
+):
+    with get_controller() as ctrl:
+        ctrl.insert_from_list('team_composition',[data.user_id,data.team_id,data.role])
+
+@app.post('/add_task_to_team')
+async def add_task_to_team(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    data: TaskTeamAssignReq
+):
+    with get_controller() as ctrl:
+        ctrl.insert_from_list('task_team_assignment',[data.task_id,data.team_id])
 
 # ================================================================================================================================
 #                                                               GETS
@@ -236,16 +254,25 @@ async def create_task(
 
 @app.get('/hello_world')
 async def hello_world():
-    return {"message": "Hello World using fastapi :)"}
+    return {"message": "Hello World from fastapi :)"}
 
 
 
-@app.get('/get_tasks')
-async def get_tasks(
+@app.get('/get_tasks_of_user')
+async def get_tasks_of_user(
     current_user: Annotated[User, Depends(get_current_active_user)],
 ):
     with get_controller() as ctrl:
-        return ctrl.get_tasks(current_user.id)
+        return ctrl.get_tasks_of_user(current_user.id)
+    
+
+@app.get('/get_tasks_of_project')
+async def get_tasks_of_project(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    project_id:int
+):
+    with get_controller() as ctrl:
+        return ctrl.get_tasks_of_project(project_id)
 
 
 @app.get('/get_projects')
@@ -256,7 +283,7 @@ async def get_projects(
         return ctrl.get_projects(current_user.id)
     
 
-@app.get('/get_teams')
+@app.get('/get_teams/{project_id}')
 async def get_teams(
     current_user: Annotated[User, Depends(get_current_active_user)],
     project_id
@@ -272,17 +299,82 @@ async def get_users():
         # return ctrl.get_users()
         return [list(vals.values()) for vals in ctrl.get_users()]
     
+@app.get('/get_teammembers/{team_id}')
+async def get_teammembers(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    team_id:int
+):
+    with get_controller() as ctrl:
+        # return ctrl.get_users()
+        return [vals.values()[0] for vals in ctrl.get_teammembers(team_id)]
     
+@app.get('/get_nonteammembers/{team_id}')
+async def get_nonteammembers(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    team_id:int
+):
+    with get_controller() as ctrl:
+        # return ctrl.get_users()
+        return [vals.values()[0] for vals in ctrl.get_non_teammembers(team_id)]
 
 # ================================================================================================================================
 #                                                           DELETES
 # ================================================================================================================================
 
 
-@app.delete('/delete_project')
+@app.delete('/delete_project/{project_id}')
 async def delete_project(
     current_user: Annotated[User, Depends(get_current_active_user)],
-    project_id
+    project_id:int
 ):
     with get_controller() as ctrl:
         ctrl.delete_project(project_id)
+
+
+
+@app.delete('/delete_task/{task_id}')
+async def delete_task(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    task_id:int
+):
+    with get_controller() as ctrl:
+        ctrl.delete_task(task_id)
+
+
+@app.delete('/delete_user/{user_id}',
+            description="Deletes a user from the database. You can only delete a user, whose id corresponds to the user id of your session token")
+async def delete_user(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    user_id:int
+):
+    if current_user.id == user_id:
+        with get_controller() as ctrl:
+            ctrl.delete_user(user_id)
+    else:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized deletion of a user")
+
+
+@app.delete('/remove_user_from_team/{team_id}/{user_id}')
+async def remove_user_from_team(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    team_id:int,
+    user_id:int
+):
+    with get_controller() as ctrl:
+        ctrl.remvoe_user_from_team(user_id,team_id)
+
+
+
+# ================================================================================================================================
+#                                                           PATCHES
+# ================================================================================================================================
+
+
+@app.patch('/increase_task_status/{task_id}')
+async def increase_task_status(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    task_id:int,
+    data:TaskStatusChangeReq
+):
+    with get_controller() as ctrl:
+        ctrl.increase_task_status(task_id,data.amount)
