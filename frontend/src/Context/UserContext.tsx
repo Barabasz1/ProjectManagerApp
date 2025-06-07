@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-
+import {get,post,del} from './api_request'
 export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
@@ -11,12 +11,13 @@ export const UserProvider = ({ children }) => {
 
   const removeUser = async (userId, token) => {
     // logika usuwania użytkownika
+    del(`delete_user/${userId}`,token)
   };
 
-  const createUser = async ( name, login, password) => {
-    console.log(name)
+  const createUser = async (login, password) => {
     console.log(login)
     console.log(password)
+    post('register',null,{login:login,password:password})
 
     // i potem robimy loginUser(login, password)
   };
