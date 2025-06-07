@@ -6,11 +6,34 @@ import { SidebarProvider, SidebarTrigger } from '../ui/sidebar';
 import { AppSidebar } from '../Basic/app-sidebar';
 import TeamsComponent from '../SubsectionInProperApp/TeamsComponent';
 import UserComponent from '../SubsectionInProperApp/UserComponent';
+import { useTeamContext } from '@/Context/TeamsContext';
+import { useEffect } from 'react';
+import { useUserContext } from '@/Context/UserContext';
+import { useProjectContext } from '@/Context/ProjectsContext';
 
 
 
 const ProperApp = () => {
+ const {fetchTeams} = useTeamContext();
+ const {token} = useUserContext()
+ const {selectedProjectID} = useProjectContext()
  
+
+ useEffect(()=>{
+  const loadTeams = async () => {
+      const tokenToSend = token; // Get from auth context or storage
+      const projectId = selectedProjectID; // Get from props or state
+      
+      try {
+        await fetchTeams(tokenToSend, projectId);
+        
+      } catch (error) {
+        console.error("Failed to load teams:", error);
+      }
+    };
+    
+    loadTeams();
+ }, [selectedProjectID])
 
   return ( 
 
@@ -32,11 +55,11 @@ const ProperApp = () => {
           <div className="flex h-screen w-full flex-col md:flex-row bg-[var(--c6)]"> 
             <div className="w-screen h-full bg-indigo-100 md:rounded-tl-3xl md:rounded-bl-3xl">
               <Routes>
-                <Route path='/' element={<div>dasddsad </div>} />
-                <Route path='/teams' element={<TeamsComponent></TeamsComponent>} />
-                <Route path='/users' element={<UserComponent></UserComponent>} />
+              
+                <Route path='/' element={<TeamsComponent></TeamsComponent>} />
+
                 <Route path='/tasks' element={<CanbanTasks></CanbanTasks>} />
-                <Route path='/account' element={<div> account</div>} />
+       
               </Routes>
             </div>
           </div>

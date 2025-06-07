@@ -1,11 +1,21 @@
 import React, { useState } from 'react'
 import { Box, Typography } from '@mui/material';
+import { useUserContext } from '@/Context/UserContext';
 
 const RegisterPanel = () => {
   const [name, setName] = useState('');
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-
+  const {createUser} = useUserContext()
+   const register = () => {
+   
+    try {
+      createUser(name, login, password)
+    }
+    catch(error){
+      console.log("Failed")
+    }
+  }
   return (
     <Box
       display="flex"
@@ -69,6 +79,7 @@ const RegisterPanel = () => {
               : 'bg-indigo-400 cursor-not-allowed opacity-70'}
           `}
           disabled={!name || !login || !password}
+          onClick={()=> register()}
         >
           Register
         </button>

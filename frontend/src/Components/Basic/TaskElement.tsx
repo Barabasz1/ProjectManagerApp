@@ -1,18 +1,20 @@
 import {useState} from 'react'
 import { Box, Typography, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
+import { useTasksContext } from '@/Context/TasksContext';
 const TaskElement = () => {
 
     const [open, setOpen] = useState(false);
-      const handleOpen = () => setOpen(true);
-      const handleClose = () => setOpen(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const {IncreaseStatus, DecreaseStatus} = useTasksContext()
       
   const leftClick = () =>{
-    console.log("left clicked")
+    DecreaseStatus("token", "1")
   }
   
   const rightClick = () =>{
-    console.log("right clicked")
+     IncreaseStatus("token", "123")
   }
 
 

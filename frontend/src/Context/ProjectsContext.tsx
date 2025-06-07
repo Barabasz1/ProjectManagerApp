@@ -6,8 +6,12 @@ const ProjectsContext = createContext(null);
 
 export const ProjectDataProvider = ({ children }) => {
   const [projectData, setProjectData] = useState([]);
+<<<<<<< HEAD
   const [selectedProjectID, SetSelectedProjectID] = useState(null)
 
+=======
+  const [selectedProjectID, SetSelectedProjectID] = useState(1) //do zmiany
+>>>>>>> Frontend
   const fetchProjects = (token) => {
       return get('get_projects',token)
   };
@@ -25,7 +29,7 @@ export const ProjectDataProvider = ({ children }) => {
   };
 
   return (
-    <ProjectsContext.Provider value={{ projectData, fetchProjects, removeProjects, createProjects, editProjects }}>
+    <ProjectsContext.Provider value={{ projectData,setProjectData, selectedProjectID, SetSelectedProjectID, fetchProjects, removeProjects, createProjects, editProjects }}>
       {children}
     </ProjectsContext.Provider>
   );
