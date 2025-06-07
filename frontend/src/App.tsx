@@ -12,8 +12,11 @@ import { UserDataProvider } from './Context/UsersContext';
 
 
 
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> Frontend
 function App() {
 
   const userContext = useContext(UserContext);

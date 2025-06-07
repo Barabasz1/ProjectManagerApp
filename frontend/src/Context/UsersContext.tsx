@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
-
-const UsersContext = createContext(null);
-
 import {get,post,del} from './api_request'
+const UsersContext = createContext(null);
 
 export const UserDataProvider = ({ children }) => {
   const [userData, setUserData] = useState([]);
@@ -13,11 +11,11 @@ export const UserDataProvider = ({ children }) => {
   };
 
   const removeUser = (token,userId) => {
-      del(`delete_user/${userId}`,token)
+    del(`delete_user/${userId}`,token)
   };
 
   const createUser = (login,password) => {
-      post('register',token,{login:login,password:password})
+    post('register',null,{login:login,password:password})
   };
 
   const editUser = (updatedUser) => {

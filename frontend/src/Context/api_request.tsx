@@ -51,7 +51,7 @@ export async function get(path:string,token:string | null){
     return await get_response(path,'GET',token,null)
 }
 
-export async function post(path:string,token:string,data) {
+export async function post(path:string,token:string | null,data) {
     return await get_response(path,'POST',token,data)
 }
 

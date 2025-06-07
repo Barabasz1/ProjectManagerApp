@@ -1,16 +1,11 @@
-import { Table2 } from 'lucide-react';
 import React, { createContext, useContext, useState } from 'react';
-
 import {get,post,del,patch} from './api_request'
-
 const TasksContext = createContext(null);
 
-
-export const MyDataProvider = ({ children }) => {
+export const TaskDataProvider = ({ children }) => {
   const [taskdata, setTaskData] = useState([]);
-  const [taskData1]
+  const [taskData1, setTaskData1] = useState([]);
 
-  
   const fetchTasksOfProejct = (token,project_id) => {
     return get(`get_tasks_of_project?project_id=${project_id}`,token)
   };
@@ -22,7 +17,7 @@ export const MyDataProvider = ({ children }) => {
     return del(`delete_task/${idTask}`,token)
   };
 
-  const createTask = (token, idprojekt, nazwa, opis, deadline, idTeam) =>{
+  const createTask = (token, idprojekt, nazwa, opis, deadline, idTeam) => {
     return post(`create_task`,token,{
       project_id:idprojekt,
       task_name:nazwa,
@@ -30,25 +25,29 @@ export const MyDataProvider = ({ children }) => {
       deadline:deadline,
       team_id:idTeam
     })
-  }
-  const editTask = (updatedtask, id) =>{
-    //NIEWIEM CZY ID JEST OK?
-  }
+  };
 
-  const IncreaseStatus = (token, IdTask) =>{
-    return patch(`increase_task_status/${IdTask}`,token,{amount:1})
-  }
-   const DecreaseStatus = (token, IdTask) =>{
-    return patch(`increase_task_status/${IdTask}`,token,{amount:-1})
-  }
+  const editTask = (updatedtask, id) => {
+    // Logika edytowania zadania
+  };
 
+  const IncreaseStatus = (token, IdTask) => {
+    patch(`increase_task_status/${IdTask}`,token,{amount:1})
+    console.log("increase status")
+    console.log(IdTask)
+  };
+
+  const DecreaseStatus = (token, IdTask) => {
+    patch(`increase_task_status/${IdTask}`,token,{amount:-1})
+     console.log("decrease status")
+     console.log(IdTask)
+  };
 
   return (
-    <TasksContext.Provider value={{  taskdata, fetchTasks, removeTask,createTask }}>
+    <TasksContext.Provider value={{ taskdata, fetchTasksOfProejct,fetchTasksOfUser, removeTask, createTask, editTask, IncreaseStatus, DecreaseStatus }}>
       {children}
     </TasksContext.Provider>
   );
 };
 
-
-export const UseUserContext = () => useContext(TasksContext);
+export const useTasksContext = () => useContext(TasksContext);
