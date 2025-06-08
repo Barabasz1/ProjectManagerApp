@@ -23,6 +23,10 @@ ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
+class InvalidIDException(HTTPException):
+    def __init__(self, detail: str = "The supplied ID is invalid"):
+        super().__init__(status_code=460, detail=detail)
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -81,10 +85,7 @@ def get_user(controller:Controller, username: str) -> UserCon | ReturnCode.Auth:
 
 
 def get_not_found_exception():
-    return HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Data not found"
-            )
+    return InvalidIDException()
 
 
 def authenticate_user(controller, username: str, password: str) -> UserCon | ReturnCode.Auth:
