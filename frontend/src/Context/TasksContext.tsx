@@ -18,14 +18,14 @@ export const TaskDataProvider = ({ children }) => {
     console.log("fetching tasks")
     setUserId(user_id)
     set_ProjectId(project_id)
-    const data = await get(`get_tasks_of_project/${project_id}`,token)
+    const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
 
     
-    const data1 = data.filter(item => item.status === 1);
-const data2 = data.filter(item => item.status === 2);
-const data3 = data.filter(item => item.status === 3);
-const data4 = data.filter(item => item.status === 4);
-const data5 = data.filter(item => item.status === 5);
+    const data1 = data.filter(item => item.status === 0);
+const data2 = data.filter(item => item.status === 1);
+const data3 = data.filter(item => item.status === 2);
+const data4 = data.filter(item => item.status === 3);
+const data5 = data.filter(item => item.status === 4);
 
 setTaskData1(data1)
 setTaskData2(data2)
