@@ -21,10 +21,10 @@ async function get_response(path:string,method:'GET' | 'POST' | 'DELETE' | 'PATC
     let response = null;
 
     if (token==null) {
-        response = await fetch(get_url().concat(url))
+        response = await fetch(url)
     } else {
         if(data==null){
-        response = await fetch(get_url().concat(url), {
+        response = await fetch(url, {
             method: method,
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -32,7 +32,7 @@ async function get_response(path:string,method:'GET' | 'POST' | 'DELETE' | 'PATC
         });
     } else {
     
-        response = await fetch(get_url().concat(url), {
+        response = await fetch(url), {
         method: method,
         headers: {
             "Authorization": `Bearer ${token}`,
