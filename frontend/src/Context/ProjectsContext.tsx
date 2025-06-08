@@ -8,6 +8,7 @@ export const ProjectDataProvider = ({ children }) => {
   const [selectedProjectID, SetSelectedProjectID] = useState(1) //do zmiany
 
   const fetchProjects = (token,user_id) => {
+    console.log("fetch projects")
     return get(`get_projects/${user_id}`,token)
   };
 

@@ -8,7 +8,8 @@ export const TeamDataProvider = ({ children }) => {
 
      const fetchTeams = async (token, project_id) => {
     // logika fetchowania zespołów
-    const response = await fetch(`http://localhost:8000/get_teams?project_id=${project_id}`, {
+    console.log("fetch teams")
+    const response = await fetch(`http://localhost:8000/get_teams/${project_id}`, {
     method: "GET",
     headers: {
       "Authorization": `Bearer ${token}`,
