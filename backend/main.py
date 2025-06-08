@@ -224,6 +224,7 @@ async def create_task(
     current_user: Annotated[User, Depends(get_current_active_user)],
     data: TaskCreationReq
 ):
+    print(f"\n\n\n\creating task \n\n\n{data}\n\n\n")
     with get_controller() as ctrl:
         if not ctrl.project_exists(data.project_id):
            raise get_invalid_id_exception()
@@ -253,10 +254,15 @@ async def add_user_to_team(
     current_user: Annotated[User, Depends(get_current_active_user)],
     data: UserTeamAssignReq
 ):
+    print("Received data:", data)
     with get_controller() as ctrl:
         if not ctrl.user_exists(data.user_id) or not ctrl.team_exists(data.team_id):
             raise get_invalid_id_exception()
-        ctrl.insert_from_list('team_composition',[data.user_id,data.team_id,data.role])
+
+        result = ctrl.insert_from_list('team_composition',[data.user_id,data.team_id,data.role])
+        if result == ReturnCode.Sql.INTEGRITY_ERROR:
+            return None
+        
 
 @app.post('/add_task_to_team')
 async def add_task_to_team(
@@ -356,8 +362,9 @@ async def get_teammembers(
     with get_controller() as ctrl:
         if not ctrl.team_exists(team_id):
             raise get_invalid_id_exception()
-        # return ctrl.get_users()
-        return [list(vals.values())[0] for vals in ctrl.get_teammembers(team_id)]
+        result = ctrl.get_teammembers(team_id)
+        # return result
+        return [list(vals.values()) for vals in result]
     
 @app.get('/get_nonteammembers/{team_id}')
 async def get_nonteammembers(
@@ -367,8 +374,9 @@ async def get_nonteammembers(
     with get_controller() as ctrl:
         if not ctrl.team_exists(team_id):
             raise get_invalid_id_exception()
-        # return ctrl.get_users()
-        return [list(vals.values())[0] for vals in ctrl.get_non_teammembers(team_id)]
+        result = ctrl.get_non_teammembers(team_id)
+        # return  result
+        return  [list(vals.values()) for vals in result]
 
 # ================================================================================================================================
 #                                                           DELETES

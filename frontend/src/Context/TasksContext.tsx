@@ -52,12 +52,20 @@ console.log(data2)
     console.log(opis)
     console.log(deadline)
     console.log(idTeam)
+    // await post(`create_task`,token,{
+    //   project_id:idprojekt,
+    //   name:nazwa,
+    //   description:opis,
+    //   deadline:deadline,
+    //   team_id:idTeam
+    // })
+
     await post(`create_task`,token,{
       project_id:idprojekt,
-      task_name:nazwa,
-      description:opis,
-      deadline:deadline,
-      team_id:idTeam
+      name:nazwa,
+      description:"1",
+      deadline:new Date().toISOString(),
+      team_id:1
     })
 
     await fetchTasksOfProejct(token, idprojekt, user_id )

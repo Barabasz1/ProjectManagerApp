@@ -100,24 +100,28 @@ class Controller:
 
     
     def get_teammembers(self,team_id) -> List[dict]:
-        command = 'SELECT team_composition.user ' \
+        command = 'SELECT team_composition.user AS user_id, account.login AS username ' \
         'FROM team_composition ' \
         'INNER JOIN team ' \
         'ON team.id = team_composition.team ' \
+        'INNER JOIN account ' \
+        'ON account.id = team_composition.user ' \
         'WHERE team.id = ? ' \
-        'ORDER BY team_composition.user'
+        'ORDER BY username'
 
         self.dbm.execute(command,(team_id,))
         return self.dbm.fetchall()
 
     # same project - but not in the team
     def get_non_teammembers(self,team_id) -> List[dict]:
-        command = 'SELECT team_composition.user ' \
+        command = 'SELECT team_composition.user AS user_id, account.login AS username ' \
         'FROM team_composition ' \
         'INNER JOIN team ' \
         'ON team.id = team_composition.team ' \
         'INNER JOIN project ' \
         'ON project.id = team.project ' \
+        'INNER JOIN account ' \
+        'ON account.id = team_composition.user ' \
         'WHERE team.id <> ? ' \
         'AND team.project = (SELECT project FROM team WHERE id = ?) ' \
         'ORDER BY team_composition.user'
@@ -176,7 +180,9 @@ class Controller:
 
     def insert_from_list(self,table_name:str,data):
         dictionary = dict(zip(DbManager.TABLES_INSERT_FIELDS[table_name],data))
-        self.dbm._insert_single(table_name,dictionary)
+        rc = self.dbm._insert_single(table_name,dictionary)
+        if rc == ReturnCode.Sql.INTEGRITY_ERROR:
+            return rc
         new_row = self.dbm.get_lastrowid()
         self.dbm.commit()
         return new_row

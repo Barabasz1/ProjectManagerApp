@@ -57,8 +57,8 @@ export const TeamDataProvider = ({ children }) => {
       role:role
     })
     
-    await fetchnotteammembers(token, idTeam)
-    await fetchteammembers(token, idTeam)
+    // await fetchnotteammembers(token, idTeam)
+    // await fetchteammembers(token, idTeam)
   }
 
     const UnassignUserToTeam = async (idTeam, idUser, token) =>{
@@ -68,6 +68,7 @@ export const TeamDataProvider = ({ children }) => {
      
     await del(`remove_user_from_team/${idTeam}/${idUser}`,token)
 
+
     await fetchnotteammembers(token, idTeam)
     await fetchteammembers(token, idTeam)
   }
@@ -76,17 +77,14 @@ export const TeamDataProvider = ({ children }) => {
     console.log(idteam)
     console.log(token)
     //cos nie dzial wiec fetchuje wszystkich
-     // const data =  await get(`get_teammembers/${idteam}`,token)
-     const data =  await get('get_users',null)
-         
+     const data =  await get(`get_teammembers/${idteam}`,token)
           console.log(data)
           setUsersInProject(data)
   }
   const fetchnotteammembers = async (token, idteam) =>{
     console.log("fetching not members")
     //cos nie dzial wiec fetchuje wszystkich
-  //const data =  await get(`get_nonteammembers/${idteam}`,token)
-    const data =  await get('get_users',null) 
+  const data =  await get(`get_nonteammembers/${idteam}`,token)
       console.log(data)
       setUsersNotInProject(data)
   }

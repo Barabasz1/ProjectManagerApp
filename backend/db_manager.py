@@ -3,6 +3,7 @@ from backend.utils import get_master_dir
 import sqlite3
 from typing import List
 from datetime import datetime
+from backend.const import ReturnCode
 
 class DbManager:
 
@@ -223,8 +224,12 @@ class DbManager:
 
     # inserts a single new row into any table, 
     # data dictionary must contain each field defined in TABLES_INSERT_FIELDS
-    def _insert_single(self,table_name:str,data:dict):  
-        self.cursor.execute(self._get_insert_command(table_name,DbManager.TABLES_INSERT_FIELDS),data)
+    def _insert_single(self,table_name:str,data:dict): 
+        try:
+            self.cursor.execute(self._get_insert_command(table_name,DbManager.TABLES_INSERT_FIELDS),data)
+        except sqlite3.IntegrityError as e:
+            return ReturnCode.Sql.INTEGRITY_ERROR
+ 
 
     def _insert_single_raw(self,table_name,data:dict):
         self.cursor.execute(self._get_insert_command(table_name,DbManager.TABLES_FIELDS),data)

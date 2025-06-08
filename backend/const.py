@@ -9,3 +9,6 @@ class ReturnCode:
     # session
     class Sess(Enum):
         NOT_LOGGED_IN = 0
+
+    class Sql(Enum):
+        INTEGRITY_ERROR = 0
