@@ -5,46 +5,88 @@ const TasksContext = createContext(null);
 export const TaskDataProvider = ({ children }) => {
   const [taskdata, setTaskData] = useState([]);
   const [taskData1, setTaskData1] = useState([]);
+  const [taskData2, setTaskData2] = useState([]);
+  const [taskData3, setTaskData3] = useState([]);
+  const [taskData4, setTaskData4] = useState([]);
+  const [taskData5, setTaskData5] = useState([]);
+  //private
+  const [user_id, setUserId] = useState(null)
+  const [project_id, set_ProjectId] = useState(null)
 
-  const fetchTasksOfProejct = (token,project_id) => {
-    return get(`get_tasks_of_project/${project_id}`,token)
-  };
-  const fetchTasksOfUser= (token,user_id) => {
-    return get(`get_tasks_of_user/${user_id}`,token)
+
+  const fetchTasksOfProejct = async (token,project_id, user_id) => {
+    console.log("fetching tasks")
+    setUserId(user_id)
+    set_ProjectId(project_id)
+    const data = await get(`get_tasks_of_project/${project_id}`,token)
+
+    
+    const data1 = data.filter(item => item.status === 1);
+const data2 = data.filter(item => item.status === 2);
+const data3 = data.filter(item => item.status === 3);
+const data4 = data.filter(item => item.status === 4);
+const data5 = data.filter(item => item.status === 5);
+
+setTaskData1(data1)
+setTaskData2(data2)
+setTaskData3(data3)
+setTaskData4(data4)
+setTaskData5(data5)
+console.log("1")
+console.log(data1)
+console.log("2")
+console.log(data2)
+
+
   };
 
   const removeTask = (idTask, token) => {
     return del(`delete_task/${idTask}`,token)
   };
 
-  const createTask = (token, idprojekt, nazwa, opis, deadline, idTeam) => {
-    return post(`create_task`,token,{
+  const createTask = async (token, idprojekt, nazwa, opis, deadline, idTeam) => {
+    console.log("tworzenie taska")
+    console.log(token)
+    console.log(idprojekt)
+    console.log(nazwa)
+    console.log(opis)
+    console.log(deadline)
+    console.log(idTeam)
+    await post(`create_task`,token,{
       project_id:idprojekt,
       task_name:nazwa,
       description:opis,
       deadline:deadline,
       team_id:idTeam
     })
+
+    await fetchTasksOfProejct(token, idprojekt, user_id )
   };
 
   const editTask = (updatedtask, id) => {
     // Logika edytowania zadania
   };
 
-  const IncreaseStatus = (token, IdTask) => {
-    patch(`increase_task_status/${IdTask}`,token,{amount:1})
+  const IncreaseStatus = async (token, IdTask) => {
+    await patch(`increase_task_status/${IdTask}`,token,{amount:1})
     console.log("increase status")
     console.log(IdTask)
+
+    //od nowa fetchuje
+  await fetchTasksOfProejct(token, project_id, user_id)
+
   };
 
-  const DecreaseStatus = (token, IdTask) => {
-    patch(`increase_task_status/${IdTask}`,token,{amount:-1})
+  const DecreaseStatus = async (token, IdTask) => {
+    await patch(`increase_task_status/${IdTask}`,token,{amount:-1})
      console.log("decrease status")
      console.log(IdTask)
+     //od nowa fetchuje
+    await fetchTasksOfProejct(token, project_id, user_id)
   };
 
   return (
-    <TasksContext.Provider value={{ taskdata, fetchTasksOfProejct,fetchTasksOfUser, removeTask, createTask, editTask, IncreaseStatus, DecreaseStatus }}>
+    <TasksContext.Provider value={{ taskdata, fetchTasksOfProejct, removeTask, createTask, editTask, IncreaseStatus, DecreaseStatus,taskData1,taskData2,taskData3,taskData4,taskData5 }}>
       {children}
     </TasksContext.Provider>
   );

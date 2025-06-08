@@ -12,38 +12,16 @@ import {
   SidebarMenuItem,
 } from "@/Components/ui/sidebar"
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { useProjectContext } from '@/Context/ProjectsContext';
+import { useUserContext } from '@/Context/UserContext';
 
-const items = [
-  {
-    title: "Home",
-    url: "#",
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    
-  },
-  {
-    title: "Calendar",
-    url: "#",
-   
-  },
-  {
-    title: "Search",
-    url: "#",
-    
-  },
-  {
-    title: "Settings",
-    url: "#",
-   
-  },
-]
+
 
 export function AppSidebar() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
-  
+  const {projectData, SetSelectedProjectID, removeProjects, createProjects} = useProjectContext()
+  const {token} = useUserContext()
   const handleOpenCreateDialog = () => {
     setCreateDialogOpen(true);
   };
@@ -56,7 +34,7 @@ export function AppSidebar() {
   const handleCreateProject = () => {
     console.log("Creating new project:", newProjectName);
     
-    handleCloseCreateDialog();
+    createProjects(token, newProjectName, "opis temp")
   };
 
   return (
@@ -65,27 +43,41 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarHeader className="shadow-xl to-indigo-300 text-3xl font-bold">Projects:</SidebarHeader>
        
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url} className="flex justify-between items-center w-full pr-3">
-                      <span>{item.title}</span>
-                      <button onClick={()=>{console.log("click")}} className="bg-red-700 border-red-700 border-8 hover:bg-red-400 hover:border-red-400 hover:cursor-pointer text-white rounded-full w-7 h-7 flex items-center justify-center text-xl ">X</button>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-              <div className="w-full flex justify-center items-center">
-                <button 
-                  onClick={handleOpenCreateDialog}
-                  className="bg-indigo-700 mt-4 text-indigo-50 text-4xl pb-2 hover:cursor-pointer rounded-full hover:bg-indigo-500 hover:scale-110 duration-700 font-bold w-16 h-16"
-                >
-                  +
-                </button>
-              </div>
-             
-            </SidebarMenu>
+           <SidebarMenu>
+  {projectData.map((project) => (
+    <SidebarMenuItem key={project.id}>
+      <SidebarMenuButton asChild>
+        <div className="flex justify-between items-center w-full pr-3">
+          <button 
+            onClick={() => {
+              
+              SetSelectedProjectID(project.id);
+            }} 
+            className="text-left hover:text-indigo-700 hover:font-medium flex-grow py-1"
+          >
+            {project.name}
+          </button>
+          <button 
+            onClick={() => {
+              removeProjects(project.id, token)
+            }} 
+            className="bg-red-700 border-red-700 border-8 hover:bg-red-400 hover:border-red-400 hover:cursor-pointer text-white rounded-full w-7 h-7 flex items-center justify-center text-xl"
+          >
+            X
+          </button>
+        </div>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  ))}
+  <div className="w-full flex justify-center items-center">
+    <button 
+      onClick={handleOpenCreateDialog}
+      className="bg-indigo-700 mt-4 text-indigo-50 text-4xl pb-2 hover:cursor-pointer rounded-full hover:bg-indigo-500 hover:scale-110 duration-700 font-bold w-16 h-16"
+    >
+      +
+    </button>
+  </div>
+</SidebarMenu>
         
       </SidebarContent>
    

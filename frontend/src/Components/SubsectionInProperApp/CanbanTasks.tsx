@@ -11,6 +11,9 @@ import { useTeamContext } from '@/Context/TeamsContext'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { Calendar } from "@/Components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select";
+import { useTasksContext } from '@/Context/TasksContext'
+import { useUserContext } from '@/Context/UserContext'
+import { useProjectContext } from '@/Context/ProjectsContext'
 
 const CanbanTasks = () => {
 
@@ -32,17 +35,23 @@ const CanbanTasks = () => {
     setDeadline(undefined);
     setSelectedTeam('');
   };
-
+const {createTask} = useTasksContext()
+const {token} = useUserContext()
+const {selectedProjectID}  = useProjectContext()
   const handleCreateTask = () => {
     console.log({
       taskName: newTaskName,
       description: newTaskDescription,
-      deadline,
+      deadline: deadline,
       team: selectedTeam
     });
+    createTask(token, selectedProjectID,newTaskName, newTaskDescription, deadline,selectedTeam )
+
+
+
     handleCloseCreateDialog();
   };
-
+  const {taskData1,taskData2,taskData3,taskData4,taskData5} = useTasksContext()
   
   return (
     <>
@@ -52,24 +61,9 @@ const CanbanTasks = () => {
         <HeaderCanban text={"1 - to do"} index={0}/>
         <ScrollArea className="h-[calc(80%)]">
           <div className='flex flex-col gap-2 p-2'>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
-            <TaskElement/>
+            {taskData1 && taskData1.map((task) => (
+              <TaskElement key={task.id} task={task} />
+            ))}
           </div>
         </ScrollArea>
       </ResizablePanel>
@@ -78,7 +72,9 @@ const CanbanTasks = () => {
         <HeaderCanban text={"2 - designing"} index={1}/>
           <ScrollArea className="h-[calc(80%)]">
           <div className='flex flex-col gap-2 p-2'>
-            <TaskElement/>
+            {taskData2 && taskData2.map((task) => (
+              <TaskElement key={task.id} task={task} />
+            ))}
           </div>
         </ScrollArea>
       </ResizablePanel>
@@ -86,21 +82,33 @@ const CanbanTasks = () => {
       <ResizablePanel>
         <HeaderCanban text={"3 - coding"} index={2}/>
           <ScrollArea className="h-[calc(80%)]">
-          <div className='flex flex-col gap-2 p-2'></div>
+          <div className='flex flex-col gap-2 p-2'>
+            {taskData3 && taskData3.map((task) => (
+              <TaskElement key={task.id} task={task} />
+            ))}
+          </div>
         </ScrollArea>
       </ResizablePanel>
       <ResizableHandle withHandle/>
       <ResizablePanel>
         <HeaderCanban text={"4 - in test"} index={3}/>
           <ScrollArea className="h-[calc(80%)]">
-          <div className='flex flex-col gap-2 p-2'></div>
+          <div className='flex flex-col gap-2 p-2'>
+            {taskData4 && taskData4.map((task) => (
+              <TaskElement key={task.id} task={task} />
+            ))}
+          </div>
         </ScrollArea>
       </ResizablePanel>
       <ResizableHandle withHandle/>
       <ResizablePanel>
         <HeaderCanban text={"5 - finished"} index={4}/>
           <ScrollArea className="h-[calc(80%)]">
-          <div className='flex flex-col gap-2 p-2'></div>
+          <div className='flex flex-col gap-2 p-2'>
+            {taskData5 && taskData5.map((task) => (
+              <TaskElement key={task.id} task={task} />
+            ))}
+          </div>
         </ScrollArea>
       </ResizablePanel>
     </ResizablePanelGroup>
