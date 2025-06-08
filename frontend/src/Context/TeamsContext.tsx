@@ -6,9 +6,21 @@ export const TeamDataProvider = ({ children }) => {
   const [teamData, setTeamData] = useState([]);
 
 
-   const fetchTeams = async (token, project_id) => {
-    const result = await get(`get_teams/${project_id}`,token)
-    setTeamData(result)
+     const fetchTeams = async (token, project_id) => {
+    // logika fetchowania zespołów
+    const response = await fetch(`http://localhost:8000/get_teams?project_id=${project_id}`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch teams");
+  }
+
+  const result = await response.json();
+  setTeamData(result)
   };
 
   const removeTeam = (idteam, token) => {
@@ -41,7 +53,7 @@ export const TeamDataProvider = ({ children }) => {
       return get(`get_teammembers/${idteam}`,token)
   }
   const fetchnotteammembers = (token, idteam) =>{
-  turn get(`get_nonteammembers/${idteam}`,token)
+  return get(`get_nonteammembers/${idteam}`,token)
   }
   
 

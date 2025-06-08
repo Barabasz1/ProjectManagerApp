@@ -16,7 +16,7 @@ export const ProjectDataProvider = ({ children }) => {
   };
 
   const createProjects = (token, nazwa, opis) => {
-    return post('create_project',token,{project_name:nazwa,description:opis,manager:1// swap for current user id})
+    return post('create_project',token,{project_name:nazwa,description:opis,manager:1})// swap for current user id})
   };
 
   const editProjects = (token, nazwe, opis) => {

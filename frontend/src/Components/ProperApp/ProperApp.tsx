@@ -7,7 +7,7 @@ import { AppSidebar } from '../Basic/app-sidebar';
 import TeamsComponent from '../SubsectionInProperApp/TeamsComponent';
 import UserComponent from '../SubsectionInProperApp/UserComponent';
 import { useTeamContext } from '@/Context/TeamsContext';
-import { useEffect } from 'react';
+import { use, useEffect } from 'react';
 import { useUserContext } from '@/Context/UserContext';
 import { useProjectContext } from '@/Context/ProjectsContext';
 
@@ -15,8 +15,8 @@ import { useProjectContext } from '@/Context/ProjectsContext';
 
 const ProperApp = () => {
  const {fetchTeams} = useTeamContext();
- const {token} = useUserContext()
- const {selectedProjectID} = useProjectContext()
+ const {token, idUser } = useUserContext()
+ const {selectedProjectID, fetchProjects} = useProjectContext()
  
 
  useEffect(()=>{
@@ -34,6 +34,24 @@ const ProperApp = () => {
     
     loadTeams();
  }, [selectedProjectID])
+  useEffect(()=>{
+  const loadProjects = async () => {
+      const tokenToSend = token; 
+      const user_id = idUser
+      
+      try {
+        await fetchProjects(tokenToSend, user_id)
+        
+      } catch (error) {
+        console.error("Failed to load teams:", error);
+      }
+    };
+    
+    loadProjects();
+ }, [])
+
+ 
+
 
   return ( 
 
