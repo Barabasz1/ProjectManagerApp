@@ -28,6 +28,25 @@ class Controller:
             return ReturnCode.Auth.LOGIN_NOT_FOUND
         return fetch
     
+    def get_tasks_of_project_of_user(self,project_id,user_id) -> List[dict]:
+
+        command = 'SELECT ' \
+        'task.id, task.name, task.description, task.creation_date, task.deadline, task.status, task.priority ' \
+        'FROM task ' \
+        'INNER JOIN project ' \
+        'ON project.id = task.project ' \
+        'INNER JOIN task_team_assignment ' \
+        'ON task_team_assignment.task = task.id ' \
+        'INNER JOIN team_composition ' \
+        'ON team_composition.team = task_team_assignment.team ' \
+        'INNER JOIN team ' \
+        'ON team.project = project.id ' \
+        'WHERE task.project = ? ' \
+        'AND team_composition.user = ? ' \
+        'AND team.project = task.project'
+        
+        self.dbm.execute(command,(project_id,user_id))
+        return self.dbm.fetchall()
 
     def get_tasks_of_user(self,account_id) -> List[dict]:
 

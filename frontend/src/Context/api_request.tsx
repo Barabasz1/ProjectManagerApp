@@ -32,7 +32,7 @@ async function get_response(path:string,method:'GET' | 'POST' | 'DELETE' | 'PATC
         });
     } else {
     
-        response = await fetch(url), {
+        response = await fetch((url), {
         method: method,
         headers: {
             "Authorization": `Bearer ${token}`,

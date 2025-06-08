@@ -84,8 +84,11 @@ def get_user(controller:Controller, username: str) -> UserCon | ReturnCode.Auth:
     return UserCon(id=res['id'],username=res['login'],hashed_password=res['password'])
 
 
-def get_not_found_exception():
+def get_invalid_id_exception():
     return InvalidIDException()
+
+def get_unathorized_exception():
+    return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized request")
 
 
 def authenticate_user(controller, username: str, password: str) -> UserCon | ReturnCode.Auth:
@@ -211,7 +214,7 @@ async def create_project(
 ):
     with get_controller() as ctrl:
         if not ctrl.user_exists(data.manager):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         data = [data.project_name,data.manager,data.project_description,get_now(),None,None]
         ctrl.insert_from_list('project',data)
 
@@ -223,13 +226,13 @@ async def create_task(
 ):
     with get_controller() as ctrl:
         if not ctrl.project_exists(data.project_id):
-           raise get_not_found_exception()
+           raise get_invalid_id_exception()
         _data = [data.project_id,data.name,data.description,get_now(),data.deadline,1,0]
         added_task_id = ctrl.insert_from_list('task',_data)
         # print(added_task)
         if data.team_id:
             if not ctrl.team_exists(data.team_id):
-                raise get_not_found_exception()
+                raise get_invalid_id_exception()
             added_assignment = ctrl.insert_from_list('task_team_assignment',[added_task_id,data.team_id])
             # print(f' ADDED NEW ASSIGNMENT {added_assignment}')
 
@@ -241,7 +244,7 @@ async def create_team(
 ):
     with get_controller() as ctrl:
         if not ctrl.project_exists(data.project_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         ctrl.insert_from_list('team',[data.name,data.project_id])
 
 
@@ -252,7 +255,7 @@ async def add_user_to_team(
 ):
     with get_controller() as ctrl:
         if not ctrl.user_exists(data.user_id) or not ctrl.team_exists(data.team_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         ctrl.insert_from_list('team_composition',[data.user_id,data.team_id,data.role])
 
 @app.post('/add_task_to_team')
@@ -262,7 +265,7 @@ async def add_task_to_team(
 ):
     with get_controller() as ctrl:
         if not ctrl.task_exists(data.task_id) or not ctrl.team_exists(data.team_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         ctrl.insert_from_list('task_team_assignment',[data.task_id,data.team_id])
 
 # ================================================================================================================================
@@ -282,10 +285,10 @@ async def get_tasks_of_user(
     user_id:int
 ):
     if current_user.id != user_id:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized request")
+        raise get_unathorized_exception()
     with get_controller() as ctrl:
         if not ctrl.user_exists(user_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         return ctrl.get_tasks_of_user(user_id)
     
 
@@ -296,9 +299,22 @@ async def get_tasks_of_project(
 ):
     with get_controller() as ctrl:
         if not ctrl.team_exists(project_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         return ctrl.get_tasks_of_project(project_id)
 
+    
+@app.get('/get_tasks')
+async def get_tasks_of_project_of_user(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    project_id:int,
+    user_id:int
+):
+    if current_user.id != user_id:
+        raise get_unathorized_exception()
+    with get_controller() as ctrl:
+        if not ctrl.user_exists(user_id) and not ctrl.project_exists(project_id):
+            raise get_invalid_id_exception()
+        return ctrl.get_tasks_of_project_of_user(project_id,user_id)
 
 @app.get('/get_projects/{user_id}')
 async def get_projects(
@@ -306,11 +322,12 @@ async def get_projects(
     user_id:int
 ):
     if current_user.id != user_id:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized request")
+        raise get_unathorized_exception()
     with get_controller() as ctrl:
         if not ctrl.user_exists(user_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         return ctrl.get_projects(user_id)
+
     
 
 @app.get('/get_teams/{project_id}')
@@ -320,7 +337,7 @@ async def get_teams(
 ):
     with get_controller() as ctrl:
         if not ctrl.team_exists(project_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         return ctrl.get_teams(project_id)
     
 
@@ -338,7 +355,7 @@ async def get_teammembers(
 ):
     with get_controller() as ctrl:
         if not ctrl.team_exists(team_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         # return ctrl.get_users()
         return [list(vals.values())[0] for vals in ctrl.get_teammembers(team_id)]
     
@@ -349,7 +366,7 @@ async def get_nonteammembers(
 ):
     with get_controller() as ctrl:
         if not ctrl.team_exists(team_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         # return ctrl.get_users()
         return [list(vals.values())[0] for vals in ctrl.get_non_teammembers(team_id)]
 
@@ -365,7 +382,7 @@ async def delete_project(
 ):
     with get_controller() as ctrl:
         if not ctrl.project_exists(project_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         ctrl.delete_project(project_id)
 
 
@@ -377,7 +394,7 @@ async def delete_task(
 ):
     with get_controller() as ctrl:
         if not ctrl.task_exists(task_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         ctrl.delete_task(task_id)
 
 
@@ -390,10 +407,10 @@ async def delete_user(
     if current_user.id == user_id:
         with get_controller() as ctrl:
             if not ctrl.user_exists(user_id):
-                raise get_not_found_exception()
+                raise get_invalid_id_exception()
             ctrl.delete_user(user_id)
     else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized deletion of a user")
+        raise get_unathorized_exception()
 
 
 @app.delete('/remove_user_from_team/{team_id}/{user_id}')
@@ -404,7 +421,7 @@ async def remove_user_from_team(
 ):
     with get_controller() as ctrl:
         if not ctrl.team_exists(team_id) and not ctrl.user_exists(user_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         ctrl.remove_user_from_team(user_id,team_id)
 
 
@@ -422,5 +439,5 @@ async def increase_task_status(
 ):
     with get_controller() as ctrl:
         if not ctrl.task_exists(task_id):
-            raise get_not_found_exception()
+            raise get_invalid_id_exception()
         ctrl.increase_task_status(task_id,data.amount)

@@ -10,32 +10,34 @@ current_user = User(id=1, username="Chlebek")
 
 
 async def get():
-    print("\nGet teams")
-    print(await get_teams(current_user,1))
+    print("get tasks: ")
+    print(await get_tasks_of_project_of_user(current_user,1,1))
+    # print("\nGet teams")
+    # print(await get_teams(current_user,1))
 
 
-    print("\nGet tasks of project")
-    print(await get_tasks_of_project(current_user,1))
+    # print("\nGet tasks of project")
+    # print(await get_tasks_of_project(current_user,1))
 
 
-    print("\nGet tasks of user")
-    print(await get_tasks_of_user(current_user,1))
+    # print("\nGet tasks of user")
+    # print(await get_tasks_of_user(current_user,1))
 
 
-    print("\nGet projects")
-    print(await get_projects(current_user,1))
+    # print("\nGet projects")
+    # print(await get_projects(current_user,1))
 
 
-    print("\nGet users")
-    print(await get_users())
+    # print("\nGet users")
+    # print(await get_users())
 
 
-    print("\nGet teammembers")
-    print(await get_teammembers(current_user,1))
+    # print("\nGet teammembers")
+    # print(await get_teammembers(current_user,1))
 
 
-    print("\nGet nonteammembers")
-    print(await get_nonteammembers(current_user,1))
+    # print("\nGet nonteammembers")
+    # print(await get_nonteammembers(current_user,1))
 
 async def post():
     # print("\ncreate project")
@@ -83,9 +85,9 @@ async def patch():
 
 async def main():
 
-    # await get()
+    await get()
     # await post()
-    await delete()
+    # await delete()
     # await patch()
 
 
