@@ -10,6 +10,8 @@ import { useTeamContext } from '@/Context/TeamsContext';
 import { use, useEffect } from 'react';
 import { useUserContext } from '@/Context/UserContext';
 import { useProjectContext } from '@/Context/ProjectsContext';
+import { useTasksContext } from '@/Context/TasksContext';
+import { useUsersContext } from '@/Context/UsersContext';
 
 
 
@@ -17,23 +19,34 @@ const ProperApp = () => {
  const {fetchTeams} = useTeamContext();
  const {token, idUser } = useUserContext()
  const {selectedProjectID, fetchProjects} = useProjectContext()
+ const {fetchTasksOfProejct} = useTasksContext()
+ const {fetchUsers, } = useUsersContext()
  
 
  useEffect(()=>{
-  const loadTeams = async () => {
+  const loadTeamsAndTasks = async () => {
       const tokenToSend = token; // Get from auth context or storage
       const projectId = selectedProjectID; // Get from props or state
+      const userIDtoSend = idUser
       
       try {
         await fetchTeams(tokenToSend, projectId);
+       
+        await fetchTasksOfProejct(tokenToSend, projectId, userIDtoSend)
+        await fetchUsers()
+        
         
       } catch (error) {
         console.error("Failed to load teams:", error);
       }
     };
+  
     
-    loadTeams();
+    loadTeamsAndTasks();
  }, [selectedProjectID])
+
+
+ 
   useEffect(()=>{
   const loadProjects = async () => {
       const tokenToSend = token; 

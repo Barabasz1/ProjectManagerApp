@@ -4,6 +4,8 @@ import { ScrollArea } from '@radix-ui/react-scroll-area'
 import { useTeamContext } from '@/Context/TeamsContext'
 import TaskElement from '../Basic/TaskElement'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { useProjectContext } from '@/Context/ProjectsContext'
+import { useUserContext } from '@/Context/UserContext'
 
 const TeamsComponent = () => {
   const { teamData } = useTeamContext()
@@ -18,9 +20,12 @@ const TeamsComponent = () => {
     setCreateTeamDialogOpen(false);
     setNewTeamName('');
   };
-
+const {createTeam} = useTeamContext()
+const {token} = useUserContext()
+const {selectedProjectID} = useProjectContext()
   const handleCreateTeam = () => {
-    console.log(newTeamName);
+    createTeam(token, newTeamName,selectedProjectID)
+    
     handleCloseCreateDialog();
   };
 
@@ -31,6 +36,7 @@ const TeamsComponent = () => {
         <TeamsElement 
           key={elem.id} 
           name={elem.name}
+          id={elem.id} 
         />
       ))}
       

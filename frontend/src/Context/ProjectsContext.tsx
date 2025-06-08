@@ -6,18 +6,30 @@ const ProjectsContext = createContext(null);
 export const ProjectDataProvider = ({ children }) => {
   const [projectData, setProjectData] = useState([]);
   const [selectedProjectID, SetSelectedProjectID] = useState(1) //do zmiany
-
-  const fetchProjects = (token,user_id) => {
+  //private
+   const [userId, setUserId] = useState(null);
+  
+  const fetchProjects = async (token,user_id) => {
+    setUserId(user_id)
     console.log("fetch projects")
-    return get(`get_projects/${user_id}`,token)
+     const data = await get(`get_projects/${user_id}`,token)
+     setProjectData(data)
   };
 
-  const removeProjects = (projectId, token) => {
-    return del(`delete_project/${projectId}`,token)
+  const removeProjects = async (projectId, token) => {
+    console.log("remove project")
+    await del(`delete_project/${projectId}`,token)
+    await fetchProjects(token, userId)
   };
 
-  const createProjects = (token, nazwa, opis) => {
-    return post('create_project',token,{project_name:nazwa,description:opis,manager:1})// swap for current user id})
+  const createProjects = async (token, nazwa, opis) => {
+    console.log("dsa")
+    console.log(token)
+    console.log(nazwa)
+    console.log(opis)
+   //await post('create_project',token,{project_name:nazwa,description:opis,manager:1})// swap for current user id})
+    //tutaj nie dziala post, to ma sie dodac i ponizej fetchuje od nowa nowe dane
+    await fetchProjects(token, userId)
   };
 
   const editProjects = (token, nazwe, opis) => {

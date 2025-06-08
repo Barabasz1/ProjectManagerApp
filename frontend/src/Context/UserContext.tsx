@@ -18,7 +18,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(-1);
   const [error, setError] = useState(0);
   const [token, setToken] = useState(null);
-  const [idUser, SetUserId] = useState(1);
+  const [idUser, SetUserId] = useState(null);
   const [name, setName] = useState("temp name")
   
   
@@ -28,12 +28,13 @@ export const UserProvider = ({ children }) => {
     del(`delete_user/${userId}`,token)
   };
 
-  const createUser = async (login, password) => {
+  const createUser = async (name,login, password) => {
+    console.log(name)
     console.log(login)
     console.log(password)
-    post('register',null,{login:login,password:password})
+    await post('register',null,{login:login,password:password})
 
-    // i potem robimy loginUser(login, password)
+    await loginUser(login, password)
   };
 
   const loginUser = async (username, password) => {
