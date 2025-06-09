@@ -112,21 +112,27 @@ class Controller:
         self.dbm.execute(command,(team_id,))
         return self.dbm.fetchall()
 
-    # same project - but not in the team
     def get_non_teammembers(self,team_id) -> List[dict]:
-        command = 'SELECT team_composition.user AS user_id, account.login AS username ' \
-        'FROM team_composition ' \
-        'INNER JOIN team ' \
-        'ON team.id = team_composition.team ' \
-        'INNER JOIN project ' \
-        'ON project.id = team.project ' \
-        'INNER JOIN account ' \
-        'ON account.id = team_composition.user ' \
-        'WHERE team.id <> ? ' \
-        'AND team.project = (SELECT project FROM team WHERE id = ?) ' \
-        'ORDER BY team_composition.user'
+        # command = 'SELECT team_composition.user AS user_id, account.login AS username ' \
+        # 'FROM team_composition ' \
+        # 'INNER JOIN team ' \
+        # 'ON team.id = team_composition.team ' \
+        # 'INNER JOIN project ' \
+        # 'ON project.id = team.project ' \
+        # 'INNER JOIN account ' \
+        # 'ON account.id = team_composition.user ' \
+        # 'WHERE team.id <> ? ' \
+        # 'AND team.project = (SELECT project FROM team WHERE id = ?) ' \
+        # 'ORDER BY team_composition.user'
 
-        self.dbm.execute(command,(team_id,team_id))
+        command = 'SELECT account.id AS user_id, account.login AS username ' \
+        'FROM account ' \
+        'WHERE account.id NOT IN ' \
+        '(SELECT user FROM team_composition WHERE team = ?) ' \
+        'ORDER BY account.login'
+        
+
+        self.dbm.execute(command,(team_id,))
         return self.dbm.fetchall()
     
     def get_users(self) -> List[dict]:

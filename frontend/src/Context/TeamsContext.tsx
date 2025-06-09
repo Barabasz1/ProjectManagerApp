@@ -57,8 +57,8 @@ export const TeamDataProvider = ({ children }) => {
       role:role
     })
     
-    // await fetchnotteammembers(token, idTeam)
-    // await fetchteammembers(token, idTeam)
+    await fetchnotteammembers(token, idTeam)
+    await fetchteammembers(token, idTeam)
   }
 
     const UnassignUserToTeam = async (idTeam, idUser, token) =>{

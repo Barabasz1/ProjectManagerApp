@@ -224,7 +224,6 @@ async def create_task(
     current_user: Annotated[User, Depends(get_current_active_user)],
     data: TaskCreationReq
 ):
-    print(f"\n\n\n\creating task \n\n\n{data}\n\n\n")
     with get_controller() as ctrl:
         if not ctrl.project_exists(data.project_id):
            raise get_invalid_id_exception()
@@ -258,8 +257,10 @@ async def add_user_to_team(
     with get_controller() as ctrl:
         if not ctrl.user_exists(data.user_id) or not ctrl.team_exists(data.team_id):
             raise get_invalid_id_exception()
-
-        result = ctrl.insert_from_list('team_composition',[data.user_id,data.team_id,data.role])
+        print("inserting ")
+        print(data.user_id)
+        print()
+        result = ctrl.insert_from_list('team_composition',[data.team_id,data.user_id,data.role])
         if result == ReturnCode.Sql.INTEGRITY_ERROR:
             return None
         
