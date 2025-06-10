@@ -26,9 +26,9 @@ const TaskElement = ({task}) => {
       <h1 className='text-center text-indigo-50 text-xl px-2'>  {task.name} </h1>
       <p className='text-center text-indigo-100 pt-2'> deadline: {task.deadline}</p>
       <div className="flex justify-between w-full  px-2 py-2 text-indigo-950">
-        {task.status != 1 && <button onClick={()=>leftClick(task.id)} className='bg-indigo-50 hover:cursor-pointer hover:bg-indigo-950 hover:text-indigo-50 px-4 py-2 transition duration-700 rounded-full border'> <GoArrowLeft /> </button> }
+        {task.status != 0 && <button onClick={()=>leftClick(task.id)} className='bg-indigo-50 hover:cursor-pointer hover:bg-indigo-950 hover:text-indigo-50 px-4 py-2 transition duration-700 rounded-full border'> <GoArrowLeft /> </button> }
         <button  onClick={handleOpen} className='bg-indigo-50 hover:cursor-pointer hover:bg-indigo-950 hover:text-indigo-50  transition duration-700 rounded-full px-4 py-2 border'> Details</button>
-        {task.status != 5 &&<button  onClick={()=>rightClick(task.id)} className='bg-indigo-50 hover:cursor-pointer hover:bg-indigo-950 hover:text-indigo-50 px-4 py-2  transition duration-700 rounded-full  border'><GoArrowRight/></button>}
+        {task.status != 4 &&<button  onClick={()=>rightClick(task.id)} className='bg-indigo-50 hover:cursor-pointer hover:bg-indigo-950 hover:text-indigo-50 px-4 py-2  transition duration-700 rounded-full  border'><GoArrowRight/></button>}
       </div>
     </div>
 
