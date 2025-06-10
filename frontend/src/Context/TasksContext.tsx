@@ -63,9 +63,9 @@ console.log(data2)
     await post(`create_task`,token,{
       project_id:idprojekt,
       name:nazwa,
-      description:"1",
+      description:opis,
       deadline:new Date().toISOString(),
-      team_id:1
+      team_id:idTeam
     })
 
     await fetchTasksOfProejct(token, idprojekt, user_id )

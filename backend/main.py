@@ -343,7 +343,7 @@ async def get_teams(
     project_id
 ):
     with get_controller() as ctrl:
-        if not ctrl.team_exists(project_id):
+        if not ctrl.project_exists(project_id):
             raise get_invalid_id_exception()
         return ctrl.get_teams(project_id)
     

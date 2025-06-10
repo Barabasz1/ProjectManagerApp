@@ -3,6 +3,16 @@ fetche
 testy jednostkowe
 docker
 
-
-
 datetime example data
+
+task na czerwono jak minie termin
+
+priority tasków - sortowanie
+
+przedzialy czasu deadlinow taskow
+
+edytowanie deadlinó tasków
+
+format daty inny
+
+usuwanie i edycja zadan
