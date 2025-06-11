@@ -16,6 +16,8 @@ class TaskCreationReq(BaseModel):
     name:str
     description:str
     deadline:datetime
+    status: int
+    priority: int 
     team_id: int | None = None 
 
 class TeamCreationReq(BaseModel):
@@ -57,6 +59,12 @@ class ProjectEditReq(BaseModel):
 class AccountEditReq(BaseModel):
     login: Optional[str] = None
     password: Optional[str] = None
+
+class UserEditReq(BaseModel):
+    f_name: Optional[str] = None
+    l_name: Optional[str] = None
+    email: Optional[str] = None
+    description: Optional[str] = None
 
 class TeamEditReq(BaseModel):
     name: Optional[str] = None

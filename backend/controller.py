@@ -224,5 +224,22 @@ class Controller:
         self.dbm.execute(command,(user_id,))
         self.dbm.commit()
 
-    def update_task(self,task_id:int,data:dict,):
-        self.dbm.update()
+    def update_task(self,task_id:int,data:dict):
+        self.dbm.update('task',{**data,'id':task_id},['id'])
+        self.dbm.commit()
+
+    def update_project(self,project_id:int,data:dict):
+        self.dbm.update('project',{**data,'id':project_id},['id'])
+        self.dbm.commit()
+
+    def update_team(self,team_id:int,data:dict):
+        self.dbm.update('team',{**data,'id':team_id},['id'])
+        self.dbm.commit()
+
+    def update_user(self,user_id:int,data:dict):
+        self.dbm.update('user',{**data,'id':user_id},['id'])
+        self.dbm.commit()
+
+    def update_account(self,account_id:int,data:dict):
+        self.dbm.update('account',{**data,'id':account_id},['id'])
+        self.dbm.commit()

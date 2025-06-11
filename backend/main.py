@@ -461,4 +461,71 @@ async def edit_task(
     data:TaskEditReq
 ):
     with get_controller() as ctrl:
-       pass
+       ctrl.update_task(task_id,{
+           'name':data.name,
+           'description':data.description,
+           'deadline':data.deadline,
+           'status':data.status,
+           'priority':data.priority
+           })
+       
+@app.patch('/edit_user/{user_id}')
+async def edit_user(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    user_id:int,
+    data:UserEditReq
+):
+    with get_controller() as ctrl:
+        ctrl.update_user(user_id,{
+           'name':data.name,
+           'description':data.description,
+           'deadline':data.deadline,
+           'status':data.status,
+           'priority':data.priority
+           })
+
+
+@app.patch('/edit_account/{account_id}')
+async def edit_account(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    account_id:int,
+    data:AccountEditReq
+):
+    with get_controller() as ctrl:
+       ctrl.update_user(user_id,{
+           'name':data.name,
+           'description':data.description,
+           'deadline':data.deadline,
+           'status':data.status,
+           'priority':data.priority
+           })
+
+@app.patch('/edit_team/{team_id}')
+async def edit_team(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    team_id:int,
+    data:TeamEditReq
+):
+    with get_controller() as ctrl:
+       ctrl.update_user(user_id,{
+           'name':data.name,
+           'description':data.description,
+           'deadline':data.deadline,
+           'status':data.status,
+           'priority':data.priority
+           })
+
+@app.patch('/edit_project/{project_id}')
+async def edit_project(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    project_id:int,
+    data:ProjectEditReq
+):
+    with get_controller() as ctrl:
+       ctrl.update_user(user_id,{
+           'name':data.name,
+           'description':data.description,
+           'deadline':data.deadline,
+           'status':data.status,
+           'priority':data.priority
+           })
