@@ -163,7 +163,7 @@ const {selectedProjectID}  = useProjectContext()
         />
       </div>
 
-      {/* New Priority Selection */}
+    
       <div className="flex flex-col gap-2">
         <label className="text-indigo-800 font-medium">
           Priority (1-5)

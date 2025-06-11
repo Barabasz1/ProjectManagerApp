@@ -16,9 +16,9 @@ import { useUsersContext } from '@/Context/UsersContext';
 
 
 const ProperApp = () => {
- const {fetchTeams} = useTeamContext();
+ const {fetchTeams, usersInProject, usersInNotProject} = useTeamContext();
  const {token, idUser } = useUserContext()
- const {selectedProjectID, fetchProjects} = useProjectContext()
+ const { selectedProjectID, fetchProjects} = useProjectContext()
  const {fetchTasksOfProejct} = useTasksContext()
  const {fetchUsers, } = useUsersContext()
  
@@ -70,7 +70,7 @@ const ProperApp = () => {
       const userIDtoSend = idUser
       
       try {
-       
+       console.log("dmadsajd")
        
         await fetchTasksOfProejct(tokenToSend, projectId, userIDtoSend)
       
