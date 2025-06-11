@@ -30,7 +30,7 @@ class Controller:
     
     def get_tasks_of_project_of_user(self,project_id,user_id) -> List[dict]:
 
-        command = 'SELECT ' \
+        command = 'SELECT DISTINCT ' \
         'task.id, task.name, task.description, task.creation_date, task.deadline, task.status, task.priority ' \
         'FROM task ' \
         'INNER JOIN project ' \
@@ -223,3 +223,6 @@ class Controller:
         command = 'DELETE FROM account WHERE id = ?'
         self.dbm.execute(command,(user_id,))
         self.dbm.commit()
+
+    def update_task(self,task_id:int,data:dict,):
+        self.dbm.update()
