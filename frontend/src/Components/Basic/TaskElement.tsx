@@ -74,9 +74,9 @@ const TaskElement = ({task}) => {
         
         <button 
           onClick={() => handleOpenEditDialog()}
-          className="absolute top-3 left-3 hover:cursor-pointer bg-indigo-500 hover:bg-indigo-400 text-white rounded-full w-6 h-6 flex items-center justify-center transition-colors duration-300 z-10"
+          className="absolute top-3 left-3 hover:cursor-pointer bg-indigo-800 hover:bg-indigo-700 text-white rounded-full w-6 h-6 flex items-center justify-center transition-colors duration-300 z-10"
         >
-          <FiEdit className="w-5 h-5" />
+          <FiEdit className="w-4 h-4" />
         </button>
         
       

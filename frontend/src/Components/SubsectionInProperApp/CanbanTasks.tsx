@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useTasksContext } from '@/Context/TasksContext'
 import { useUserContext } from '@/Context/UserContext'
 import { useProjectContext } from '@/Context/ProjectsContext'
+ import { FaSortAlphaDown } from "react-icons/fa";
 
 const CanbanTasks = () => {
 
@@ -24,6 +25,8 @@ const CanbanTasks = () => {
   const [deadline, setDeadline] = useState<Date | undefined>(undefined);
   const [selectedTeam, setSelectedTeam] = useState('');
   const [priority, setPriority] = useState(''); 
+  const [sortDialogOpen, setSortDialogOpen] = useState(false);
+ 
 
   const handleOpenCreateDialog = () => {
     setCreateTaskDialogOpen(true);
@@ -37,6 +40,35 @@ const CanbanTasks = () => {
     setSelectedTeam('');
     setPriority(''); 
   };
+
+  const handleOpenSortDialog = () => {
+    setSortDialogOpen(true);
+  };
+
+  const handleCloseSortDialog = () => {
+    setSortDialogOpen(false);
+  };
+
+  const handleSortByDeadlineAsc = () => {
+    console.log("Sorting by deadline: ascending");
+    handleCloseSortDialog();
+  };
+
+  const handleSortByDeadlineDesc = () => {
+    console.log("Sorting by deadline: descending");
+    handleCloseSortDialog();
+  };
+
+  const handleSortByPriorityAsc = () => {
+    console.log("Sorting by priority: ascending");
+    handleCloseSortDialog();
+  };
+
+  const handleSortByPriorityDesc = () => {
+    console.log("Sorting by priority: descending");
+    handleCloseSortDialog();
+  };
+
 const {createTask} = useTasksContext()
 const {token} = useUserContext()
 const {selectedProjectID}  = useProjectContext()
@@ -118,6 +150,13 @@ const {selectedProjectID}  = useProjectContext()
   onClick={handleOpenCreateDialog}
 >
   <span className="font-semibold leading-none flex items-center justify-center pb-2">+</span>
+</button>
+
+<button 
+  className="fixed text-3xl bottom-10 right-35 w-20 h-20 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full shadow-lg flex items-center justify-center z-20 transition-all duration-400 transform hover:scale-110"
+  onClick={handleOpenSortDialog}
+>
+  <span className="font-semibold leading-none flex items-center justify-center"><FaSortAlphaDown /></span>
 </button>
 
       <Dialog open={createTaskDialogOpen} onClose={handleCloseCreateDialog}>
@@ -234,6 +273,51 @@ const {selectedProjectID}  = useProjectContext()
         `}
       >
         Create Task
+      </button>
+    </div>
+  </DialogContent>
+</Dialog>
+
+<Dialog open={sortDialogOpen} onClose={handleCloseSortDialog}>
+  <DialogTitle className="bg-indigo-100">
+    <div className="flex justify-between items-center">
+      <span className="text-indigo-800 font-semibold">Sort Tasks</span>
+      <button 
+        onClick={handleCloseSortDialog}
+        className="bg-red-800 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center transition-colors duration-300"
+      >
+        ✕
+      </button>
+    </div>
+  </DialogTitle>
+  <DialogContent className="pt-4">
+    <div className="flex flex-col gap-4 p-2 min-w-[300px]">
+      <button
+        onClick={handleSortByDeadlineAsc}
+        className="py-2 px-4 rounded-md font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-300"
+      >
+        Sort by Deadline: Ascending
+      </button>
+      
+      <button
+        onClick={handleSortByDeadlineDesc}
+        className="py-2 px-4 rounded-md font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-300"
+      >
+        Sort by Deadline: Descending
+      </button>
+      
+      <button
+        onClick={handleSortByPriorityAsc}
+        className="py-2 px-4 rounded-md font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-300"
+      >
+        Sort by Priority: Ascending
+      </button>
+      
+      <button
+        onClick={handleSortByPriorityDesc}
+        className="py-2 px-4 rounded-md font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-300"
+      >
+        Sort by Priority: Descending
       </button>
     </div>
   </DialogContent>
