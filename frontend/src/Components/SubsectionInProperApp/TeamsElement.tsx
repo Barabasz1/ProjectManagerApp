@@ -4,16 +4,18 @@ import UserElement from './UserElement';
 import { useUsersContext } from '@/Context/UsersContext';
 import { useTeamContext } from '@/Context/TeamsContext';
 import { useUserContext } from '@/Context/UserContext';
+import { FiEdit } from 'react-icons/fi'; 
 
 const TeamsElement = ({name, id}) => {
     const [open, setOpen] = useState(false);
-  
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [editedTeamName, setEditedTeamName] = useState(name);
     
-   
     const [addSearchTerm, setAddSearchTerm] = useState('');
     const [removeSearchTerm, setRemoveSearchTerm] = useState('');
-    const {usersInNotProject,usersInProject, fetchteammembers, fetchnotteammembers, AssignUserToTeam,UnassignUserToTeam } = useTeamContext()
+    const {usersInNotProject,usersInProject, fetchteammembers, fetchnotteammembers, AssignUserToTeam, UnassignUserToTeam, updateTeam } = useTeamContext()
     const {token} = useUserContext()
+    const {removeTeam} = useTeamContext()
     
     const handleOpen = (idproj) => {
       setOpen(true)
@@ -23,7 +25,21 @@ const TeamsElement = ({name, id}) => {
     };
     const handleClose = () => setOpen(false);
    
-    
+    const handleOpenEditDialog = () => {
+      setEditedTeamName(name);
+      setEditDialogOpen(true);
+    };
+
+    const handleCloseEditDialog = () => {
+      setEditDialogOpen(false);
+    };
+
+    const handleUpdateTeam = () => {
+      if (editedTeamName.trim()) {
+        updateTeam(id, editedTeamName, token);
+        handleCloseEditDialog();
+      }
+    };
   
     const filteredUsersToAdd = usersInNotProject
         .filter(user => user[1].toLowerCase().includes(addSearchTerm.toLowerCase()));
@@ -33,10 +49,61 @@ const TeamsElement = ({name, id}) => {
 
     return (
         <>
-        
+        <div className='flex bg-indigo-950 hover:cursor-pointer w-90 text-3xl  text-indigo-300  h-40 min-h-16 max-h-48 rounded-2xl transition-all hover:rounded-4xl duration-700'>
         <button onClick={()=> handleOpen(id)} className='bg-indigo-700 hover:cursor-pointer hover:bg-indigo-500 max-w-104 min-w-72 w-80 text-3xl hover:text-5xl text-indigo-300 hover:text-indigo-950 h-40 min-h-16 max-h-48 rounded-2xl transition-all hover:rounded-4xl duration-700'>
             {name}
         </button>
+        <div className='flex flex-col gap-2 items-center justify-center w-full'>
+            <button onClick={()=> removeTeam(id, token)} className='bg-red-600 hover:bg-red-400 rounded-full w-10 h-10 font-bold text-indigo-50 hover:cursor-pointer duration-500'>X</button>
+            <button onClick={handleOpenEditDialog} className='bg-indigo-600 hover:bg-indigo-800 rounded-full w-10 h-10 flex items-center justify-center hover:cursor-pointer duration-500'><FiEdit className='w-7'/></button>
+        </div>
+        
+        </div>
+
+     
+        <Dialog open={editDialogOpen} onClose={handleCloseEditDialog}>
+          <DialogTitle className="bg-indigo-100">
+            <div className="flex justify-between items-center">
+              <span className="text-indigo-800 font-semibold">Edit Team</span>
+              <button 
+                onClick={handleCloseEditDialog}
+                className="bg-red-800 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center transition-colors duration-300"
+              >
+                ✕
+              </button>
+            </div>
+          </DialogTitle>
+          <DialogContent className="pt-4">
+            <div className="flex flex-col gap-4 p-2 min-w-[300px]">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="teamName" className="text-indigo-800 font-medium">
+                  Team Name
+                </label>
+                <input
+                  id="teamName"
+                  type="text"
+                  value={editedTeamName}
+                  onChange={(e) => setEditedTeamName(e.target.value)}
+                  className="border-2 border-indigo-600 text-indigo-600 focus:border-indigo-500 rounded-md p-2 outline-none"
+                  placeholder="Enter team name"
+                />
+              </div>
+              
+              <button
+                onClick={handleUpdateTeam}
+                disabled={!editedTeamName.trim()}
+                className={`py-2 px-4 rounded-md font-medium text-white transition-all duration-300 mt-4
+                  ${editedTeamName.trim() 
+                    ? 'bg-indigo-600 hover:bg-indigo-700' 
+                    : 'bg-indigo-300 cursor-not-allowed'}
+                `}
+              >
+                Update Team
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         <Dialog fullScreen fullWidth maxWidth="lg" open={open} onClose={handleClose}>
             <DialogTitle color='textSecondary'>
              

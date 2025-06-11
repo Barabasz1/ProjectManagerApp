@@ -25,8 +25,11 @@ const CanbanTasks = () => {
   const [deadline, setDeadline] = useState<Date | undefined>(undefined);
   const [selectedTeam, setSelectedTeam] = useState('');
   const [priority, setPriority] = useState(''); 
+  const {token,idUser} = useUserContext()
+  const {selectedProjectID} = useProjectContext()
   const [sortDialogOpen, setSortDialogOpen] = useState(false);
- 
+  const {fetchTasksDeadlineASC, fetchTasksDeadlineDES, fetchTasksPriorityASC, fetchTasksPriorityDES} = useTasksContext()
+ const {createTask} = useTasksContext()
 
   const handleOpenCreateDialog = () => {
     setCreateTaskDialogOpen(true);
@@ -50,28 +53,27 @@ const CanbanTasks = () => {
   };
 
   const handleSortByDeadlineAsc = () => {
-    console.log("Sorting by deadline: ascending");
+    fetchTasksDeadlineASC(token,selectedProjectID ,idUser)
     handleCloseSortDialog();
   };
 
   const handleSortByDeadlineDesc = () => {
-    console.log("Sorting by deadline: descending");
+    fetchTasksDeadlineDES(token,selectedProjectID ,idUser)
     handleCloseSortDialog();
   };
 
   const handleSortByPriorityAsc = () => {
-    console.log("Sorting by priority: ascending");
+    fetchTasksPriorityASC(token,selectedProjectID ,idUser)
     handleCloseSortDialog();
   };
 
   const handleSortByPriorityDesc = () => {
-    console.log("Sorting by priority: descending");
+    fetchTasksPriorityDES(token,selectedProjectID ,idUser)
     handleCloseSortDialog();
   };
 
-const {createTask} = useTasksContext()
-const {token} = useUserContext()
-const {selectedProjectID}  = useProjectContext()
+
+
   const handleCreateTask = () => {
     console.log({
       taskName: newTaskName,

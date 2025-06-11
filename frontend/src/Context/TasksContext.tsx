@@ -9,6 +9,7 @@ export const TaskDataProvider = ({ children }) => {
   const [taskData3, setTaskData3] = useState([]);
   const [taskData4, setTaskData4] = useState([]);
   const [taskData5, setTaskData5] = useState([]);
+  
   //private
   const [user_id, setUserId] = useState(null)
   const [project_id, set_ProjectId] = useState(null)
@@ -27,6 +28,7 @@ const data3 = data.filter(item => item.status === 2);
 const data4 = data.filter(item => item.status === 3);
 const data5 = data.filter(item => item.status === 4);
 console.log(data)
+setTaskData(data)
 setTaskData1(data1)
 setTaskData2(data2)
 setTaskData3(data3)
@@ -36,6 +38,20 @@ setTaskData5(data5)
 
 
   };
+  const fetchTasksDeadlineASC = async (token,project_id, user_id) => {
+    console.log("fetchTasksDeadlineASC")
+    
+  }
+  const fetchTasksDeadlineDES = async (token,project_id, user_id) => {
+    console.log("fetchTasksDeadlineDEC")
+  }
+  const fetchTasksPriorityASC = async (token,project_id, user_id) => {
+    console.log("fetchTasksPriorityASC")
+  }
+  const fetchTasksPriorityDES = async (token,project_id, user_id) => {
+    console.log("fetchTasksPriorityDEC")
+  }
+
 
   const removeTask = async (token, idTask) => {
     await del(`delete_task/${idTask}`,token)
@@ -112,7 +128,7 @@ setTaskData5(data5)
   };
 
   return (
-    <TasksContext.Provider value={{ taskdata, fetchTasksOfProejct, removeTask, createTask, editTask, IncreaseStatus, DecreaseStatus,taskData1,taskData2,taskData3,taskData4,taskData5 }}>
+    <TasksContext.Provider value={{ fetchTasksDeadlineASC, fetchTasksDeadlineDES, fetchTasksPriorityASC, fetchTasksPriorityDES, taskdata, fetchTasksOfProejct, removeTask, createTask, editTask, IncreaseStatus, DecreaseStatus,taskData1,taskData2,taskData3,taskData4,taskData5 }}>
       {children}
     </TasksContext.Provider>
   );

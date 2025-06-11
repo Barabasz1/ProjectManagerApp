@@ -86,7 +86,7 @@ export function AppSidebar() {
           <div className="flex items-center gap-2">
             <button 
               onClick={() => handleOpenEditDialog(project.id, project.name)} 
-              className="bg-indigo-600 border-indigo-600 border-8 hover:bg-indigo-400 hover:border-indigo-400 hover:cursor-pointer text-white rounded-full w-7 h-7 flex items-center justify-center text-sm"
+              className="bg-indigo-600 border-indigo-600 border-8 hover:bg-indigo-800  hover:border-indigo-800 hover:cursor-pointer text-white rounded-full w-7 h-7 flex items-center justify-center text-sm"
             >
               <FiEdit/>
             </button>
