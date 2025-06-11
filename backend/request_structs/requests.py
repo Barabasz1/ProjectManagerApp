@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional
 
 class RegisterReq(BaseModel):
     login:str
@@ -32,3 +33,30 @@ class UserTeamAssignReq(BaseModel):
 class TaskTeamAssignReq(BaseModel):
     task_id:int
     team_id:int
+
+class TaskStatusChangeReq(BaseModel):
+    amount:int
+
+
+# edits
+
+class TaskEditReq(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    deadline: Optional[datetime] = None
+    status: Optional[int] = None
+    priority: Optional[int] = None
+
+class ProjectEditReq(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    manager: Optional[int] = None
+    version: Optional[str] = None
+    deadline: Optional[datetime] = None
+
+class AccountEditReq(BaseModel):
+    login: Optional[str] = None
+    password: Optional[str] = None
+
+class TeamEditReq(BaseModel):
+    name: Optional[str] = None

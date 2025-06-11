@@ -17,3 +17,8 @@ def get_master_dir():
 
 def sha256(input:str):
     return perform_sha256(input.encode('utf-8'))
+
+
+
+def clean_dict(d:dict):
+    return d

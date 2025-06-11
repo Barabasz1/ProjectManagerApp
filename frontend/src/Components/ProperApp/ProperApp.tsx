@@ -16,7 +16,7 @@ import { useUsersContext } from '@/Context/UsersContext';
 
 
 const ProperApp = () => {
- const {fetchTeams, usersInProject, usersInNotProject} = useTeamContext();
+ const {fetchTeams} = useTeamContext();
  const {token, idUser } = useUserContext()
  const {selectedProjectID, fetchProjects} = useProjectContext()
  const {fetchTasksOfProejct} = useTasksContext()
@@ -25,8 +25,8 @@ const ProperApp = () => {
 
  useEffect(()=>{
   const loadTeamsAndTasks = async () => {
-      const tokenToSend = token; 
-      const projectId = selectedProjectID; 
+      const tokenToSend = token; // Get from auth context or storage
+      const projectId = selectedProjectID; // Get from props or state
       const userIDtoSend = idUser
       
       try {
@@ -44,9 +44,6 @@ const ProperApp = () => {
     
     loadTeamsAndTasks();
  }, [selectedProjectID])
-
-
-
 
 
  

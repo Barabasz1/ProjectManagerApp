@@ -321,7 +321,9 @@ async def get_tasks_of_project_of_user(
     with get_controller() as ctrl:
         if not ctrl.user_exists(user_id) and not ctrl.project_exists(project_id):
             raise get_invalid_id_exception()
-        return ctrl.get_tasks_of_project_of_user(project_id,user_id)
+        result = ctrl.get_tasks_of_project_of_user(project_id,user_id)
+        print(f"\n====\n{result}\n===\n")
+        return result
 
 @app.get('/get_projects/{user_id}')
 async def get_projects(
@@ -450,3 +452,13 @@ async def increase_task_status(
         if not ctrl.task_exists(task_id):
             raise get_invalid_id_exception()
         ctrl.increase_task_status(task_id,data.amount)
+
+
+@app.patch('/edit_task/{task_id}')
+async def edit_task(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    task_id:int,
+    data:TaskEditReq
+):
+    with get_controller() as ctrl:
+       pass

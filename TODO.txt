@@ -1,9 +1,5 @@
-fetche
-
 testy jednostkowe
 docker
-
-datetime example data
 
 task na czerwono jak minie termin
 
@@ -11,8 +7,8 @@ priority tasków - sortowanie
 
 przedzialy czasu deadlinow taskow
 
-edytowanie deadlinó tasków
+edytowanie deadlinów tasków
 
-format daty inny
+format daty
 
 usuwanie i edycja zadan

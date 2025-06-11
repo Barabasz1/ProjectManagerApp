@@ -221,6 +221,10 @@ class DbManager:
             command += f' WHERE {where}'
         return command
     
+    def _get_update_command(self,table_name:str,data:dict,where_keys:list[str]):
+        set_keys = [key for key in data if key not in where_keys]
+        return f'UPDATE {table_name} SET {','.join([f'{x} = :{x}'for x in set_keys])} WHERE {'AND'.join([f'{x} = :{x}' for x in where_keys])}'
+
 
     # inserts a single new row into any table, 
     # data dictionary must contain each field defined in TABLES_INSERT_FIELDS
@@ -241,6 +245,9 @@ class DbManager:
         command = self._get_select_command(table_name,columns,where)
         self.cursor.execute(command,where_values)
     
+    def update(self,table_name:str,data:dict,where_keys:list[str]):
+        self.cursor.execute(self._get_update_command(table_name,data,where_keys),data)
+
     def get_lastrowid(self):
         return self.cursor.lastrowid
 
@@ -257,12 +264,3 @@ class DbManager:
         row = self.cursor.fetchone()
         return dict(row) if row else None
 
-
-
-    # def _add_account(self, account_data:dict):
-    #     self.cursor.execute("""INSERT INTO account (login, password, creation_date) VALUES (:login, :password, :creation_date)""", account_data)
-    #     self.connection.commit()
-
-    # def _add_user(self, user_data:dict):
-    #     self.cursor.execute("""INSERT INTO user (id, f_name, l_name, email, description)VALUES (:id, :f_name, :l_name, :email, :description)""", user_data)
-    #     self.connection.commit()
