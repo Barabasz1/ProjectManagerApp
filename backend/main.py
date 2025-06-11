@@ -461,6 +461,4 @@ async def edit_task(
     data:TaskEditReq
 ):
     with get_controller() as ctrl:
-        if not ctrl.team_exists(team_id) and not ctrl.user_exists(user_id):
-            raise get_invalid_id_exception()
-        ctrl.remove_user_from_team(user_id,team_id)
+       pass
