@@ -16,9 +16,9 @@ import { useUsersContext } from '@/Context/UsersContext';
 
 
 const ProperApp = () => {
- const {fetchTeams} = useTeamContext();
+ const {fetchTeams, usersInProject, usersInNotProject} = useTeamContext();
  const {token, idUser } = useUserContext()
- const {selectedProjectID, fetchProjects} = useProjectContext()
+ const { selectedProjectID, fetchProjects} = useProjectContext()
  const {fetchTasksOfProejct} = useTasksContext()
  const {fetchUsers, } = useUsersContext()
  
@@ -63,6 +63,27 @@ const ProperApp = () => {
     loadProjects();
  }, [])
 
+  useEffect(()=>{
+  const loadTeamsAndTasks = async () => {
+      const tokenToSend = token; 
+      const projectId = selectedProjectID; 
+      const userIDtoSend = idUser
+      
+      try {
+       console.log("dmadsajd")
+       
+        await fetchTasksOfProejct(tokenToSend, projectId, userIDtoSend)
+      
+        
+        
+      } catch (error) {
+        console.error("Failed to load tasks:", error);
+      }
+    };
+  
+    
+    loadTeamsAndTasks();
+ }, [usersInNotProject, usersInProject])
  
 
 

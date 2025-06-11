@@ -26,32 +26,42 @@ const data2 = data.filter(item => item.status === 1);
 const data3 = data.filter(item => item.status === 2);
 const data4 = data.filter(item => item.status === 3);
 const data5 = data.filter(item => item.status === 4);
-
+console.log(data)
 setTaskData1(data1)
 setTaskData2(data2)
 setTaskData3(data3)
 setTaskData4(data4)
 setTaskData5(data5)
-console.log("1")
-console.log(data1)
-console.log("2")
-console.log(data2)
+
 
 
   };
 
-  const removeTask = (idTask, token) => {
-    return del(`delete_task/${idTask}`,token)
+  const removeTask = async (token, idTask) => {
+    await del(`delete_task/${idTask}`,token)
+    await fetchTasksOfProejct(token, project_id, user_id )
   };
 
-  const createTask = async (token, idprojekt, nazwa, opis, deadline, idTeam) => {
+  const formatDate = (date: Date | undefined): string => {
+    if (!date) return '';
+    
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  };
+
+  const createTask = async (token, idprojekt, nazwa, opis, deadline, idTeam, priority) => {
     console.log("tworzenie taska")
     console.log(token)
     console.log(idprojekt)
     console.log(nazwa)
     console.log(opis)
-    console.log(deadline)
+    const goodFormatDeadline = formatDate(deadline)
+    console.log(goodFormatDeadline)
     console.log(idTeam)
+    console.log(priority)
     // await post(`create_task`,token,{
     //   project_id:idprojekt,
     //   name:nazwa,
@@ -59,20 +69,28 @@ console.log(data2)
     //   deadline:deadline,
     //   team_id:idTeam
     // })
-
+ console.log("DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY")
     await post(`create_task`,token,{
       project_id:idprojekt,
       name:nazwa,
       description:opis,
-      deadline:new Date().toISOString(),
+      deadline: goodFormatDeadline,
       team_id:idTeam
     })
 
     await fetchTasksOfProejct(token, idprojekt, user_id )
   };
 
-  const editTask = (updatedtask, id) => {
-    // Logika edytowania zadania
+  const editTask = (token, idprojekt, nazwa, opis, deadline, idTeam, priority) => {
+    console.log("edycja taska")
+    console.log(token)
+    console.log(idprojekt)
+    console.log(nazwa)
+    console.log(opis)
+    const goodFormatDeadline = formatDate(deadline)
+    console.log(goodFormatDeadline)
+    console.log(idTeam)
+    console.log(priority)
   };
 
   const IncreaseStatus = async (token, IdTask) => {
