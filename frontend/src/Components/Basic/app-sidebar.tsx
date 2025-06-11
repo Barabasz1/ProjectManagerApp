@@ -14,6 +14,7 @@ import {
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { useProjectContext } from '@/Context/ProjectsContext';
 import { useUserContext } from '@/Context/UserContext';
+import { FiEdit } from 'react-icons/fi'; 
 
 
 
@@ -43,7 +44,7 @@ export function AppSidebar() {
     handleCloseCreateDialog();
   };
   
-  // Edit project handlers
+ 
   const handleOpenEditDialog = (projectId, projectName) => {
     setEditProjectId(projectId);
     setEditProjectName(projectName);
@@ -87,13 +88,13 @@ export function AppSidebar() {
               onClick={() => handleOpenEditDialog(project.id, project.name)} 
               className="bg-indigo-600 border-indigo-600 border-8 hover:bg-indigo-400 hover:border-indigo-400 hover:cursor-pointer text-white rounded-full w-7 h-7 flex items-center justify-center text-sm"
             >
-              ✎
+              <FiEdit/>
             </button>
             <button 
               onClick={() => {
                 removeProjects(project.id, token)
               }} 
-              className="bg-red-700 border-red-700 border-8 hover:bg-red-400 hover:border-red-400 hover:cursor-pointer text-white rounded-full w-7 h-7 flex items-center justify-center text-xl"
+              className="bg-red-700 border-red-700 font-bold border-8 hover:bg-red-400 hover:border-red-400 hover:cursor-pointer text-white rounded-full w-7 h-7 flex items-center justify-center text-xl"
             >
               X
             </button>

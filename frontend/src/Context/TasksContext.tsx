@@ -81,8 +81,16 @@ setTaskData5(data5)
     await fetchTasksOfProejct(token, idprojekt, user_id )
   };
 
-  const editTask = (updatedtask, id) => {
-    // Logika edytowania zadania
+  const editTask = (token, idprojekt, nazwa, opis, deadline, idTeam, priority) => {
+    console.log("edycja taska")
+    console.log(token)
+    console.log(idprojekt)
+    console.log(nazwa)
+    console.log(opis)
+    const goodFormatDeadline = formatDate(deadline)
+    console.log(goodFormatDeadline)
+    console.log(idTeam)
+    console.log(priority)
   };
 
   const IncreaseStatus = async (token, IdTask) => {
