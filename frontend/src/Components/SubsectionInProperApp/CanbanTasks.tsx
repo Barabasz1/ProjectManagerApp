@@ -23,6 +23,7 @@ const CanbanTasks = () => {
   const [newTaskDescription, setNewTaskDescription] = useState('');
   const [deadline, setDeadline] = useState<Date | undefined>(undefined);
   const [selectedTeam, setSelectedTeam] = useState('');
+  const [priority, setPriority] = useState(''); 
 
   const handleOpenCreateDialog = () => {
     setCreateTaskDialogOpen(true);
@@ -34,6 +35,7 @@ const CanbanTasks = () => {
     setNewTaskDescription('');
     setDeadline(undefined);
     setSelectedTeam('');
+    setPriority(''); 
   };
 const {createTask} = useTasksContext()
 const {token} = useUserContext()
@@ -43,11 +45,10 @@ const {selectedProjectID}  = useProjectContext()
       taskName: newTaskName,
       description: newTaskDescription,
       deadline: deadline,
-      team: selectedTeam
+      team: selectedTeam,
+      priority: priority
     });
-    createTask(token, selectedProjectID,newTaskName, newTaskDescription, deadline,selectedTeam )
-
-
+    createTask(token, selectedProjectID, newTaskName, newTaskDescription, deadline, selectedTeam, priority)
 
     handleCloseCreateDialog();
   };
@@ -161,8 +162,31 @@ const {selectedProjectID}  = useProjectContext()
           placeholder="Enter task description"
         />
       </div>
+
+      {/* New Priority Selection */}
+      <div className="flex flex-col gap-2">
+        <label className="text-indigo-800 font-medium">
+          Priority (1-5)
+        </label>
+        <Select value={priority} onValueChange={setPriority}>
+          <SelectTrigger className="border-2 border-indigo-600 rounded-md text-indigo-950 p-2">
+            <SelectValue placeholder="Select priority level" />
+          </SelectTrigger>
+          <SelectContent 
+            portalprops={{ 
+              container: document.getElementById('root')
+            }}
+            style={{ zIndex: 1400 }}
+          >
+            <SelectItem value="1">1 - Low Priority</SelectItem>
+            <SelectItem value="2">2 - Medium-Low Priority</SelectItem>
+            <SelectItem value="3">3 - Medium Priority</SelectItem>
+            <SelectItem value="4">4 - Medium-High Priority</SelectItem>
+            <SelectItem value="5">5 - High Priority</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       
-    
       <div className="flex flex-col gap-2 ">
         <label className="text-indigo-800 font-medium">
           Deadline
@@ -202,9 +226,9 @@ const {selectedProjectID}  = useProjectContext()
      
       <button
         onClick={handleCreateTask}
-        disabled={!newTaskName.trim()}
+        disabled={!newTaskName.trim() || !newTaskDescription.trim() || !priority || !deadline || !selectedTeam}
         className={`py-2 px-4 rounded-md font-medium text-white transition-all duration-300 mt-4
-          ${newTaskName.trim() 
+          ${(newTaskName.trim() && newTaskDescription.trim() && priority && deadline && selectedTeam) 
             ? 'bg-indigo-600 hover:bg-indigo-700' 
             : 'bg-indigo-300 cursor-not-allowed'}
         `}

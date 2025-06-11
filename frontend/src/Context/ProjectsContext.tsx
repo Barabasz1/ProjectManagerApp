@@ -32,12 +32,17 @@ export const ProjectDataProvider = ({ children }) => {
     await fetchProjects(token, userId)
   };
 
-  const editProjects = (token, nazwe, opis) => {
-    // malo wazne ale do zrobienia
+  const editProject = async (token, nazwa, IdProj) => {
+    console.log("zmiana nazwy")
+    console.log(token)
+    console.log(nazwa)
+    console.log(IdProj)
+
+    await fetchProjects(token,userId )
   };
 
   return (
-    <ProjectsContext.Provider value={{ projectData,setProjectData, selectedProjectID, SetSelectedProjectID, fetchProjects, removeProjects, createProjects, editProjects }}>
+    <ProjectsContext.Provider value={{ projectData,editProject,setProjectData, selectedProjectID, SetSelectedProjectID, fetchProjects, removeProjects, createProjects }}>
       {children}
     </ProjectsContext.Provider>
   );

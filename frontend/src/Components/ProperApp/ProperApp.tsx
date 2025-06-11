@@ -45,27 +45,7 @@ const ProperApp = () => {
     loadTeamsAndTasks();
  }, [selectedProjectID])
 
- useEffect(()=>{
-  const loadTeamsAndTasks = async () => {
-      const tokenToSend = token; 
-      const projectId = selectedProjectID; 
-      const userIDtoSend = idUser
-      
-      try {
-       
-       
-        await fetchTasksOfProejct(tokenToSend, projectId, userIDtoSend)
-      
-        
-        
-      } catch (error) {
-        console.error("Failed to load tasks:", error);
-      }
-    };
-  
-    
-    loadTeamsAndTasks();
- }, [usersInNotProject, usersInProject])
+
 
 
 
