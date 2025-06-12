@@ -477,11 +477,10 @@ async def edit_user(
 ):
     with get_controller() as ctrl:
         ctrl.update_user(user_id,{
-           'name':data.name,
-           'description':data.description,
-           'deadline':data.deadline,
-           'status':data.status,
-           'priority':data.priority
+           'f_name':data.f_name,
+           'l_name':data.l_name,
+           'email':data.email,
+           'description':data.description
            })
 
 
@@ -492,12 +491,9 @@ async def edit_account(
     data:AccountEditReq
 ):
     with get_controller() as ctrl:
-       ctrl.update_user(user_id,{
-           'name':data.name,
-           'description':data.description,
-           'deadline':data.deadline,
-           'status':data.status,
-           'priority':data.priority
+       ctrl.update_account(account_id,{
+           'login':data.login,
+           'password':data.password,
            })
 
 @app.patch('/edit_team/{team_id}')
@@ -507,12 +503,8 @@ async def edit_team(
     data:TeamEditReq
 ):
     with get_controller() as ctrl:
-       ctrl.update_user(user_id,{
+       ctrl.update_team(team_id,{
            'name':data.name,
-           'description':data.description,
-           'deadline':data.deadline,
-           'status':data.status,
-           'priority':data.priority
            })
 
 @app.patch('/edit_project/{project_id}')
@@ -522,10 +514,10 @@ async def edit_project(
     data:ProjectEditReq
 ):
     with get_controller() as ctrl:
-       ctrl.update_user(user_id,{
+       ctrl.update_project(project_id,{
            'name':data.name,
+           'manager':data.manager,
            'description':data.description,
-           'deadline':data.deadline,
-           'status':data.status,
-           'priority':data.priority
+           'version':data.version,
+           'deadline':data.deadline
            })
