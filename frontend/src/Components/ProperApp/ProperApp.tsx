@@ -12,6 +12,7 @@ import { useUserContext } from '@/Context/UserContext';
 import { useProjectContext } from '@/Context/ProjectsContext';
 import { useTasksContext } from '@/Context/TasksContext';
 import { useUsersContext } from '@/Context/UsersContext';
+import Timeline from '../SubsectionInProperApp/Timeline';
 
 
 
@@ -111,6 +112,8 @@ const ProperApp = () => {
                 <Route path='/' element={<TeamsComponent></TeamsComponent>} />
 
                 <Route path='/tasks' element={<CanbanTasks></CanbanTasks>} />
+                
+                <Route path='/tasksDates' element={<Timeline></Timeline>} />
        
               </Routes>
             </div>

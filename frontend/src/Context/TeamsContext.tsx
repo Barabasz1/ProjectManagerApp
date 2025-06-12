@@ -6,10 +6,12 @@ export const TeamDataProvider = ({ children }) => {
   const [teamData, setTeamData] = useState([]);
   const [usersInProject, setUsersInProject] = useState([]);
      const [usersInNotProject, setUsersNotInProject] = useState([]);
-
+    //private
+    const [project_id, setProject_id] = useState(null)
+    
 
      const fetchTeams = async (token, project_id) => {
-    // logika fetchowania zespołów
+    setProject_id(project_id)
     console.log("fetch teams 2")
     console.log(token)
     console.log(project_id)
@@ -28,8 +30,12 @@ export const TeamDataProvider = ({ children }) => {
   setTeamData(result)
   };
 
-  const removeTeam = (idteam, token) => {
-    return del(`delete_team/${idteam}`,token)
+  const removeTeam = async (idteam, token) => {
+    console.log("usuwanie")
+    console.log(token)
+    console.log(idteam)
+    await del(`delete_team/${idteam}`,token)
+    await fetchTeams(token, project_id)
   };
 
   const createTeam = async (token, nazwa, project_id) => {
@@ -41,8 +47,13 @@ export const TeamDataProvider = ({ children }) => {
     await fetchTeams(token,project_id )
   };
 
-  const editTeam = (nazwa, token) => {
-    // chyba tylko nazwe edytujemy?
+  const updateTeam = async (id, nowanazwa, token) => {
+    console.log("update teamu")
+    console.log(id)
+    console.log(nowanazwa)
+    console.log(token)
+
+    await fetchTeams(token, project_id)
   };
 
   const AssignUserToTeam = async(idTeam, idUser,role, token) =>{
@@ -76,14 +87,14 @@ export const TeamDataProvider = ({ children }) => {
     console.log("fetching members")
     console.log(idteam)
     console.log(token)
-    //cos nie dzial wiec fetchuje wszystkich
+    
      const data =  await get(`get_teammembers/${idteam}`,token)
           console.log(data)
           setUsersInProject(data)
   }
   const fetchnotteammembers = async (token, idteam) =>{
     console.log("fetching not members")
-    //cos nie dzial wiec fetchuje wszystkich
+    
   const data =  await get(`get_nonteammembers/${idteam}`,token)
       console.log(data)
       setUsersNotInProject(data)
@@ -97,7 +108,7 @@ export const TeamDataProvider = ({ children }) => {
         fetchTeams,
         removeTeam,
         createTeam,
-        editTeam,
+        updateTeam,
         AssignUserToTeam,
         UnassignUserToTeam,
         fetchnotteammembers,
