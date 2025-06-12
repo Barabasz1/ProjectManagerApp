@@ -224,6 +224,23 @@ class Controller:
         self.dbm.execute(command,(user_id,))
         self.dbm.commit()
 
+    def delete_task_team_bind(self,task_id:int,team_id:int | None):
+        command = 'DELETE FROM task_team_assignment WHERE task = ?'
+        
+        if team_id is not None:
+            command += ' AND team = ?'
+            params = (task_id,)
+        else:
+            params = (task_id,team_id)
+
+
+        rc = self.dbm.execute(command,params)
+        if rc == ReturnCode.Sql.INTEGRITY_ERROR:
+            return rc
+    
+
+        self.dbm.commit()
+
     def update_task(self,task_id:int,data:dict):
         self.dbm.update('task',{**data,'id':task_id},['id'])
         self.dbm.commit()

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
-
+from enum import Enum
 class RegisterReq(BaseModel):
     login:str
     password:str
@@ -68,3 +68,10 @@ class UserEditReq(BaseModel):
 
 class TeamEditReq(BaseModel):
     name: Optional[str] = None
+
+
+
+class BindMode(str, Enum):
+    assign = "assign"
+    unassign = "unassign"
+    unassign_all = "unassign_all"

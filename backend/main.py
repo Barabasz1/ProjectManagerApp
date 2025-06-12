@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Depends,HTTPException,status
+from fastapi import FastAPI,Depends,HTTPException,status, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
@@ -6,6 +6,7 @@ from pydantic import BaseModel
 import jwt
 from jwt.exceptions import InvalidTokenError
 from contextlib import contextmanager
+from enum import Enum
 
 from typing import Annotated, Tuple, List
 from datetime import datetime, timedelta, timezone
@@ -265,15 +266,49 @@ async def add_user_to_team(
             return None
         
 
-@app.post('/add_task_to_team')
-async def add_task_to_team(
+# @app.post('/add_task_to_team')
+# async def add_task_to_team(
+#     current_user: Annotated[User, Depends(get_current_active_user)],
+#     data: TaskTeamAssignReq
+# ):
+#     with get_controller() as ctrl:
+#         if not ctrl.task_exists(data.task_id) or not ctrl.team_exists(data.team_id):
+#             raise get_invalid_id_exception()
+#         ctrl.insert_from_list('task_team_assignment',[data.task_id,data.team_id])
+
+
+
+@app.post('/task_team_bind/{task_id}',
+          description='Binds or unbinds a task to a team. Can also unbind task from all teams')
+async def task_team_bind(
     current_user: Annotated[User, Depends(get_current_active_user)],
-    data: TaskTeamAssignReq
+    task_id:int,
+    team_id: Optional[int] = Query(None, description="Required unless bind_mode is 'unassign_all')"),
+    bind_mode: BindMode = Query(BindMode.assign, description="Bind mode: assign, unassign, or unassign_all")
 ):
     with get_controller() as ctrl:
-        if not ctrl.task_exists(data.task_id) or not ctrl.team_exists(data.team_id):
+
+        if not ctrl.task_exists(task_id):
             raise get_invalid_id_exception()
-        ctrl.insert_from_list('task_team_assignment',[data.task_id,data.team_id])
+        
+        match bind_mode:
+            case BindMode.assign | BindMode.unassign:
+                if team_id is None or not ctrl.team_exists(team_id):
+                    raise get_invalid_id_exception()
+                
+                match bind_mode:
+                    case BindMode.assign:
+                        ctrl.insert_from_list('task_team_assignment',[task_id,team_id])
+
+                    case BindMode.unassign:
+                        ctrl.delete_task_team_bind(task_id,team_id)
+
+            case BindMode.unassign_all:
+                ctrl.delete_task_team_bind(task_id,None)
+
+            case _:
+                pass
+
 
 # ================================================================================================================================
 #                                                               GETS

@@ -2,6 +2,9 @@ from enum import Enum
 
 class ReturnCode:
     # authorization
+    class General(Enum):
+        SUCCESS = 0
+    
     class Auth(Enum):
         LOGIN_NOT_FOUND = 0
         WRONG_PASSWORD = 1

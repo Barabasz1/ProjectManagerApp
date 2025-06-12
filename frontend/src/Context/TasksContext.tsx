@@ -68,6 +68,7 @@ setTaskData5(data5)
     return `${year}-${month}-${day}`;
   };
 
+  // idTeam can be null
   const createTask = async (token, idprojekt, nazwa, opis, deadline, idTeam, priority) => {
     console.log("tworzenie taska")
     console.log(token)
@@ -78,35 +79,41 @@ setTaskData5(data5)
     console.log(goodFormatDeadline)
     console.log(idTeam)
     console.log(priority)
-    // await post(`create_task`,token,{
-    //   project_id:idprojekt,
-    //   name:nazwa,
-    //   description:opis,
-    //   deadline:deadline,
-    //   team_id:idTeam
-    // })
+
+    const default_status = 0
+
  console.log("DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY")
     await post(`create_task`,token,{
       project_id:idprojekt,
       name:nazwa,
       description:opis,
       deadline: goodFormatDeadline,
-      team_id:idTeam
+      priority:priority,
+      status:default_status,
+      team_id:idTeam,
     })
 
     await fetchTasksOfProejct(token, idprojekt, user_id )
   };
 
-  const editTask = (token, idprojekt, nazwa, opis, deadline, idTeam, priority) => {
+  const editTask = async (token, idTask, nazwa, opis, deadline, idTeam, priority) => {
+    const goodFormatDeadline = formatDate(deadline)
+
     console.log("edycja taska")
     console.log(token)
-    console.log(idprojekt)
+    console.log(idTask)
     console.log(nazwa)
     console.log(opis)
-    const goodFormatDeadline = formatDate(deadline)
     console.log(goodFormatDeadline)
     console.log(idTeam)
     console.log(priority)
+
+    await patch(token,`edit_task/${idTask}`,{
+
+    })
+    await patch(token,`task_team_bind/${idTask}?bind_mode=unassign_all`,null)
+    await patch(token,`task_team_bind/${idTask}?team_id=${idTeam}&?bind_mode=assign`,null)
+
   };
 
   const IncreaseStatus = async (token, IdTask) => {

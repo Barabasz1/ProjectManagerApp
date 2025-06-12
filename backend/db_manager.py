@@ -255,7 +255,11 @@ class DbManager:
         self.connection.commit()
 
     def execute(self,command,params):
-        self.cursor.execute(command,params)
+        try:
+            self.cursor.execute(command,params)
+            return ReturnCode.General.SUCCESS
+        except sqlite3.IntegrityError as e:
+            return ReturnCode.Sql.INTEGRITY_ERROR
 
 
     def fetchall(self) -> List[dict]:
