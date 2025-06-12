@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 import {get,post,del,patch} from './api_request'
+import { Description } from '@radix-ui/react-dialog';
 const TasksContext = createContext(null);
+import {formatDate,create_obj_clean_undefined} from './utils'
 
 export const TaskDataProvider = ({ children }) => {
   const [taskdata, setTaskData] = useState([]);
@@ -58,15 +60,6 @@ setTaskData5(data5)
     await fetchTasksOfProejct(token, project_id, user_id )
   };
 
-  const formatDate = (date: Date | undefined): string => {
-    if (!date) return '';
-    
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}`;
-  };
 
   // idTeam can be null
   const createTask = async (token, idprojekt, nazwa, opis, deadline, idTeam, priority) => {
@@ -96,23 +89,18 @@ setTaskData5(data5)
     await fetchTasksOfProejct(token, idprojekt, user_id )
   };
 
+  // if you dont want to change something, set it to undefined !!!
   const editTask = async (token, idTask, nazwa, opis, deadline, idTeam, priority) => {
-    const goodFormatDeadline = formatDate(deadline)
 
-    console.log("edycja taska")
-    console.log(token)
-    console.log(idTask)
-    console.log(nazwa)
-    console.log(opis)
-    console.log(goodFormatDeadline)
-    console.log(idTeam)
-    console.log(priority)
+    await patch(`edit_task/${idTask}`,token,create_obj_clean_undefined({
+        name:nazwa,
+        description:opis,
+        deadline:formatDate(deadline),
+        priority:priority
+    }))
 
-    await patch(token,`edit_task/${idTask}`,{
-
-    })
-    await patch(token,`task_team_bind/${idTask}?bind_mode=unassign_all`,null)
-    await patch(token,`task_team_bind/${idTask}?team_id=${idTeam}&?bind_mode=assign`,null)
+    await post(`task_team_bind/${idTask}?bind_mode=unassign_all`,token,null)
+    await post(`task_team_bind/${idTask}?team_id=${idTeam}&?bind_mode=assign`,token,null)
 
   };
 

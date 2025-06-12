@@ -203,12 +203,16 @@ class Controller:
         self.dbm.execute(command,(task_id,))
         self.dbm.commit()
 
+    def delete_team(self,team_id:int):
+        command = 'DELETE FROM team WHERE team.id = ?'
+        self.dbm.execute(command,(team_id,))
+        self.dbm.commit()
+
+
     def increase_task_status(self,task_id:int,amount:int):
         self.dbm.execute('SELECT status FROM task WHERE id = ?',(task_id,)) 
         current_status = list(self.dbm.fetchone().values())[0]
-        print(f"old = {current_status}")
         new_status = max(min(current_status + amount,DbManager.KANBAN_STATUS_MAX),DbManager.KANBAN_STATUS_MIN)
-        print(f"new: {new_status}")
         command = 'UPDATE task SET status = ? WHERE id = ?'
         self.dbm.execute(command,(new_status,task_id))
         self.dbm.commit()
@@ -229,15 +233,13 @@ class Controller:
         
         if team_id is not None:
             command += ' AND team = ?'
-            params = (task_id,)
-        else:
             params = (task_id,team_id)
-
+        else:
+            params = (task_id,)
 
         rc = self.dbm.execute(command,params)
         if rc == ReturnCode.Sql.INTEGRITY_ERROR:
             return rc
-    
 
         self.dbm.commit()
 

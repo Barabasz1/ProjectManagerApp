@@ -24,9 +24,10 @@ export const UserDataProvider = ({ children }) => {
     post('register',null,{login:login,password:password})
   };
 
-  const editUser = (updatedUser) => {
-    // logika edycji danych użytkownika
+  const editUser = (token,userId,) => {
+    
   };
+
 
   return (
     <UsersContext.Provider

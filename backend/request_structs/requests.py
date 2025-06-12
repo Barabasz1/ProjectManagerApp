@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
 from datetime import datetime
 from typing import Optional
 from enum import Enum
@@ -43,31 +44,31 @@ class TaskStatusChangeReq(BaseModel):
 # edits
 
 class TaskEditReq(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
-    deadline: Optional[datetime] = None
-    status: Optional[int] = None
-    priority: Optional[int] = None
+    name: Optional[str] = Field(default=None)
+    description: Optional[str] = Field(default=None)
+    deadline: Optional[datetime] = Field(default=None)
+    status: Optional[int] = Field(default=None)
+    priority: Optional[int] = Field(default=None)
 
 class ProjectEditReq(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
-    manager: Optional[int] = None
-    version: Optional[str] = None
-    deadline: Optional[datetime] = None
+    name: Optional[str] = Field(default=None)
+    description: Optional[str] = Field(default=None)
+    manager: Optional[int] = Field(default=None)
+    version: Optional[str] = Field(default=None)
+    deadline: Optional[datetime] = Field(default=None)
 
 class AccountEditReq(BaseModel):
-    login: Optional[str] = None
-    password: Optional[str] = None
+    login: Optional[str] = Field(default=None)
+    password: Optional[str] = Field(default=None)
 
 class UserEditReq(BaseModel):
-    f_name: Optional[str] = None
-    l_name: Optional[str] = None
-    email: Optional[str] = None
-    description: Optional[str] = None
+    f_name: Optional[str] = Field(default=None)
+    l_name: Optional[str] = Field(default=None)
+    email: Optional[str] = Field(default=None)
+    description: Optional[str] = Field(default=None)
 
 class TeamEditReq(BaseModel):
-    name: Optional[str] = None
+    name: Optional[str] = Field(default=None)
 
 
 

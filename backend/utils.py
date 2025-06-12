@@ -20,5 +20,8 @@ def sha256(input:str):
 
 
 
-def clean_dict(d:dict):
-    return d
+def clean_dict(dictionary:dict):
+    return {key: value for key, value in dictionary.items() if value is not None}
+
+def filter_out_not_set(dictionary:dict,provided:set[str]) -> dict:
+    return {k: v for k, v in dictionary.items() if k in provided}

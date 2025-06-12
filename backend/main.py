@@ -16,7 +16,7 @@ sys.path.append(os.path.abspath(os.path.join(__file__, '..','..')))
 
 from backend.const import ReturnCode
 from backend.controller import Controller
-from backend.utils import get_now,get_now_str
+from backend.utils import get_now,clean_dict,filter_out_not_set
 from backend.request_structs.requests import *
 
 SECRET_KEY = 'bae0a9511295b4d7243684f9eb2ddf92bce396a2dbca2302b1688b28bfe5c853'
@@ -230,12 +230,10 @@ async def create_task(
            raise get_invalid_id_exception()
         _data = [data.project_id,data.name,data.description,get_now(),data.deadline,1,0]
         added_task_id = ctrl.insert_from_list('task',_data)
-        # print(added_task)
         if data.team_id:
             if not ctrl.team_exists(data.team_id):
                 raise get_invalid_id_exception()
-            added_assignment = ctrl.insert_from_list('task_team_assignment',[added_task_id,data.team_id])
-            # print(f' ADDED NEW ASSIGNMENT {added_assignment}')
+            ctrl.insert_from_list('task_team_assignment',[added_task_id,data.team_id])
 
 
 @app.post('/create_team')
@@ -254,13 +252,10 @@ async def add_user_to_team(
     current_user: Annotated[User, Depends(get_current_active_user)],
     data: UserTeamAssignReq
 ):
-    print("Received data:", data)
     with get_controller() as ctrl:
         if not ctrl.user_exists(data.user_id) or not ctrl.team_exists(data.team_id):
             raise get_invalid_id_exception()
-        print("inserting ")
-        print(data.user_id)
-        print()
+
         result = ctrl.insert_from_list('team_composition',[data.team_id,data.user_id,data.role])
         if result == ReturnCode.Sql.INTEGRITY_ERROR:
             return None
@@ -357,7 +352,6 @@ async def get_tasks_of_project_of_user(
         if not ctrl.user_exists(user_id) and not ctrl.project_exists(project_id):
             raise get_invalid_id_exception()
         result = ctrl.get_tasks_of_project_of_user(project_id,user_id)
-        print(f"\n====\n{result}\n===\n")
         return result
 
 @app.get('/get_projects/{user_id}')
@@ -442,6 +436,17 @@ async def delete_task(
         if not ctrl.task_exists(task_id):
             raise get_invalid_id_exception()
         ctrl.delete_task(task_id)
+        
+
+@app.delete('/delete_team/{team_id}')
+async def delete_team(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    team_id:int
+):
+    with get_controller() as ctrl:
+        if not ctrl.team_exists(team_id):
+            raise get_invalid_id_exception()
+        ctrl.delete_team(team_id)
 
 
 @app.delete('/delete_user/{user_id}',
@@ -490,19 +495,20 @@ async def increase_task_status(
 
 
 @app.patch('/edit_task/{task_id}')
-async def edit_task(
+async def edit_task(    
     current_user: Annotated[User, Depends(get_current_active_user)],
     task_id:int,
     data:TaskEditReq
 ):
+    
     with get_controller() as ctrl:
-       ctrl.update_task(task_id,{
+       ctrl.update_task(task_id,filter_out_not_set({
            'name':data.name,
            'description':data.description,
            'deadline':data.deadline,
            'status':data.status,
            'priority':data.priority
-           })
+        },data.model_fields_set))
        
 @app.patch('/edit_user/{user_id}')
 async def edit_user(
@@ -511,12 +517,12 @@ async def edit_user(
     data:UserEditReq
 ):
     with get_controller() as ctrl:
-        ctrl.update_user(user_id,{
+        ctrl.update_user(user_id,filter_out_not_set({
            'f_name':data.f_name,
            'l_name':data.l_name,
            'email':data.email,
            'description':data.description
-           })
+           },data.model_fields_set))
 
 
 @app.patch('/edit_account/{account_id}')
@@ -526,10 +532,10 @@ async def edit_account(
     data:AccountEditReq
 ):
     with get_controller() as ctrl:
-       ctrl.update_account(account_id,{
+       ctrl.update_account(account_id,filter_out_not_set({
            'login':data.login,
            'password':data.password,
-           })
+           },data.model_fields_set))
 
 @app.patch('/edit_team/{team_id}')
 async def edit_team(
@@ -538,9 +544,9 @@ async def edit_team(
     data:TeamEditReq
 ):
     with get_controller() as ctrl:
-       ctrl.update_team(team_id,{
+       ctrl.update_team(team_id,filter_out_not_set({
            'name':data.name,
-           })
+           },data.model_fields_set))
 
 @app.patch('/edit_project/{project_id}')
 async def edit_project(
@@ -549,10 +555,10 @@ async def edit_project(
     data:ProjectEditReq
 ):
     with get_controller() as ctrl:
-       ctrl.update_project(project_id,{
+       ctrl.update_project(project_id,filter_out_not_set({
            'name':data.name,
            'manager':data.manager,
            'description':data.description,
            'version':data.version,
            'deadline':data.deadline
-           })
+           },data.model_fields_set))
