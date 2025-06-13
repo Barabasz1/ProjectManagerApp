@@ -52,7 +52,9 @@ export const TeamDataProvider = ({ children }) => {
     console.log(id)
     console.log(nowanazwa)
     console.log(token)
+    //tutaj metode update team
 
+    //tutaj metoda update team
     await fetchTeams(token, project_id)
   };
 

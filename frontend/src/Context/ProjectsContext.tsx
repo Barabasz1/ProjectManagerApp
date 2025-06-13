@@ -37,7 +37,9 @@ export const ProjectDataProvider = ({ children }) => {
     console.log(token)
     console.log(nazwa)
     console.log(IdProj)
+    //tutaj wpisz metode 
 
+    //tutaj wpisz metode
     await fetchProjects(token,userId )
   };
 

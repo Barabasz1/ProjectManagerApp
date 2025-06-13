@@ -42,18 +42,87 @@ setTaskData5(data5)
   };
   const fetchTasksDeadlineASC = async (token,project_id, user_id) => {
     console.log("fetchTasksDeadlineASC")
-    
+    //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
+     const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
+    //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
+   const data1 = data.filter(item => item.status === 0);
+const data2 = data.filter(item => item.status === 1);
+const data3 = data.filter(item => item.status === 2);
+const data4 = data.filter(item => item.status === 3);
+const data5 = data.filter(item => item.status === 4);
+console.log(data)
+setTaskData(data)
+setTaskData1(data1)
+setTaskData2(data2)
+setTaskData3(data3)
+setTaskData4(data4)
+setTaskData5(data5)
+
+
   }
   const fetchTasksDeadlineDES = async (token,project_id, user_id) => {
     console.log("fetchTasksDeadlineDEC")
+       //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
+     const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
+    //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
+   const data1 = data.filter(item => item.status === 0);
+const data2 = data.filter(item => item.status === 1);
+const data3 = data.filter(item => item.status === 2);
+const data4 = data.filter(item => item.status === 3);
+const data5 = data.filter(item => item.status === 4);
+console.log(data)
+setTaskData(data)
+setTaskData1(data1)
+setTaskData2(data2)
+setTaskData3(data3)
+setTaskData4(data4)
+setTaskData5(data5)
   }
   const fetchTasksPriorityASC = async (token,project_id, user_id) => {
     console.log("fetchTasksPriorityASC")
+       //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
+     const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
+    //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
+   const data1 = data.filter(item => item.status === 0);
+const data2 = data.filter(item => item.status === 1);
+const data3 = data.filter(item => item.status === 2);
+const data4 = data.filter(item => item.status === 3);
+const data5 = data.filter(item => item.status === 4);
+console.log(data)
+setTaskData(data)
+setTaskData1(data1)
+setTaskData2(data2)
+setTaskData3(data3)
+setTaskData4(data4)
+setTaskData5(data5)
   }
   const fetchTasksPriorityDES = async (token,project_id, user_id) => {
     console.log("fetchTasksPriorityDEC")
+       //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
+     const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
+    //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
+   const data1 = data.filter(item => item.status === 0);
+const data2 = data.filter(item => item.status === 1);
+const data3 = data.filter(item => item.status === 2);
+const data4 = data.filter(item => item.status === 3);
+const data5 = data.filter(item => item.status === 4);
+console.log(data)
+setTaskData(data)
+setTaskData1(data1)
+setTaskData2(data2)
+setTaskData3(data3)
+setTaskData4(data4)
+setTaskData5(data5)
   }
 
+
+  const fetchTasksByDate = async (token,project_id, user_id, DateFrom, DateTo) => {
+    console.log("by date")
+     //wpisz tutaj podobnego fetcha ale z z filtrowanymi danymi
+     const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
+    //wpisz tutaj podobnego fetcha ale z z filtrowanymi danymi
+    setTaskData(data)
+  }
 
   const removeTask = async (token, idTask) => {
     await del(`delete_task/${idTask}`,token)
@@ -102,6 +171,8 @@ setTaskData5(data5)
     await post(`task_team_bind/${idTask}?bind_mode=unassign_all`,token,null)
     await post(`task_team_bind/${idTask}?team_id=${idTeam}&?bind_mode=assign`,token,null)
 
+    await fetchTasksOfProejct(token, project_id, user_id )
+
   };
 
   const IncreaseStatus = async (token, IdTask) => {
@@ -123,7 +194,7 @@ setTaskData5(data5)
   };
 
   return (
-    <TasksContext.Provider value={{ fetchTasksDeadlineASC, fetchTasksDeadlineDES, fetchTasksPriorityASC, fetchTasksPriorityDES, taskdata, fetchTasksOfProejct, removeTask, createTask, editTask, IncreaseStatus, DecreaseStatus,taskData1,taskData2,taskData3,taskData4,taskData5 }}>
+    <TasksContext.Provider value={{fetchTasksByDate, fetchTasksDeadlineASC, fetchTasksDeadlineDES, fetchTasksPriorityASC, fetchTasksPriorityDES, taskdata, fetchTasksOfProejct, removeTask, createTask, editTask, IncreaseStatus, DecreaseStatus,taskData1,taskData2,taskData3,taskData4,taskData5 }}>
       {children}
     </TasksContext.Provider>
   );

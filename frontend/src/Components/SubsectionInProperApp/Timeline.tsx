@@ -2,15 +2,19 @@ import React, { useState } from 'react'
 import { Calendar } from "@/Components/ui/calendar";
 import { useTasksContext } from '@/Context/TasksContext';
 import TaskElement from '../Basic/TaskElement';
+import { useUserContext } from '@/Context/UserContext';
+import { useProjectContext } from '@/Context/ProjectsContext';
 const Timeline = () => {
-    const {taskdata} = useTasksContext()
+    const {taskdata, fetchTasksByDate} = useTasksContext()
     const [datefrom, setdatefrom] = useState(null)
     const [dateto, setdateto] = useState(null)
-    
+    const {token, idUser} = useUserContext()
+    const {selectedProjectID} = useProjectContext()
+
     const ChangeTask =  () => {
         console.log(datefrom)
         console.log(dateto)
-      
+      fetchTasksByDate(token,idUser,selectedProjectID  ,datefrom, dateto)
     }
   return (
      <div className="flex  justify-center items-start h-full  gap-4 text-indigo-950 w-full bg-indigo-300 overflow-auto">
