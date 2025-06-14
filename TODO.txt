@@ -1,28 +1,10 @@
 testy jednostkowe
 docker
 
-task na czerwono jak minie termin
-
-priority tasków - sortowanie
-
-przedzialy czasu deadlinow taskow
-
-edytowanie deadlinów tasków
-
-format daty
-
-usuwanie i edycja zadan
-
-
-edytacja - priorytet
-
-edycja team
-edycja project
-
 
 
 BUGI:
 
 fetch tasks by date - user_id i project_id sa ze soba zamienione - zmienic wywolanie
 
-fetch tasks by date dziala - zwracane sa poprawne dane, ale nie wyswietlaja sie zadne taski 
+fetch tasks by date dziala - zwracane sa poprawne dane, ale nie wyswietlaja sie zadne taski - tez zamienione ze soba ID

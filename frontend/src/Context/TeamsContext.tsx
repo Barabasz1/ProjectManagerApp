@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
-import {get,post,del} from './api_request'
+import {get,post,del,patch} from './api_request'
+import {create_obj_clean_undefined} from './utils'
 const TeamsContext = createContext(null);
 
 export const TeamDataProvider = ({ children }) => {
@@ -52,9 +53,10 @@ export const TeamDataProvider = ({ children }) => {
     console.log(id)
     console.log(nowanazwa)
     console.log(token)
-    //tutaj metode update team
-
-    //tutaj metoda update team
+    
+    await patch(`edit_team/${id}`,token,create_obj_clean_undefined({
+      name:nowanazwa
+    }))
     await fetchTeams(token, project_id)
   };
 

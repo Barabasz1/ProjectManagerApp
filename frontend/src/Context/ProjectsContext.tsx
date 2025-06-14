@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
-import {get,post,del} from './api_request'
+import {get,post,del,patch} from './api_request'
+import {create_obj_clean_undefined} from './utils'
 
 const ProjectsContext = createContext(null);
 
@@ -37,9 +38,13 @@ export const ProjectDataProvider = ({ children }) => {
     console.log(token)
     console.log(nazwa)
     console.log(IdProj)
-    //tutaj wpisz metode 
-
-    //tutaj wpisz metode
+    await patch(`edit_project/${IdProj}`,token,create_obj_clean_undefined({
+      name:nazwa,
+      description:undefined,
+      manager:undefined,
+      version:undefined,
+      deadline:undefined
+    }))
     await fetchProjects(token,userId )
   };
 
