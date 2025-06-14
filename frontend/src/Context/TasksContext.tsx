@@ -16,111 +16,70 @@ export const TaskDataProvider = ({ children }) => {
   const [user_id, setUserId] = useState(null)
   const [project_id, set_ProjectId] = useState(null)
 
+  async function get_tasks_data(token,project_id, user_id,sortBy: null | 'deadline' | 'priority' = null,sortOrder:null |'asc' | 'desc' = null,date_range:[any,any] | null = null){
+    let path:string = `get_tasks?project_id=${project_id}&user_id=${user_id}`
+    if(sortBy != null){
+      path = path.concat(`&sort=${sortBy}`)
+      if(sortOrder!=null){
+        path = path.concat(`&sort_order=${sortOrder}`)
+      }
+    }
+    if(date_range != null){ 
+      path = path.concat(`&date_from=${date_range[0]}&date_to=${date_range[1]}`)
+    }
+    return await get(path,token)
+  }
 
-  const fetchTasksOfProejct = async (token,project_id, user_id) => {
+  function set_task_data(data){
+    setTaskData(data)
+  }
+  function set_task_data_by_status(data){
+    setTaskData1(data.filter(item => item.status === 0))
+    setTaskData2(data.filter(item => item.status === 1))
+    setTaskData3(data.filter(item => item.status === 2))
+    setTaskData4(data.filter(item => item.status === 3))
+    setTaskData5(data.filter(item => item.status === 4))
+  }
+  const fetchTasksOfProejct = async (token,project_id, user_id,sortBy: null | 'deadline' | 'priority' = null,sortOrder:null |'asc' | 'desc' = null) => {
     console.log("fetching tasks")
     setUserId(user_id)
     set_ProjectId(project_id)
-    const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
-
-    
-    const data1 = data.filter(item => item.status === 0);
-const data2 = data.filter(item => item.status === 1);
-const data3 = data.filter(item => item.status === 2);
-const data4 = data.filter(item => item.status === 3);
-const data5 = data.filter(item => item.status === 4);
-console.log(data)
-setTaskData(data)
-setTaskData1(data1)
-setTaskData2(data2)
-setTaskData3(data3)
-setTaskData4(data4)
-setTaskData5(data5)
-
-
-
+  
+    const data = await get_tasks_data(token,project_id,user_id)
+    set_task_data(data)
+    set_task_data_by_status(data)
   };
   const fetchTasksDeadlineASC = async (token,project_id, user_id) => {
-    console.log("fetchTasksDeadlineASC")
-    //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
-     const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
-    //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
-   const data1 = data.filter(item => item.status === 0);
-const data2 = data.filter(item => item.status === 1);
-const data3 = data.filter(item => item.status === 2);
-const data4 = data.filter(item => item.status === 3);
-const data5 = data.filter(item => item.status === 4);
-console.log(data)
-setTaskData(data)
-setTaskData1(data1)
-setTaskData2(data2)
-setTaskData3(data3)
-setTaskData4(data4)
-setTaskData5(data5)
-
-
+    console.log("fetchTasksDeadlineASC")  
+    const data = await get_tasks_data(token,project_id,user_id,'deadline','asc')
+    set_task_data(data)
+    set_task_data_by_status(data)
   }
   const fetchTasksDeadlineDES = async (token,project_id, user_id) => {
-    console.log("fetchTasksDeadlineDEC")
-       //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
-     const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
-    //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
-   const data1 = data.filter(item => item.status === 0);
-const data2 = data.filter(item => item.status === 1);
-const data3 = data.filter(item => item.status === 2);
-const data4 = data.filter(item => item.status === 3);
-const data5 = data.filter(item => item.status === 4);
-console.log(data)
-setTaskData(data)
-setTaskData1(data1)
-setTaskData2(data2)
-setTaskData3(data3)
-setTaskData4(data4)
-setTaskData5(data5)
+    console.log("fetchTasksDeadlineDESC")  
+    const data = await get_tasks_data(token,project_id,user_id,'deadline','desc')
+    set_task_data(data)
+    set_task_data_by_status(data)
   }
   const fetchTasksPriorityASC = async (token,project_id, user_id) => {
     console.log("fetchTasksPriorityASC")
-       //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
-     const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
-    //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
-   const data1 = data.filter(item => item.status === 0);
-const data2 = data.filter(item => item.status === 1);
-const data3 = data.filter(item => item.status === 2);
-const data4 = data.filter(item => item.status === 3);
-const data5 = data.filter(item => item.status === 4);
-console.log(data)
-setTaskData(data)
-setTaskData1(data1)
-setTaskData2(data2)
-setTaskData3(data3)
-setTaskData4(data4)
-setTaskData5(data5)
+    const data = await get_tasks_data(token,project_id,user_id,'priority','asc')
+    set_task_data(data)
+    set_task_data_by_status(data)
   }
   const fetchTasksPriorityDES = async (token,project_id, user_id) => {
-    console.log("fetchTasksPriorityDEC")
-       //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
-     const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
-    //wpisz tutaj podobnego fetcha ale z z posortowanymi danymi
-   const data1 = data.filter(item => item.status === 0);
-const data2 = data.filter(item => item.status === 1);
-const data3 = data.filter(item => item.status === 2);
-const data4 = data.filter(item => item.status === 3);
-const data5 = data.filter(item => item.status === 4);
-console.log(data)
-setTaskData(data)
-setTaskData1(data1)
-setTaskData2(data2)
-setTaskData3(data3)
-setTaskData4(data4)
-setTaskData5(data5)
+    console.log("fetchTasksPriorityASC")
+    const data = await get_tasks_data(token,project_id,user_id,'priority','desc')
+    set_task_data(data)
+    set_task_data_by_status(data)
   }
 
 
   const fetchTasksByDate = async (token,project_id, user_id, DateFrom, DateTo) => {
     console.log("by date")
-     //wpisz tutaj podobnego fetcha ale z z filtrowanymi danymi
-     const data = await get(`get_tasks?project_id=${project_id}&user_id=${user_id}`,token)
-    //wpisz tutaj podobnego fetcha ale z z filtrowanymi danymi
+    console.log(DateFrom)
+    console.log(DateTo)
+    const data = await get_tasks_data(token,project_id,user_id,'deadline','asc',[DateFrom.toISOString(),DateTo.toISOString()])
     setTaskData(data)
   }
 
@@ -131,7 +90,7 @@ setTaskData5(data5)
 
 
   // idTeam can be null
-  const createTask = async (token, idprojekt, nazwa, opis, deadline, idTeam, priority) => {
+  const createTask = async (token, idprojekt, nazwa, opis, deadline, idTeam, priority, status = 0) => {
     console.log("tworzenie taska")
     console.log(token)
     console.log(idprojekt)
@@ -142,16 +101,13 @@ setTaskData5(data5)
     console.log(idTeam)
     console.log(priority)
 
-    const default_status = 0
-
- console.log("DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY DO POPRAWY DODAWANIA TASKOW _ DODAJ PRIORITY")
     await post(`create_task`,token,{
       project_id:idprojekt,
       name:nazwa,
       description:opis,
       deadline: goodFormatDeadline,
       priority:priority,
-      status:default_status,
+      status:status,
       team_id:idTeam,
     })
 

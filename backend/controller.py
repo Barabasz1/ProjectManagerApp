@@ -2,6 +2,7 @@ from backend.db_manager import DbManager
 from backend.const import ReturnCode
 
 from typing import Tuple, List
+from datetime import datetime
 
 def trace_callback(statement):
     print("Executing SQL:", statement)
@@ -28,7 +29,7 @@ class Controller:
             return ReturnCode.Auth.LOGIN_NOT_FOUND
         return fetch
     
-    def get_tasks_of_project_of_user(self,project_id,user_id) -> List[dict]:
+    def get_tasks_of_project_of_user(self,project_id,user_id,order_by_command:str | None = None,date_range:Tuple[datetime | None,datetime | None] = (None,None)) -> List[dict]:
 
         command = 'SELECT DISTINCT ' \
         'task.id, task.name, task.description, task.creation_date, task.deadline, task.status, task.priority ' \
@@ -43,9 +44,25 @@ class Controller:
         'ON team.project = project.id ' \
         'WHERE task.project = ? ' \
         'AND team_composition.user = ? ' \
-        'AND team.project = task.project'
+        'AND team.project = task.project' \
         
-        self.dbm.execute(command,(project_id,user_id))
+        match date_range:
+            case (None,None):
+                params = (project_id,user_id)
+            case (None,_):
+                params = (project_id,user_id,date_range[0])
+                command += f' AND task.deadline >= ?'
+            case (_,None):
+                params = (project_id,user_id,date_range[1])
+                command += f' AND task.deadline <= ?'
+            case _:
+                params = (project_id,user_id,date_range[0],date_range[1])
+                command += f' AND task.deadline >= ? AND task.deadline <= ?'
+
+        if order_by_command is not None:    
+            command+= f' {order_by_command}'
+
+        self.dbm.execute(command,params)
         return self.dbm.fetchall()
 
     def get_tasks_of_user(self,account_id) -> List[dict]:

@@ -72,7 +72,17 @@ class TeamEditReq(BaseModel):
 
 
 
-class BindMode(str, Enum):
+class BindModeQP(str, Enum):
     assign = "assign"
     unassign = "unassign"
     unassign_all = "unassign_all"
+
+
+class TaskSortByQP(str, Enum):
+    priority = "priority"
+    deadline = "deadline"
+
+
+class SortOrderQP(str, Enum):
+    asc = "asc"
+    desc = "desc"

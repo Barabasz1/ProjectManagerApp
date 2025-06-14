@@ -16,7 +16,7 @@ sys.path.append(os.path.abspath(os.path.join(__file__, '..','..')))
 
 from backend.const import ReturnCode
 from backend.controller import Controller
-from backend.utils import get_now,clean_dict,filter_out_not_set
+from backend.utils import get_now,clean_dict,filter_out_not_set,get_datetime_utc,datetime_to_native
 from backend.request_structs.requests import *
 
 SECRET_KEY = 'bae0a9511295b4d7243684f9eb2ddf92bce396a2dbca2302b1688b28bfe5c853'
@@ -228,7 +228,7 @@ async def create_task(
     with get_controller() as ctrl:
         if not ctrl.project_exists(data.project_id):
            raise get_invalid_id_exception()
-        _data = [data.project_id,data.name,data.description,get_now(),data.deadline,1,0]
+        _data = [data.project_id,data.name,data.description,get_now(),data.deadline,data.status,data.priority]
         added_task_id = ctrl.insert_from_list('task',_data)
         if data.team_id:
             if not ctrl.team_exists(data.team_id):
@@ -279,7 +279,7 @@ async def task_team_bind(
     current_user: Annotated[User, Depends(get_current_active_user)],
     task_id:int,
     team_id: Optional[int] = Query(None, description="Required unless bind_mode is 'unassign_all')"),
-    bind_mode: BindMode = Query(BindMode.assign, description="Bind mode: assign, unassign, or unassign_all")
+    bind_mode: BindModeQP = Query(BindModeQP.assign, description="Bind mode: assign, unassign, or unassign_all")
 ):
     with get_controller() as ctrl:
 
@@ -287,18 +287,18 @@ async def task_team_bind(
             raise get_invalid_id_exception()
         
         match bind_mode:
-            case BindMode.assign | BindMode.unassign:
+            case BindModeQP.assign | BindModeQP.unassign:
                 if team_id is None or not ctrl.team_exists(team_id):
                     raise get_invalid_id_exception()
                 
                 match bind_mode:
-                    case BindMode.assign:
+                    case BindModeQP.assign:
                         ctrl.insert_from_list('task_team_assignment',[task_id,team_id])
 
-                    case BindMode.unassign:
+                    case BindModeQP.unassign:
                         ctrl.delete_task_team_bind(task_id,team_id)
 
-            case BindMode.unassign_all:
+            case BindModeQP.unassign_all:
                 ctrl.delete_task_team_bind(task_id,None)
 
             case _:
@@ -344,15 +344,28 @@ async def get_tasks_of_project(
 async def get_tasks_of_project_of_user(
     current_user: Annotated[User, Depends(get_current_active_user)],
     project_id:int,
-    user_id:int
+    user_id:int,
+    sort: TaskSortByQP | None = None,
+    sort_order: SortOrderQP | None = None,
+    date_from: datetime | None = None,
+    date_to: datetime | None = None,
 ):
-    if current_user.id != user_id:
-        raise get_unathorized_exception()
     with get_controller() as ctrl:
-        if not ctrl.user_exists(user_id) and not ctrl.project_exists(project_id):
+        if not ctrl.user_exists(user_id) or not ctrl.project_exists(project_id):
             raise get_invalid_id_exception()
-        result = ctrl.get_tasks_of_project_of_user(project_id,user_id)
-        return result
+        
+        date_range = (datetime_to_native(date_from),datetime_to_native(date_to))
+        print(f'DATE range = {date_range}')
+
+        if sort is not None:
+            result = ctrl.get_tasks_of_project_of_user(project_id,user_id,f'ORDER BY task.{sort.value} {sort_order.value.upper() if not None else 'ASC'}',date_range)
+            print(f"========================\n{result}\n=============================")
+            return result
+        else:
+            result = ctrl.get_tasks_of_project_of_user(project_id,user_id,None,date_range)
+            print(f"========================\n{result}\n=============================")
+            return result
+
 
 @app.get('/get_projects/{user_id}')
 async def get_projects(
@@ -471,7 +484,7 @@ async def remove_user_from_team(
     user_id:int
 ):
     with get_controller() as ctrl:
-        if not ctrl.team_exists(team_id) and not ctrl.user_exists(user_id):
+        if not ctrl.team_exists(team_id) or not ctrl.user_exists(user_id):
             raise get_invalid_id_exception()
         ctrl.remove_user_from_team(user_id,team_id)
 
