@@ -1,100 +1,101 @@
 id,project,name,description,creation_date,deadline,status,priority
-1,1,Design Homepage,Create new homepage layout,2025/01/02 08:00,2025/01/15 18:00,1,2
-2,1,Implement API,Develop REST API,2025/01/05 09:00,2025/02/01 17:00,2,1
-3,2,Setup Firebase,Initialize Firebase services,2025/01/10 11:30,2025/02/15 17:00,1,3
-4,5,User Authentication,Implement login system,2025/07/22 09:30,2025/10/01 17:00,2,1
-5,88,Create Wireframes,Design initial wireframes,2025/08/01 08:15,2025/09/20 16:00,4,3
-6,29,Write Documentation,Document API endpoints,2025/08/03 14:00,2025/09/30 18:00,1,2
-7,66,Optimize Queries,Improve DB performance,2025/07/30 11:45,2025/10/05 15:00,5,1
-8,13,Fix Bugs,Resolve reported issues,2025/07/25 10:20,2025/09/25 14:00,3,2
-9,72,Design Logo,Create project logo,2025/07/28 09:00,2025/09/10 12:00,2,3
-10,41,Setup CI/CD,Configure build pipeline,2025/08/10 08:00,2025/10/15 17:00,4,1
-11,84,Frontend Testing,Write UI tests,2025/08/15 10:30,2025/09/28 16:00,1,2
-12,24,Backend Integration,Connect backend services,2025/08/20 14:00,2025/10/01 18:00,5,3
-13,51,UX Research,Conduct user interviews,2025/08/05 09:00,2025/09/22 15:00,3,2
-14,6,Improve Security,Add encryption layers,2025/07/29 08:15,2025/10/10 12:00,2,1
-15,97,Refactor Code,Clean up legacy code,2025/08/02 11:00,2025/09/18 14:00,4,3
-16,15,Create Mockups,Design screen mockups,2025/07/31 09:45,2025/09/12 16:00,3,2
-17,78,Deploy Staging,Push to staging env,2025/08/07 10:00,2025/10/20 17:00,1,1
-18,35,Write Unit Tests,Develop tests for modules,2025/07/26 08:30,2025/09/27 15:00,4,2
-19,92,Setup Analytics,Implement tracking,2025/08/11 13:00,2025/10/12 18:00,5,1
-20,43,Database Migration,Move to new schema,2025/07/24 10:00,2025/09/29 16:00,3,2
-21,61,Content Creation,Write blog posts,2025/08/14 08:00,2025/09/25 14:00,2,3
-22,4,Load Testing,Stress test application,2025/08/12 09:15,2025/10/22 17:00,4,1
-23,70,API Documentation,Create API docs,2025/08/01 11:30,2025/09/15 15:00,1,2
-24,27,UI Animation,Add animations,2025/07/27 10:45,2025/09/23 12:00,3,3
-25,89,Security Audit,Review security posture,2025/08/09 08:30,2025/10/05 18:00,5,1
-26,54,Customer Feedback,Analyze feedback,2025/07/28 09:00,2025/09/30 14:00,2,2
-27,17,Optimize Images,Reduce asset size,2025/08/13 08:00,2025/09/18 16:00,3,3
-28,33,Setup Monitoring,Implement alerts,2025/08/06 10:00,2025/10/01 17:00,4,1
-29,21,Refine UX,Improve user flows,2025/07/29 11:15,2025/09/22 15:00,2,2
-30,45,Improve SEO,Boost site ranking,2025/08/10 09:30,2025/09/28 16:00,3,3
-31,7,Localization,Add multi-language support,2025/08/03 08:45,2025/10/10 12:00,4,1
-32,56,Create Tutorials,Write user guides,2025/07/30 10:00,2025/09/20 14:00,1,2
-33,19,Fix UI Bugs,Resolve UI glitches,2025/08/15 09:00,2025/09/25 15:00,3,3
-34,50,Update Dependencies,Upgrade packages,2025/08/05 11:00,2025/10/15 16:00,5,1
-35,85,Performance Testing,Benchmark app,2025/07/27 08:30,2025/09/29 12:00,4,2
-36,32,Setup Backup,Implement backups,2025/08/14 10:15,2025/10/05 14:00,2,1
-37,11,Design Newsletter,Create email templates,2025/08/02 09:00,2025/09/18 17:00,3,3
-38,79,Integrate Payment,Add payment gateway,2025/07/31 08:00,2025/10/01 16:00,4,1
-39,16,Conduct Testing,QA testing,2025/08/09 10:00,2025/09/22 18:00,2,2
-40,94,Setup Cache,Improve response time,2025/08/12 09:30,2025/10/10 15:00,5,1
-41,3,Implement Search,Add search feature,2025/07/25 11:00,2025/09/26 14:00,3,2
-42,44,Update UI,Refresh design,2025/08/07 10:30,2025/09/28 16:00,2,3
-43,90,Write Blog,Publish articles,2025/08/01 08:45,2025/09/20 15:00,1,2
-44,26,Refactor Backend,Improve code structure,2025/07/29 09:00,2025/10/05 17:00,4,1
-45,53,Improve Logging,Add detailed logs,2025/08/15 11:00,2025/10/12 14:00,5,2
-46,18,Fix Crash Bugs,Resolve crashes,2025/07/27 10:00,2025/09/30 15:00,3,3
-47,77,Create Dashboard,Design dashboard,2025/08/03 09:15,2025/09/24 17:00,2,2
-48,60,Setup Alerts,Configure notifications,2025/08/05 08:30,2025/10/01 16:00,4,1
-49,9,Add Chat,Implement chat feature,2025/08/10 10:00,2025/09/25 14:00,3,2
-50,39,Improve UX Flow,Smooth user experience,2025/07/31 11:00,2025/09/20 15:00,2,3
-51,95,Fix Security Bugs,Patch vulnerabilities,2025/08/02 08:00,2025/10/10 17:00,5,1
-52,14,Create API Tests,Test API endpoints,2025/07/28 09:30,2025/09/27 16:00,3,2
-53,48,Design Icons,Create icon set,2025/08/01 10:45,2025/09/22 14:00,1,3
-54,34,Optimize CSS,Improve styling performance,2025/07/26 08:15,2025/09/28 16:00,4,2
-55,20,Add Notifications,Push notification system,2025/08/12 09:00,2025/10/05 15:00,3,1
-56,83,Test Integrations,Check third-party services,2025/08/06 11:00,2025/09/30 14:00,2,3
-57,12,Update Docs,Revise documentation,2025/07/25 10:30,2025/09/18 16:00,4,2
-58,55,Create Animations,Add UI effects,2025/08/09 08:00,2025/10/01 17:00,3,1
-59,23,Code Review,Review pull requests,2025/08/14 09:15,2025/09/26 15:00,5,2
-60,74,Improve Accessibility,Enhance usability,2025/07/30 10:45,2025/09/25 14:00,2,3
-61,8,Setup Firewall,Improve security,2025/08/03 11:00,2025/10/10 16:00,4,1
-62,42,Add Filters,Search filters,2025/08/11 09:00,2025/09/20 15:00,3,2
-63,38,Fix Layout Issues,Resolve CSS bugs,2025/07/27 08:30,2025/09/22 16:00,2,3
-64,28,Improve Speed,Optimize loading times,2025/08/15 10:00,2025/10/01 17:00,4,1
-65,46,Write Tutorials,User education,2025/07/29 09:15,2025/09/28 15:00,3,2
-66,10,Create Surveys,User feedback surveys,2025/08/02 11:00,2025/09/25 16:00,1,3
-67,62,Integrate Maps,Add location features,2025/07/31 08:45,2025/10/05 17:00,4,1
-68,36,Fix API Errors,Resolve backend issues,2025/08/10 09:00,2025/09/29 15:00,3,2
-69,49,Add Tags,Implement tagging system,2025/08/07 10:15,2025/10/12 14:00,5,3
-70,73,Optimize Images,Compress assets,2025/07/26 08:00,2025/09/20 16:00,4,2
-71,30,Improve Navigation,Refine menus,2025/08/01 09:30,2025/09/30 15:00,3,1
-72,69,Setup SSL,Secure connections,2025/07/28 11:00,2025/10/15 17:00,5,3
-73,22,Add Analytics,Track user activity,2025/08/03 08:15,2025/09/18 14:00,4,2
-74,65,Update Styles,Modernize UI,2025/08/11 10:00,2025/10/05 16:00,3,1
-75,58,Fix Crashes,Stabilize app,2025/07/30 09:00,2025/09/25 15:00,5,3
-76,31,Create Landing Page,Design marketing page,2025/08/05 11:30,2025/10/01 18:00,2,2
-77,64,Improve UX,Enhance interactions,2025/07/27 08:45,2025/09/28 16:00,3,1
-78,40,Setup CDN,Distribute assets,2025/08/09 09:15,2025/10/10 17:00,4,3
-79,59,Write FAQs,Help center content,2025/07/25 10:00,2025/09/20 15:00,1,2
-80,52,Add Dark Mode,Implement theme toggle,2025/08/14 08:30,2025/10/05 16:00,3,1
-81,25,Fix UI Bugs,Resolve display errors,2025/07/29 09:00,2025/09/30 14:00,2,3
-82,67,Improve Security,Add firewalls,2025/08/01 10:15,2025/10/15 17:00,5,1
-83,57,Create Reports,Data export features,2025/07/28 11:00,2025/09/22 15:00,3,2
-84,1,Design Homepage,Create new homepage layout,2025/01/02 08:00,2025/09/20 18:00,1,2
-85,1,Implement API,Develop REST API,2025/01/05 09:00,2025/10/01 17:00,2,1
-86,14,Test Mobile,Mobile compatibility,2025/08/10 09:00,2025/09/29 16:00,3,2
-87,3,Fix Performance,Speed optimizations,2025/07/25 10:00,2025/10/12 15:00,4,1
-88,42,Update UI,Refresh components,2025/08/07 08:30,2025/09/25 14:00,3,2
-89,21,Add Features,New functionalities,2025/07/28 09:15,2025/10/05 16:00,5,3
-90,55,Improve Docs,Better documentation,2025/08/03 11:00,2025/09/22 15:00,1,2
-91,17,Refactor Code,Cleanup codebase,2025/07/30 10:00,2025/10/01 18:00,4,1
-92,77,Setup Monitoring,Add system alerts,2025/08/12 09:30,2025/09/30 16:00,3,3
-93,5,Fix Bugs,Bug fixing,2025/07/26 08:00,2025/09/28 15:00,2,2
-94,66,Improve UX,User experience polish,2025/08/01 10:00,2025/10/10 17:00,3,1
-95,9,Create Tutorials,User education,2025/07/29 09:30,2025/09/25 16:00,4,3
-96,88,Optimize API,Improve backend speed,2025/08/05 08:15,2025/10/05 15:00,5,1
-97,24,Setup Backup,Data protection,2025/07/25 10:45,2025/09/20 14:00,3,2
-98,60,Design Newsletter,Email marketing,2025/08/11 09:00,2025/10/12 16:00,4,1
-99,32,Add Filters,Search enhancement,2025/07/28 08:30,2025/09/30 15:00,1,1
+1,1,Design Homepage,Create new homepage layout,2025-01-02 08:00:00,2025-01-15 18:00:00,5,2
+2,1,Design dashboard,Create new dashboard menu,2025-01-02 08:00:00,2025-01-15 18:00:00,5,2
+3,2,Setup Firebase,Initialize Firebase services,2025-01-10 11:30:00,2025-02-15 17:00:00,1,3
+4,5,User Authentication,Implement login system,2025-07-22 09:30:00,2025-10-01 17:00:00,2,1
+5,88,Create Wireframes,Design initial wireframes,2025-08-01 08:15:00,2025-09-20 16:00:00,4,3
+6,29,Write Documentation,Document API endpoints,2025-08-03 14:00:00,2025-09-30 18:00:00,1,2
+7,66,Optimize Queries,Improve DB performance,2025-07-30 11:45:00,2025-10-05 15:00:00,5,1
+8,13,Fix Bugs,Resolve reported issues,2025-07-25 10:20:00,2025-09-25 14:00:00,3,2
+9,72,Design Logo,Create project logo,2025-07-28 09:00:00,2025-09-10 12:00:00,2,3
+10,41,Setup CI/CD,Configure build pipeline,2025-08-10 08:00:00,2025-10-15 17:00:00,4,1
+11,84,Frontend Testing,Write UI tests,2025-08-15 10:30:00,2025-09-28 16:00:00,1,2
+12,24,Backend Integration,Connect backend services,2025-08-20 14:00:00,2025-10-01 18:00:00,5,3
+13,51,UX Research,Conduct user interviews,2025-08-05 09:00:00,2025-09-22 15:00:00,3,2
+14,6,Improve Security,Add encryption layers,2025-07-29 08:15:00,2025-10-10 12:00:00,2,1
+15,97,Refactor Code,Clean up legacy code,2025-08-02 11:00:00,2025-09-18 14:00:00,4,3
+16,15,Create Mockups,Design screen mockups,2025-07-31 09:45:00,2025-09-12 16:00:00,3,2
+17,78,Deploy Staging,Push to staging env,2025-08-07 10:00:00,2025-10-20 17:00:00,1,1
+18,35,Write Unit Tests,Develop tests for modules,2025-07-26 08:30:00,2025-09-27 15:00:00,4,2
+19,92,Setup Analytics,Implement tracking,2025-08-11 13:00:00,2025-10-12 18:00:00,5,1
+20,43,Database Migration,Move to new schema,2025-07-24 10:00:00,2025-09-29 16:00:00,3,2
+21,61,Content Creation,Write blog posts,2025-08-14 08:00:00,2025-09-25 14:00:00,2,3
+22,4,Load Testing,Stress test application,2025-08-12 09:15:00,2025-10-22 17:00:00,4,1
+23,70,API Documentation,Create API docs,2025-08-01 11:30:00,2025-09-15 15:00:00,1,2
+24,27,UI Animation,Add animations,2025-07-27 10:45:00,2025-09-23 12:00:00,3,3
+25,89,Security Audit,Review security posture,2025-08-09 08:30:00,2025-10-05 18:00:00,5,1
+26,54,Customer Feedback,Analyze feedback,2025-07-28 09:00:00,2025-09-30 14:00:00,2,2
+27,17,Optimize Images,Reduce asset size,2025-08-13 08:00:00,2025-09-18 16:00:00,3,3
+28,33,Setup Monitoring,Implement alerts,2025-08-06 10:00:00,2025-10-01 17:00:00,4,1
+29,21,Refine UX,Improve user flows,2025-07-29 11:15:00,2025-09-22 15:00:00,2,2
+30,45,Improve SEO,Boost site ranking,2025-08-10 09:30:00,2025-09-28 16:00:00,3,3
+31,7,Localization,Add multi-language support,2025-08-03 08:45:00,2025-10-10 12:00:00,4,1
+32,56,Create Tutorials,Write user guides,2025-07-30 10:00:00,2025-09-20 14:00:00,1,2
+33,19,Fix UI Bugs,Resolve UI glitches,2025-08-15 09:00:00,2025-09-25 15:00:00,3,3
+34,50,Update Dependencies,Upgrade packages,2025-08-05 11:00:00,2025-10-15 16:00:00,5,1
+35,85,Performance Testing,Benchmark app,2025-07-27 08:30:00,2025-09-29 12:00:00,4,2
+36,32,Setup Backup,Implement backups,2025-08-14 10:15:00,2025-10-05 14:00:00,2,1
+37,11,Design Newsletter,Create email templates,2025-08-02 09:00:00,2025-09-18 17:00:00,3,3
+38,79,Integrate Payment,Add payment gateway,2025-07-31 08:00:00,2025-10-01 16:00:00,4,1
+39,16,Conduct Testing,QA testing,2025-08-09 10:00:00,2025-09-22 18:00:00,2,2
+40,94,Setup Cache,Improve response time,2025-08-12 09:30:00,2025-10-10 15:00:00,5,1
+41,3,Implement Search,Add search feature,2025-07-25 11:00:00,2025-09-26 14:00:00,3,2
+42,44,Update UI,Refresh design,2025-08-07 10:30:00,2025-09-28 16:00:00,2,3
+43,90,Write Blog,Publish articles,2025-08-01 08:45:00,2025-09-20 15:00:00,1,2
+44,26,Refactor Backend,Improve code structure,2025-07-29 09:00:00,2025-10-05 17:00:00,1,1
+45,53,Improve Logging,Add detailed logs,2025-08-15 11:00:00,2025-10-12 14:00:00,5,2
+46,18,Fix Crash Bugs,Resolve crashes,2025-07-27 10:00:00,2025-09-30 15:00:00,3,3
+47,77,Create Dashboard,Design dashboard,2025-08-03 09:15:00,2025-09-24 17:00:00,2,2
+48,60,Setup Alerts,Configure notifications,2025-08-05 08:30:00,2025-10-01 16:00:00,4,1
+49,9,Add Chat,Implement chat feature,2025-08-10 10:00:00,2025-09-25 14:00:00,3,2
+50,39,Improve UX Flow,Smooth user experience,2025-07-31 11:00:00,2025-09-20 15:00:00,2,3
+51,95,Fix Security Bugs,Patch vulnerabilities,2025-08-02 08:00:00,2025-10-10 17:00:00,5,1
+52,14,Create API Tests,Test API endpoints,2025-07-28 09:30:00,2025-09-27 16:00:00,3,2
+53,48,Design Icons,Create icon set,2025-08-01 10:45:00,2025-09-22 14:00:00,1,3
+54,34,Optimize CSS,Improve styling performance,2025-07-26 08:15:00,2025-09-28 16:00:00,4,2
+55,20,Add Notifications,Push notification system,2025-08-12 09:00:00,2025-10-05 15:00:00,3,1
+56,83,Test Integrations,Check third-party services,2025-08-06 11:00:00,2025-09-30 14:00:00,2,3
+57,12,Update Docs,Revise documentation,2025-07-25 10:30:00,2025-09-18 16:00:00,4,2
+58,55,Create Animations,Add UI effects,2025-08-09 08:00:00,2025-10-01 17:00:00,3,1
+59,23,Code Review,Review pull requests,2025-08-14 09:15:00,2025-09-26 15:00:00,5,2
+60,74,Improve Accessibility,Enhance usability,2025-07-30 10:45:00,2025-09-25 14:00:00,2,3
+61,8,Setup Firewall,Improve security,2025-08-03 11:00:00,2025-10-10 16:00:00,4,1
+62,42,Add Filters,Search filters,2025-08-11 09:00:00,2025-09-20 15:00:00,3,2
+63,38,Fix Layout Issues,Resolve CSS bugs,2025-07-27 08:30:00,2025-09-22 16:00:00,2,3
+64,28,Improve Speed,Optimize loading times,2025-08-15 10:00:00,2025-10-01 17:00:00,4,1
+65,46,Write Tutorials,User education,2025-07-29 09:15:00,2025-09-28 15:00:00,3,2
+66,10,Create Surveys,User feedback surveys,2025-08-02 11:00:00,2025-09-25 16:00:00,1,3
+67,62,Integrate Maps,Add location features,2025-07-31 08:45:00,2025-10-05 17:00:00,4,1
+68,36,Fix API Errors,Resolve backend issues,2025-08-10 09:00:00,2025-09-29 15:00:00,3,2
+69,49,Add Tags,Implement tagging system,2025-08-07 10:15:00,2025-10-12 14:00:00,5,3
+70,73,Optimize Images,Compress assets,2025-07-26 08:00:00,2025-09-20 16:00:00,4,2
+71,30,Improve Navigation,Refine menus,2025-08-01 09:30:00,2025-09-30 15:00:00,3,1
+72,69,Setup SSL,Secure connections,2025-07-28 11:00:00,2025-10-15 17:00:00,5,3
+73,22,Add Analytics,Track user activity,2025-08-03 08:15:00,2025-09-18 14:00:00,4,2
+74,65,Update Styles,Modernize UI,2025-08-11 10:00:00,2025-10-05 16:00:00,3,1
+75,58,Fix Crashes,Stabilize app,2025-07-30 09:00:00,2025-09-25 15:00:00,5,3
+76,31,Create Landing Page,Design marketing page,2025-08-05 11:30:00,2025-10-01 18:00:00,2,2
+77,64,Improve UX,Enhance interactions,2025-07-27 08:45:00,2025-09-28 16:00:00,3,1
+78,40,Setup CDN,Distribute assets,2025-08-09 09:15:00,2025-10-10 17:00:00,4,3
+79,59,Write FAQs,Help center content,2025-07-25 10:00:00,2025-09-20 15:00:00,1,2
+80,52,Add Dark Mode,Implement theme toggle,2025-08-14 08:30:00,2025-10-05 16:00:00,3,1
+81,25,Fix UI Bugs,Resolve display errors,2025-07-29 09:00:00,2025-09-30 14:00:00,2,3
+82,67,Improve Security,Add firewalls,2025-08-01 10:15:00,2025-10-15 17:00:00,5,1
+83,57,Create Reports,Data export features,2025-07-28 11:00:00,2025-09-22 15:00:00,3,2
+84,1,Design Homepage,Create new homepage layout,2025-01-02 08:00:00,2025-09-20 18:00:00,0,2
+85,1,Implement API,Develop REST API,2025-01-05 09:00:00,2025-10-01 17:00:00,0,1
+86,14,Test Mobile,Mobile compatibility,2025-08-10 09:00:00,2025-09-29 16:00:00,5,2
+87,3,Fix Performance,Speed optimizations,2025-07-25 10:00:00,2025-10-12 15:00:00,4,1
+88,42,Update UI,Refresh components,2025-08-07 08:30:00,2025-09-25 14:00:00,3,2
+89,21,Add Features,New functionalities,2025-07-28 09:15:00,2025-10-05 16:00:00,5,3
+90,55,Improve Docs,Better documentation,2025-08-03 11:00:00,2025-09-22 15:00:00,1,2
+91,17,Refactor Code,Cleanup codebase,2025-07-30 10:00:00,2025-10-01 18:00:00,4,1
+92,77,Setup Monitoring,Add system alerts,2025-08-12 09:30:00,2025-09-30 16:00:00,3,3
+93,5,Fix Bugs,Bug fixing,2025-07-26 08:00:00,2025-09-28 15:00:00,2,2
+94,66,Improve UX,User experience polish,2025-08-01 10:00:00,2025-10-10 17:00:00,3,1
+95,9,Create Tutorials,User education,2025-07-29 09:30:00,2025-09-25 16:00:00,4,3
+96,88,Optimize API,Improve backend speed,2025-08-05 08:15:00,2025-10-05 15:00:00,5,1
+97,24,Setup Backup,Data protection,2025-07-25 10:45:00,2025-09-20 14:00:00,3,2
+98,60,Design Newsletter,Email marketing,2025-08-11 09:00:00,2025-10-12 16:00:00,4,1
+99,32,Add Filters,Search enhancement,2025-07-28 08:30:00,2025-09-30 15:00:00,1,1
+100,32,Improve GUI,Self-exaplinatory,2025-07-28 08:30:00,2025-09-30 15:00:00,1,1

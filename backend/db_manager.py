@@ -2,6 +2,8 @@ import os
 from backend.utils import get_master_dir
 import sqlite3
 from typing import List
+from datetime import datetime
+from backend.const import ReturnCode
 
 class DbManager:
 
@@ -46,34 +48,14 @@ class DbManager:
     }
 
     KANBAN_STATUS_MIN = 0
-    KANBAN_STATUS_MAX = 5
-
-    TASK_PRIORITY_MIN = 0
-    TASK_PRIORITY_MAX = 3
-
-    # // kanban status
-    # Enum kanban_status {
-    #   unassigned// 0
-    #   backlog//1
-    #   in_progress// 2
-    #   completed// 3
-    #   testing// 4
-    #   todo// 5
-    # }
-
-    # Enum task_priority {
-    #   unassigned//0
-    #   low//1
-    #   medium//2
-    #   high//3
-    # }
-
+    KANBAN_STATUS_MAX = 4
 
     def __init__(self,trace_callback=None):
         self.connection = None
         self.cursor = None
         self.path = None
         self.trace_callback = trace_callback
+
 
     def create(self,path:str,overwrite:bool=True):
         if os.path.exists(path):
@@ -190,11 +172,6 @@ class DbManager:
 
         self.connection.commit()
 
-    # def select(self,sql_command:str):
-    #     self.cursor.execute(sql_command)
-    #     return self.cursor.fetchall()
-
-
     def save_to_csv(self, output_dir_path):
         import pandas as pd
 
@@ -211,16 +188,24 @@ class DbManager:
         return f'INSERT INTO {table_name} ({fields}) VALUES ({values})'
 
     def _get_select_command(self,table_name:str,columns:list,where: str):
-        command = f'SELECT {', '.join(columns)} FROM {table_name}'
+        command = f'SELECT {", ".join(columns)} FROM {table_name}'
         if where is not None:
             command += f' WHERE {where}'
         return command
     
+    def _get_update_command(self,table_name:str,data:dict,where_keys:list[str]):
+        set_keys = [key for key in data if key not in where_keys]
+        return f"UPDATE {table_name} SET {','.join([f'{x} = :{x}'for x in set_keys])} WHERE {'AND'.join([f'{x} = :{x}' for x in where_keys])}"
+
 
     # inserts a single new row into any table, 
     # data dictionary must contain each field defined in TABLES_INSERT_FIELDS
-    def _insert_single(self,table_name:str,data:dict):  
-        self.cursor.execute(self._get_insert_command(table_name,DbManager.TABLES_INSERT_FIELDS),data)
+    def _insert_single(self,table_name:str,data:dict): 
+        try:
+            self.cursor.execute(self._get_insert_command(table_name,DbManager.TABLES_INSERT_FIELDS),data)
+        except sqlite3.IntegrityError as e:
+            return ReturnCode.Sql.INTEGRITY_ERROR
+ 
 
     def _insert_single_raw(self,table_name,data:dict):
         self.cursor.execute(self._get_insert_command(table_name,DbManager.TABLES_FIELDS),data)
@@ -232,6 +217,9 @@ class DbManager:
         command = self._get_select_command(table_name,columns,where)
         self.cursor.execute(command,where_values)
     
+    def update(self,table_name:str,data:dict,where_keys:list[str]):
+        self.cursor.execute(self._get_update_command(table_name,data,where_keys),data)
+
     def get_lastrowid(self):
         return self.cursor.lastrowid
 
@@ -239,7 +227,11 @@ class DbManager:
         self.connection.commit()
 
     def execute(self,command,params):
-        self.cursor.execute(command,params)
+        try:
+            self.cursor.execute(command,params)
+            return ReturnCode.General.SUCCESS
+        except sqlite3.IntegrityError as e:
+            return ReturnCode.Sql.INTEGRITY_ERROR
 
 
     def fetchall(self) -> List[dict]:
@@ -248,12 +240,3 @@ class DbManager:
         row = self.cursor.fetchone()
         return dict(row) if row else None
 
-
-
-    # def _add_account(self, account_data:dict):
-    #     self.cursor.execute("""INSERT INTO account (login, password, creation_date) VALUES (:login, :password, :creation_date)""", account_data)
-    #     self.connection.commit()
-
-    # def _add_user(self, user_data:dict):
-    #     self.cursor.execute("""INSERT INTO user (id, f_name, l_name, email, description)VALUES (:id, :f_name, :l_name, :email, :description)""", user_data)
-    #     self.connection.commit()

@@ -1,8 +1,10 @@
-fetche
-
 testy jednostkowe
 docker
 
 
 
-datetime example data
+BUGI:
+
+fetch tasks by date - user_id i project_id sa ze soba zamienione - zmienic wywolanie
+
+fetch tasks by date dziala - zwracane sa poprawne dane, ale nie wyswietlaja sie zadne taski - tez zamienione ze soba ID

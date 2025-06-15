@@ -7,33 +7,86 @@ import { AppSidebar } from '../Basic/app-sidebar';
 import TeamsComponent from '../SubsectionInProperApp/TeamsComponent';
 import UserComponent from '../SubsectionInProperApp/UserComponent';
 import { useTeamContext } from '@/Context/TeamsContext';
-import { useEffect } from 'react';
+import { use, useEffect } from 'react';
 import { useUserContext } from '@/Context/UserContext';
 import { useProjectContext } from '@/Context/ProjectsContext';
+import { useTasksContext } from '@/Context/TasksContext';
+import { useUsersContext } from '@/Context/UsersContext';
+import Timeline from '../SubsectionInProperApp/Timeline';
 
 
 
 const ProperApp = () => {
- const {fetchTeams} = useTeamContext();
- const {token} = useUserContext()
- const {selectedProjectID} = useProjectContext()
+ const {fetchTeams, usersInProject, usersInNotProject} = useTeamContext();
+ const {token, idUser } = useUserContext()
+ const { selectedProjectID, fetchProjects} = useProjectContext()
+ const {fetchTasksOfProejct} = useTasksContext()
+ const {fetchUsers, } = useUsersContext()
  
 
  useEffect(()=>{
-  const loadTeams = async () => {
+  const loadTeamsAndTasks = async () => {
       const tokenToSend = token; // Get from auth context or storage
       const projectId = selectedProjectID; // Get from props or state
+      const userIDtoSend = idUser
       
       try {
         await fetchTeams(tokenToSend, projectId);
+       
+        await fetchTasksOfProejct(tokenToSend, projectId, userIDtoSend)
+        await fetchUsers()
+        
+        
+      } catch (error) {
+        console.error("Failed to load teams:", error);
+      }
+    };
+  
+    
+    loadTeamsAndTasks();
+ }, [selectedProjectID])
+
+
+ 
+  useEffect(()=>{
+  const loadProjects = async () => {
+      const tokenToSend = token; 
+      const user_id = idUser
+      
+      try {
+        await fetchProjects(tokenToSend, user_id)
         
       } catch (error) {
         console.error("Failed to load teams:", error);
       }
     };
     
-    loadTeams();
- }, [selectedProjectID])
+    loadProjects();
+ }, [])
+
+  useEffect(()=>{
+  const loadTeamsAndTasks = async () => {
+      const tokenToSend = token; 
+      const projectId = selectedProjectID; 
+      const userIDtoSend = idUser
+      
+      try {
+       console.log("dmadsajd")
+       
+        await fetchTasksOfProejct(tokenToSend, projectId, userIDtoSend)
+      
+        
+        
+      } catch (error) {
+        console.error("Failed to load tasks:", error);
+      }
+    };
+  
+    
+    loadTeamsAndTasks();
+ }, [usersInNotProject, usersInProject])
+ 
+
 
   return ( 
 
@@ -59,6 +112,8 @@ const ProperApp = () => {
                 <Route path='/' element={<TeamsComponent></TeamsComponent>} />
 
                 <Route path='/tasks' element={<CanbanTasks></CanbanTasks>} />
+                
+                <Route path='/tasksDates' element={<Timeline></Timeline>} />
        
               </Routes>
             </div>

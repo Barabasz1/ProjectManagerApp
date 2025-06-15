@@ -5,10 +5,16 @@ const UsersContext = createContext(null);
 export const UserDataProvider = ({ children }) => {
   const [userData, setUserData] = useState([]);
   const [selectedUserID, setSelectedUserID] = useState(null);
+  
 
   const fetchUsers = async () => {
-    return await get('get_users',null)
+    const data =  await get('get_users',null)
+    console.log("userzy fetchowani")
+    console.log(data)
+    setUserData(data)
   };
+  
+  
 
   const removeUser = (token,userId) => {
     del(`delete_user/${userId}`,token)
@@ -18,9 +24,10 @@ export const UserDataProvider = ({ children }) => {
     post('register',null,{login:login,password:password})
   };
 
-  const editUser = (updatedUser) => {
-    // logika edycji danych użytkownika
+  const editUser = (token,userId,) => {
+    
   };
+
 
   return (
     <UsersContext.Provider
@@ -32,6 +39,7 @@ export const UserDataProvider = ({ children }) => {
         removeUser,
         createUser,
         editUser,
+       
       }}
     >
       {children}

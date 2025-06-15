@@ -99,8 +99,4 @@ id,f_name,l_name,email,description
 98,'Tadeusz','Urban','tadeusz.urban@gmail.com','Systems engineer'
 99,'Emilia','Kowal','emilia.kowal@yahoo.com','Healthcare consultant'
 100,'Jakub','Cieślak','jakub.cieslak@gmail.com','Blockchain developer'
-<<<<<<< HEAD
 101,'Adrian','Kowalczyk','adrian.kowalczyk@gmail.com','Blockchain developer'
-=======
-101,'Jakub','Cieślak','jakub.cieslak@gmail.com','Blockchain developer'
->>>>>>> Frontend

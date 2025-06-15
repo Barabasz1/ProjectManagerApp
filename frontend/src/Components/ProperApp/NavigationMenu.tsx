@@ -54,6 +54,21 @@ const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
         >
           tasks
         </Button>
+
+        <Button
+          component={Link}
+          to="/tasksDates"
+          variant="contained"
+          color="primary"
+          sx={{ 
+            flex: 1,
+            fontWeight: 'bold',
+            '&:hover': { transform: 'translateY(-2px)' },
+            transition: 'transform 0.2s'
+          }}
+        >
+          Timeline
+        </Button>
          
         <Button
           component={Link}
