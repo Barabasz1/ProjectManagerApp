@@ -1,9 +1,0 @@
-1) Logowanie - podaje login hasło i potem jeśli gdzieś pasuje to zwraca id
-	[Tutaj proszę wpisz przykładowe zapytanie które zrobisz]
-	
-2) rejestracja - poodaje login haslo i name i zwraca tez nowe id 
-	[Tutaj proszę wpisz przykładowe zapytanie które zrobisz]
-
-
-
-INNE ENDPOINTY KTÓRE UZNASZ ŻE JE BĘDĘ POTRZEBOWAŁ A ICH JESZCZE NIE NAPISAŁEM:

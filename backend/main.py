@@ -28,6 +28,10 @@ class InvalidIDException(HTTPException):
     def __init__(self, detail: str = "The supplied ID is invalid"):
         super().__init__(status_code=460, detail=detail)
 
+invalid_id_response = {
+    460: {"description": "The supplied ID is invalid"}
+}
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -151,12 +155,7 @@ async def get_current_active_user(
 # ================================================================================================================================
 
 
-
-
-# returns:
-#   token
-#   HTTPexception - incorrect password/incorrect username(username not found)
-@app.post("/token")
+@app.post("/token", summary="Login", description="Authenticate a user and return an access token.")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
@@ -183,8 +182,7 @@ async def login_for_access_token(
     return Token(access_token=access_token, token_type="bearer")
 
 
-# returns token
-@app.post("/register")
+@app.post("/register",summary="Register", description="Register a new user and return an access token.")
 async def register(
     data: RegisterReq
 ):
@@ -208,7 +206,7 @@ async def register(
         )
         return Token(access_token=access_token, token_type="bearer")
 
-@app.post('/create_project')
+@app.post('/create_project', summary="Create Project", description="Create a new project with a name, manager, and description.",responses=invalid_id_response)
 async def create_project(
     current_user: Annotated[User, Depends(get_current_active_user)],
     data:ProjectCreationReq
@@ -220,7 +218,7 @@ async def create_project(
         ctrl.insert_from_list('project',data)
 
 
-@app.post('/create_task')
+@app.post('/create_task', summary="Create Task", description="Create a new task under a specific project, optionally assigning it to a team.",responses=invalid_id_response)
 async def create_task(
     current_user: Annotated[User, Depends(get_current_active_user)],
     data: TaskCreationReq
@@ -236,7 +234,7 @@ async def create_task(
             ctrl.insert_from_list('task_team_assignment',[added_task_id,data.team_id])
 
 
-@app.post('/create_team')
+@app.post('/create_team', summary="Create Team", description="Create a team within a specified project.",responses=invalid_id_response)
 async def create_team(
     current_user: Annotated[User, Depends(get_current_active_user)],
     data: TeamCreationReq
@@ -247,7 +245,7 @@ async def create_team(
         ctrl.insert_from_list('team',[data.name,data.project_id])
 
 
-@app.post('/add_user_to_team')
+@app.post('/add_user_to_team', summary="Add User to Team", description="Assign a user to a team with a specified role.",responses=invalid_id_response)
 async def add_user_to_team(
     current_user: Annotated[User, Depends(get_current_active_user)],
     data: UserTeamAssignReq
@@ -261,20 +259,15 @@ async def add_user_to_team(
             return None
         
 
-# @app.post('/add_task_to_team')
-# async def add_task_to_team(
-#     current_user: Annotated[User, Depends(get_current_active_user)],
-#     data: TaskTeamAssignReq
-# ):
-#     with get_controller() as ctrl:
-#         if not ctrl.task_exists(data.task_id) or not ctrl.team_exists(data.team_id):
-#             raise get_invalid_id_exception()
-#         ctrl.insert_from_list('task_team_assignment',[data.task_id,data.team_id])
-
-
-
 @app.post('/task_team_bind/{task_id}',
-          description='Binds or unbinds a task to a team. Can also unbind task from all teams')
+          summary="Bind/Unbind Task to/from Team",
+          description="""
+Bind or unbind a task to a team.  
+Modes:
+- `assign`: Assign the task to the specified team.  
+- `unassign`: Remove the task from the specified team.  
+- `unassign_all`: Remove the task from all teams.
+""",responses=invalid_id_response)
 async def task_team_bind(
     current_user: Annotated[User, Depends(get_current_active_user)],
     task_id:int,
@@ -310,13 +303,7 @@ async def task_team_bind(
 # ================================================================================================================================
 
 
-@app.get('/hello_world')
-async def hello_world():
-    return {"message": "Hello World from fastapi :)"}
-
-
-
-@app.get('/get_tasks_of_user/{user_id}')
+@app.get('/get_tasks_of_user/{user_id}', summary="Get User's Tasks", description="Retrieve all tasks assigned to a specific user. Only the user themselves can access this.",responses=invalid_id_response)
 async def get_tasks_of_user(
     current_user: Annotated[User, Depends(get_current_active_user)],
     user_id:int
@@ -329,7 +316,7 @@ async def get_tasks_of_user(
         return ctrl.get_tasks_of_user(user_id)
     
 
-@app.get('/get_tasks_of_project/{project_id}')
+@app.get('/get_tasks_of_project/{project_id}', summary="Get Project Tasks", description="Retrieve all tasks associated with a specific project.",responses=invalid_id_response)
 async def get_tasks_of_project(
     current_user: Annotated[User, Depends(get_current_active_user)],
     project_id:int
@@ -340,7 +327,7 @@ async def get_tasks_of_project(
         return ctrl.get_tasks_of_project(project_id)
 
     
-@app.get('/get_tasks')
+@app.get('/get_tasks', summary="Get User's Tasks in Project", description="Retrieve tasks assigned to a user within a specific project, with optional sorting and date filtering.",responses=invalid_id_response)
 async def get_tasks_of_project_of_user(
     current_user: Annotated[User, Depends(get_current_active_user)],
     project_id:int,
@@ -363,7 +350,7 @@ async def get_tasks_of_project_of_user(
             return ctrl.get_tasks_of_project_of_user(project_id,user_id,None,date_range)
 
 
-@app.get('/get_projects/{user_id}')
+@app.get('/get_projects/{user_id}', summary="Get User's Projects", description="Retrieve all projects associated with a specific user. Only the user themselves can access this.",responses=invalid_id_response)
 async def get_projects(
     current_user: Annotated[User, Depends(get_current_active_user)],
     user_id:int
@@ -377,7 +364,7 @@ async def get_projects(
 
     
 
-@app.get('/get_teams/{project_id}')
+@app.get('/get_teams/{project_id}', summary="Get Project Teams", description="Retrieve all teams that belong to a specified project.",responses=invalid_id_response)
 async def get_teams(
     current_user: Annotated[User, Depends(get_current_active_user)],
     project_id
@@ -388,14 +375,13 @@ async def get_teams(
         return ctrl.get_teams(project_id)
     
 
-# returns [account_id,username]
-@app.get('/get_users')
+@app.get('/get_users', summary="Get All Users", description="Retrieve a list of all registered users. Returns user IDs and usernames.",responses=invalid_id_response)
 async def get_users():
     with get_controller() as ctrl:
         # return ctrl.get_users()
         return [list(vals.values()) for vals in ctrl.get_users()]
     
-@app.get('/get_teammembers/{team_id}')
+@app.get('/get_teammembers/{team_id}', summary="Get Team Members", description="Retrieve all members of a specified team.",responses=invalid_id_response)
 async def get_teammembers(
     current_user: Annotated[User, Depends(get_current_active_user)],
     team_id:int
@@ -407,7 +393,7 @@ async def get_teammembers(
         # return result
         return [list(vals.values()) for vals in result]
     
-@app.get('/get_nonteammembers/{team_id}')
+@app.get('/get_nonteammembers/{team_id}', summary="Get Non-Team Members", description="Retrieve users who are not part of the specified team.",responses=invalid_id_response)
 async def get_nonteammembers(
     current_user: Annotated[User, Depends(get_current_active_user)],
     team_id:int
@@ -424,7 +410,7 @@ async def get_nonteammembers(
 # ================================================================================================================================
 
 
-@app.delete('/delete_project/{project_id}')
+@app.delete('/delete_project/{project_id}', summary="Delete Project", description="Delete a project by its ID. Requires the project to exist.",responses=invalid_id_response)
 async def delete_project(
     current_user: Annotated[User, Depends(get_current_active_user)],
     project_id:int
@@ -436,7 +422,7 @@ async def delete_project(
 
 
 
-@app.delete('/delete_task/{task_id}')
+@app.delete('/delete_task/{task_id}', summary="Delete Task", description="Delete a task by its ID. Requires the task to exist.",responses=invalid_id_response)
 async def delete_task(
     current_user: Annotated[User, Depends(get_current_active_user)],
     task_id:int
@@ -447,7 +433,7 @@ async def delete_task(
         ctrl.delete_task(task_id)
         
 
-@app.delete('/delete_team/{team_id}')
+@app.delete('/delete_team/{team_id}', summary="Delete Team", description="Delete a team by its ID. Requires the team to exist.",responses=invalid_id_response)
 async def delete_team(
     current_user: Annotated[User, Depends(get_current_active_user)],
     team_id:int
@@ -458,8 +444,7 @@ async def delete_team(
         ctrl.delete_team(team_id)
 
 
-@app.delete('/delete_user/{user_id}',
-            description="Deletes a user from the database. You can only delete a user, whose id corresponds to the user id of your session token")
+@app.delete('/delete_user/{user_id}', summary="Delete User", description="Deletes a user from the database. Only the authenticated user can delete their own account.",responses=invalid_id_response)
 async def delete_user(
     current_user: Annotated[User, Depends(get_current_active_user)],
     user_id:int
@@ -473,7 +458,7 @@ async def delete_user(
         raise get_unathorized_exception()
 
 
-@app.delete('/remove_user_from_team/{team_id}/{user_id}')
+@app.delete('/remove_user_from_team/{team_id}/{user_id}', summary="Remove User from Team", description="Remove a user from a specified team. Requires both team and user to exist.",responses=invalid_id_response)
 async def remove_user_from_team(
     current_user: Annotated[User, Depends(get_current_active_user)],
     team_id:int,
@@ -491,7 +476,9 @@ async def remove_user_from_team(
 # ================================================================================================================================
 
 
-@app.patch('/increase_task_status/{task_id}')
+@app.patch('/increase_task_status/{task_id}',
+           summary="Increase Task Status",
+           description="Increase the status level of a task by a specified amount. Task must exist.",responses=invalid_id_response)
 async def increase_task_status(
     current_user: Annotated[User, Depends(get_current_active_user)],
     task_id:int,
@@ -503,7 +490,9 @@ async def increase_task_status(
         ctrl.increase_task_status(task_id,data.amount)
 
 
-@app.patch('/edit_task/{task_id}')
+@app.patch('/edit_task/{task_id}',
+           summary="Edit Task",
+           description="Update fields of an existing task. Only fields provided will be updated.",responses=invalid_id_response)
 async def edit_task(    
     current_user: Annotated[User, Depends(get_current_active_user)],
     task_id:int,
@@ -511,6 +500,8 @@ async def edit_task(
 ):
     
     with get_controller() as ctrl:
+       if not ctrl.task_exists(task_id):
+            raise get_invalid_id_exception()
        ctrl.update_task(task_id,filter_out_not_set({
            'name':data.name,
            'description':data.description,
@@ -519,13 +510,17 @@ async def edit_task(
            'priority':data.priority
         },data.model_fields_set))
        
-@app.patch('/edit_user/{user_id}')
+@app.patch('/edit_user/{user_id}',
+           summary="Edit User Profile",
+           description="Edit user's profile information such as name, email, or description.",responses=invalid_id_response)
 async def edit_user(
     current_user: Annotated[User, Depends(get_current_active_user)],
     user_id:int,
     data:UserEditReq
 ):
     with get_controller() as ctrl:
+        if not ctrl.user_exists(user_id):
+            raise get_invalid_id_exception()
         ctrl.update_user(user_id,filter_out_not_set({
            'f_name':data.f_name,
            'l_name':data.l_name,
@@ -534,36 +529,48 @@ async def edit_user(
            },data.model_fields_set))
 
 
-@app.patch('/edit_account/{account_id}')
+@app.patch('/edit_account/{account_id}',
+           summary="Edit Account Credentials",
+           description="Update login credentials of an account such as username or password.",responses=invalid_id_response)
 async def edit_account(
     current_user: Annotated[User, Depends(get_current_active_user)],
     account_id:int,
     data:AccountEditReq
 ):
     with get_controller() as ctrl:
+       if not ctrl.user_exists(account_id):
+            raise get_invalid_id_exception()
        ctrl.update_account(account_id,filter_out_not_set({
            'login':data.login,
            'password':data.password,
            },data.model_fields_set))
 
-@app.patch('/edit_team/{team_id}')
+@app.patch('/edit_team/{team_id}',
+           summary="Edit Team",
+           description="Update the name of a team.",responses=invalid_id_response)
 async def edit_team(
     current_user: Annotated[User, Depends(get_current_active_user)],
     team_id:int,
     data:TeamEditReq
 ):
     with get_controller() as ctrl:
+       if not ctrl.team_exists(team_id):
+            raise get_invalid_id_exception()
        ctrl.update_team(team_id,filter_out_not_set({
            'name':data.name,
            },data.model_fields_set))
 
-@app.patch('/edit_project/{project_id}')
+@app.patch('/edit_project/{project_id}',
+           summary="Edit Project",
+           description="Update a project's fields such as name, manager, description, version, or deadline.",responses=invalid_id_response)
 async def edit_project(
     current_user: Annotated[User, Depends(get_current_active_user)],
     project_id:int,
     data:ProjectEditReq
 ):
     with get_controller() as ctrl:
+       if not ctrl.project_exists(project_id) or ('manager' in data.model_fields_set and data.manager is not None and not ctrl.user_exists(data.manager)):
+            raise get_invalid_id_exception()
        ctrl.update_project(project_id,filter_out_not_set({
            'name':data.name,
            'manager':data.manager,
