@@ -11,20 +11,22 @@ def get_now_str():
     return get_now().strptime('%Y-%m-%d %H:%M:%S')
 
 
-def get_datetime_utc(datet:datetime):
-    return datet.astimezone(timezone.utc) if datet is not None else None
+def get_datetime_utc(dt:datetime):
+    return dt.astimezone(timezone.utc) if dt is not None else None
 
 def get_datetime_from_iso_string(datetime_str:str):
     if datetime_str.endswith('Z'):
         datetime_str = datetime_str.replace('Z', '+00:00')
     return datetime.fromisoformat(datetime_str)
 
-def drop_timezone_info(datetime:datetime):
-    return datetime.replace(tzinfo=None)
+def drop_timezone_info(dt:datetime):
+    return dt.replace(tzinfo=None)
 
-def datetime_to_native(datetime:datetime):
-    return drop_timezone_info(get_datetime_utc(datetime)) if datetime is not None else None
+def datetime_to_native(dt:datetime):
+    return drop_timezone_info(get_datetime_utc(dt)) if dt is not None else None
 
+def datetime_date_only(dt:datetime):
+    return datetime(dt.year,dt.month,dt.day) if dt is not None else None
 
 def get_master_dir():
     return os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
