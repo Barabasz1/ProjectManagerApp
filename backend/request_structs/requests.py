@@ -41,9 +41,6 @@ class TaskTeamAssignReq(BaseModel):
 class TaskStatusChangeReq(BaseModel):
     amount:int
 
-
-# edits
-
 class TaskEditReq(BaseModel):
     name: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
@@ -70,7 +67,6 @@ class UserEditReq(BaseModel):
 
 class TeamEditReq(BaseModel):
     name: Optional[str] = Field(default=None)
-
 
 
 class BindModeQP(str, Enum):

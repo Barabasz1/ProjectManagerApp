@@ -1,22 +1,11 @@
 // Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
 
-// https://dbdiagram.io/d/JezykiSkryptoweKanbanProject-683ae542bd74709cb76df6d8
-
-// Uwaga:
-// Liczności nie zostały przemyślane i nie zamierzam ich przemyślać dopóki
-// nie okaże się to naprawdę potrzebne - chyba w sqllite3 nie trzeba definiować
-// żadnej liczności foreign keysów 
-
-// Zmiany:
-// Czy drużyny są wgl potrzebne?
-// Imo to co jest teraz jest okej
-
 
 Table account {
   id integer [pk, increment]
   login string [not null,unique]
-  password string [not null,note: 'SHA256']
+  password string [not null,note: 'hashed']
   creation_date datetime
 
   Note: 'Stores user login data'
@@ -110,21 +99,3 @@ Table task_status_history {
 
   Note: 'Tracks when a task changed statuse'
 }
-
-// kanban status
-Enum kanban_status {
-  unassigned// 0
-  backlog//1
-  in_progress// 2
-  completed// 3
-  testing// 4
-  todo// 5
-}
-
-Enum task_priority {
-  unassigned//0
-  low//1
-  medium//2
-  high//3
-}
-

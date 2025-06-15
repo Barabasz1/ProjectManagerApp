@@ -19,9 +19,22 @@ from backend.controller import Controller
 from backend.utils import get_now,filter_out_not_set,datetime_to_native,datetime_date_only
 from backend.request_structs.requests import *
 
+
+#==========================================================================================
+#TOKEN SECURITY 
+#==========================================================================================
 SECRET_KEY = 'bae0a9511295b4d7243684f9eb2ddf92bce396a2dbca2302b1688b28bfe5c853'
 ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+#==========================================================================================
+# CORS
+#==========================================================================================
+ALLOWED_ORIGINS  = ["http://localhost:5173"]
+ALLOW_CREDENTIALS = True
+ALLOW_METHODS = ['*']
+ALLOW_HEADERS = ['*']
+
 
 
 class InvalidIDException(HTTPException):
@@ -50,10 +63,10 @@ def get_controller():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"], 
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS, 
+    allow_credentials=ALLOW_CREDENTIALS,
+    allow_methods=ALLOW_METHODS,
+    allow_headers=ALLOW_HEADERS,
 )
 
 class Token(BaseModel):

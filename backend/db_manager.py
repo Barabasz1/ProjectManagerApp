@@ -48,28 +48,7 @@ class DbManager:
     }
 
     KANBAN_STATUS_MIN = 0
-    KANBAN_STATUS_MAX = 5
-
-    TASK_PRIORITY_MIN = 0
-    TASK_PRIORITY_MAX = 3
-
-    # // kanban status
-    # Enum kanban_status {
-    #   unassigned// 0
-    #   backlog//1
-    #   in_progress// 2
-    #   completed// 3
-    #   testing// 4
-    #   todo// 5
-    # }
-
-    # Enum task_priority {
-    #   unassigned//0
-    #   low//1
-    #   medium//2
-    #   high//3
-    # }
-
+    KANBAN_STATUS_MAX = 4
 
     def __init__(self,trace_callback=None):
         self.connection = None
@@ -77,8 +56,6 @@ class DbManager:
         self.path = None
         self.trace_callback = trace_callback
 
-
-        
 
     def create(self,path:str,overwrite:bool=True):
         if os.path.exists(path):
@@ -194,11 +171,6 @@ class DbManager:
         """)
 
         self.connection.commit()
-
-    # def select(self,sql_command:str):
-    #     self.cursor.execute(sql_command)
-    #     return self.cursor.fetchall()
-
 
     def save_to_csv(self, output_dir_path):
         import pandas as pd
