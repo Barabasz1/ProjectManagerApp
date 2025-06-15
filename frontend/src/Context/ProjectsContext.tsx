@@ -6,7 +6,7 @@ const ProjectsContext = createContext(null);
 
 export const ProjectDataProvider = ({ children }) => {
   const [projectData, setProjectData] = useState([]);
-  const [selectedProjectID, SetSelectedProjectID] = useState(1) //do zmiany
+  const [selectedProjectID, SetSelectedProjectID] = useState(null) //do zmiany
   //private
    const [userId, setUserId] = useState(null);
   
@@ -28,7 +28,7 @@ export const ProjectDataProvider = ({ children }) => {
     console.log(token)
     console.log(nazwa)
     console.log(opis)
-   await post('create_project',token,{project_name:nazwa,project_description:opis,manager:1})// swap for current user id})
+   await post('create_project',token,{project_name:nazwa,project_description:opis,manager:userId})// swap for current user id})
     //tutaj nie dziala post, to ma sie dodac i ponizej fetchuje od nowa nowe dane
     await fetchProjects(token, userId)
   };
