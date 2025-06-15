@@ -19,32 +19,29 @@ async function get_response(path:string,method:'GET' | 'POST' | 'DELETE' | 'PATC
 
     const url = get_url().concat(path)
     let response = null;
+    const headers: Record<string, string> = {};
 
-    if (token==null) {
-        response = await fetch(url)
-    } else {
-        if(data==null){
-        response = await fetch(url, {
-            method: method,
-            headers: {
-                "Authorization": `Bearer ${token}`,
-            },
-        });
-    } else {
-    
-        response = await fetch((url), {
-        method: method,
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        },
-        body:JSON.stringify(data)
-        });
-    }
-    }
+  if (token !== null) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  if (data !== null) {
+    headers["Content-Type"] = "application/json";
+  }
   
-    return parse_response(response)
+  const fetchOptions: RequestInit = {
+    method: method,
+    headers: headers,
+  };
+
+  if (data !== null) {
+    fetchOptions.body = JSON.stringify(data);
+  }
+
+  response = await fetch(url, fetchOptions);
+  return parse_response(response)
 }
+
 
 
 export async function get(path:string,token:string | null){

@@ -216,14 +216,14 @@ class DbManager:
         return f'INSERT INTO {table_name} ({fields}) VALUES ({values})'
 
     def _get_select_command(self,table_name:str,columns:list,where: str):
-        command = f'SELECT {', '.join(columns)} FROM {table_name}'
+        command = f'SELECT {", ".join(columns)} FROM {table_name}'
         if where is not None:
             command += f' WHERE {where}'
         return command
     
     def _get_update_command(self,table_name:str,data:dict,where_keys:list[str]):
         set_keys = [key for key in data if key not in where_keys]
-        return f'UPDATE {table_name} SET {','.join([f'{x} = :{x}'for x in set_keys])} WHERE {'AND'.join([f'{x} = :{x}' for x in where_keys])}'
+        return f"UPDATE {table_name} SET {','.join([f'{x} = :{x}'for x in set_keys])} WHERE {'AND'.join([f'{x} = :{x}' for x in where_keys])}"
 
 
     # inserts a single new row into any table, 

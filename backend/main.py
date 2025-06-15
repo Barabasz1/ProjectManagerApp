@@ -355,16 +355,12 @@ async def get_tasks_of_project_of_user(
             raise get_invalid_id_exception()
         
         date_range = (datetime_to_native(date_from),datetime_to_native(date_to))
-        print(f'DATE range = {date_range}')
 
         if sort is not None:
-            result = ctrl.get_tasks_of_project_of_user(project_id,user_id,f'ORDER BY task.{sort.value} {sort_order.value.upper() if not None else 'ASC'}',date_range)
-            print(f"========================\n{result}\n=============================")
-            return result
+            return ctrl.get_tasks_of_project_of_user(project_id,user_id,f'ORDER BY task.{sort.value} {sort_order.value.upper() if sort_order is not None else "ASC"}',date_range)
+
         else:
-            result = ctrl.get_tasks_of_project_of_user(project_id,user_id,None,date_range)
-            print(f"========================\n{result}\n=============================")
-            return result
+            return ctrl.get_tasks_of_project_of_user(project_id,user_id,None,date_range)
 
 
 @app.get('/get_projects/{user_id}')

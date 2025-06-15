@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 import {get,post,del} from './api_request'
 export const UserContext = createContext(null);
 import jwt_decode from "jwt-decode"; 
+import { Coins } from 'lucide-react';
 
 function decodeJWT(token) {
   try {
@@ -32,8 +33,9 @@ export const UserProvider = ({ children }) => {
     console.log(name)
     console.log(login)
     console.log(password)
+    console.log("reg start")
     await post('register',null,{login:login,password:password})
-
+    console.log("reg end")
     await loginUser(login, password)
   };
 

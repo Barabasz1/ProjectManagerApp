@@ -1,5 +1,6 @@
 from backend.db_manager import DbManager
 from backend.const import ReturnCode
+from backend.utils import get_now
 
 from typing import Tuple, List
 from datetime import datetime
@@ -186,7 +187,8 @@ class Controller:
     def register_account(self,login,password_hashed) -> int:
         self.dbm._insert_single('account',{
             'login':login,
-            'password':password_hashed
+            'password':password_hashed,
+            'creation_date':get_now()
         })
         self.dbm.commit()
 
