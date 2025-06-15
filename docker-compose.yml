@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: mybackendimage:latest
+    volumes:
+      - ./backend:/app/backend
+    ports:
+      - "8000:8000"
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: 0
+      net.ipv6.conf.all.forwarding: 1
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    image: myfrontendimage:latest
+    volumes:
+      - ./frontend:/app/frontend:cached
+      - /app/frontend/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: 0
+      net.ipv6.conf.all.forwarding: 1
