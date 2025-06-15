@@ -12,9 +12,8 @@ const Timeline = () => {
     const {selectedProjectID} = useProjectContext()
 
     const ChangeTask =  () => {
-        console.log(datefrom)
-        console.log(dateto)
-      fetchTasksByDate(token,idUser,selectedProjectID  ,datefrom, dateto)
+      
+      fetchTasksByDate(token,selectedProjectID,idUser  ,datefrom, dateto)
     }
   return (
      <div className="flex  justify-center items-start h-full  gap-4 text-indigo-950 w-full bg-indigo-300 overflow-auto">
@@ -45,7 +44,7 @@ const Timeline = () => {
         
         <div className='w-full  h-full flex p-5 gap-5 flex-wrap justify-center content-start overflow-auto relative '>
                 {taskdata && taskdata.map((task) => (
-              <TaskElement key={task.id} task={task} />
+              <TaskElement key={task.id} task={task} isVisible={false} />
             ))}
 
            
