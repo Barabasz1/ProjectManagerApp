@@ -29,14 +29,14 @@ This project requires the following dependencies:
 
 Build **ProjectManagerApp** from source and install dependencies:
 
-# przejdź do katalogu projektu
+## navigate to the project directory
 cd ProjectManagerApp
 
-# zainstaluj zależności
+## install dependencies
 npm install
 
-# uruchom aplikację
+## start the application
 npm start
 
-# uruchom testy
+## run the test suite
 npm test
