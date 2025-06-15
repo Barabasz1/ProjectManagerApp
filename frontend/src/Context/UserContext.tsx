@@ -10,7 +10,6 @@ function decodeJWT(token) {
     const decodedPayload = atob(payload); // dekodowanie base64
     return JSON.parse(decodedPayload);
   } catch (error) {
-    console.error("Invalid JWT token", error);
     return null;
   }
 }
@@ -25,17 +24,11 @@ export const UserProvider = ({ children }) => {
   
 
   const removeUser = async (userId, token) => {
-    // logika usuwania użytkownika
     del(`delete_user/${userId}`,token)
   };
 
   const createUser = async (name,login, password) => {
-    console.log(name)
-    console.log(login)
-    console.log(password)
-    console.log("reg start")
     await post('register',null,{login:login,password:password})
-    console.log("reg end")
     await loginUser(login, password)
   };
 

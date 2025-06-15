@@ -9,8 +9,6 @@ export const UserDataProvider = ({ children }) => {
 
   const fetchUsers = async () => {
     const data =  await get('get_users',null)
-    console.log("userzy fetchowani")
-    console.log(data)
     setUserData(data)
   };
   

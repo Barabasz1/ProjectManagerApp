@@ -41,7 +41,6 @@ export const TaskDataProvider = ({ children }) => {
     setTaskData5(data.filter(item => item.status === 4))
   }
   const fetchTasksOfProejct = async (token,project_id, user_id,sortBy: null | 'deadline' | 'priority' = null,sortOrder:null |'asc' | 'desc' = null) => {
-    console.log("fetching tasks")
     setUserId(user_id)
     set_ProjectId(project_id)
   
@@ -50,25 +49,21 @@ export const TaskDataProvider = ({ children }) => {
     set_task_data_by_status(data)
   };
   const fetchTasksDeadlineASC = async (token,project_id, user_id) => {
-    console.log("fetchTasksDeadlineASC")  
     const data = await get_tasks_data(token,project_id,user_id,'deadline','asc')
     set_task_data(data)
     set_task_data_by_status(data)
   }
   const fetchTasksDeadlineDES = async (token,project_id, user_id) => {
-    console.log("fetchTasksDeadlineDESC")  
     const data = await get_tasks_data(token,project_id,user_id,'deadline','desc')
     set_task_data(data)
     set_task_data_by_status(data)
   }
   const fetchTasksPriorityASC = async (token,project_id, user_id) => {
-    console.log("fetchTasksPriorityASC")
     const data = await get_tasks_data(token,project_id,user_id,'priority','asc')
     set_task_data(data)
     set_task_data_by_status(data)
   }
   const fetchTasksPriorityDES = async (token,project_id, user_id) => {
-    console.log("fetchTasksPriorityASC")
     const data = await get_tasks_data(token,project_id,user_id,'priority','desc')
     set_task_data(data)
     set_task_data_by_status(data)
@@ -76,9 +71,6 @@ export const TaskDataProvider = ({ children }) => {
 
 
   const fetchTasksByDate = async (token,project_id, user_id, DateFrom, DateTo) => {
-    console.log("by date")
-    console.log(DateFrom)
-    console.log(DateTo)
     const data = await get_tasks_data(token,project_id,user_id,'deadline','asc',[DateFrom.toISOString(),DateTo.toISOString()])
     setTaskData(data)
   }
@@ -91,15 +83,8 @@ export const TaskDataProvider = ({ children }) => {
 
   // idTeam can be null
   const createTask = async (token, idprojekt, nazwa, opis, deadline, idTeam, priority, status = 0) => {
-    console.log("tworzenie taska")
-    console.log(token)
-    console.log(idprojekt)
-    console.log(nazwa)
-    console.log(opis)
+
     const goodFormatDeadline = formatDate(deadline)
-    console.log(goodFormatDeadline)
-    console.log(idTeam)
-    console.log(priority)
 
     await post(`create_task`,token,{
       project_id:idprojekt,
@@ -133,19 +118,14 @@ export const TaskDataProvider = ({ children }) => {
 
   const IncreaseStatus = async (token, IdTask) => {
     await patch(`increase_task_status/${IdTask}`,token,{amount:1})
-    console.log("increase status")
-    console.log(IdTask)
 
-    //od nowa fetchuje
   await fetchTasksOfProejct(token, project_id, user_id)
 
   };
 
   const DecreaseStatus = async (token, IdTask) => {
     await patch(`increase_task_status/${IdTask}`,token,{amount:-1})
-     console.log("decrease status")
-     console.log(IdTask)
-     //od nowa fetchuje
+
     await fetchTasksOfProejct(token, project_id, user_id)
   };
 

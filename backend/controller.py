@@ -5,24 +5,18 @@ from backend.utils import get_now
 from typing import Tuple, List
 from datetime import datetime
 
-def trace_callback(statement):
-    print("Executing SQL:", statement)
-
 
 class Controller:
     def __init__(self):
-        self.dbm = DbManager(trace_callback)
-        # self.dbm = DbManager(None)
+        self.dbm = DbManager(None)
         self.dbm.open(DbManager.DEFAULT_DB_PATH)
 
     def close(self) -> None:
         self.dbm.close()
 
 
-
-
     def get_account(self,login) -> dict | ReturnCode.Auth:
-        # self.dbm.select_single_table('account',['id','login','password'],'login = ?',(login,))
+
         command = 'SELECT id, login, password FROM account WHERE login = ?'
         self.dbm.execute(command,(login,))
         fetch = self.dbm.fetchone()
@@ -131,25 +125,12 @@ class Controller:
         return self.dbm.fetchall()
 
     def get_non_teammembers(self,team_id) -> List[dict]:
-        # command = 'SELECT team_composition.user AS user_id, account.login AS username ' \
-        # 'FROM team_composition ' \
-        # 'INNER JOIN team ' \
-        # 'ON team.id = team_composition.team ' \
-        # 'INNER JOIN project ' \
-        # 'ON project.id = team.project ' \
-        # 'INNER JOIN account ' \
-        # 'ON account.id = team_composition.user ' \
-        # 'WHERE team.id <> ? ' \
-        # 'AND team.project = (SELECT project FROM team WHERE id = ?) ' \
-        # 'ORDER BY team_composition.user'
-
         command = 'SELECT account.id AS user_id, account.login AS username ' \
         'FROM account ' \
         'WHERE account.id NOT IN ' \
         '(SELECT user FROM team_composition WHERE team = ?) ' \
         'ORDER BY account.login'
         
-
         self.dbm.execute(command,(team_id,))
         return self.dbm.fetchall()
     
