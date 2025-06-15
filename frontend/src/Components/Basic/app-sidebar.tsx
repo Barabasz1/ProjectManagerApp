@@ -25,7 +25,7 @@ export function AppSidebar() {
   const [editProjectName, setEditProjectName] = useState('');
   const [editProjectId, setEditProjectId] = useState(null);
   
-  const {projectData, SetSelectedProjectID, removeProjects, createProjects, editProject} = useProjectContext()
+  const {selectedProjectID, projectData, SetSelectedProjectID, removeProjects, createProjects, editProject} = useProjectContext()
   const {token} = useUserContext()
   
   // Create project handlers
@@ -79,7 +79,7 @@ export function AppSidebar() {
               
               SetSelectedProjectID(project.id);
             }} 
-            className="text-left hover:text-indigo-700 hover:font-medium flex-grow py-1"
+            className={`text-left hover:text-indigo-700 hover:font-medium px-2 flex-grow py-1 rounded-3xl ${selectedProjectID === project.id ? 'bg-indigo-400' : ''}`}
           >
             {project.name}
           </button>
