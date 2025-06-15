@@ -9,14 +9,14 @@ from contextlib import contextmanager
 from enum import Enum
 
 from typing import Annotated, Tuple, List
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone,date
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(__file__, '..','..')))
 
 from backend.const import ReturnCode
 from backend.controller import Controller
-from backend.utils import get_now,clean_dict,filter_out_not_set,get_datetime_utc,datetime_to_native
+from backend.utils import get_now,filter_out_not_set,datetime_to_native,datetime_date_only
 from backend.request_structs.requests import *
 
 SECRET_KEY = 'bae0a9511295b4d7243684f9eb2ddf92bce396a2dbca2302b1688b28bfe5c853'
@@ -341,7 +341,17 @@ async def get_tasks_of_project_of_user(
         if not ctrl.user_exists(user_id) or not ctrl.project_exists(project_id):
             raise get_invalid_id_exception()
         
-        date_range = (datetime_to_native(date_from),datetime_to_native(date_to))
+        date_from_native = datetime_date_only(datetime_to_native(date_from))
+        date_to_native = datetime_date_only(datetime_to_native(date_to))
+
+        if date_from_native is not None:
+            date_from_native += timedelta(days=1)
+
+        if date_to_native is not None:
+            date_to_native += timedelta(days=1)
+
+        date_range = (date_from_native, date_to_native)
+
 
         if sort is not None:
             return ctrl.get_tasks_of_project_of_user(project_id,user_id,f'ORDER BY task.{sort.value} {sort_order.value.upper() if sort_order is not None else "ASC"}',date_range)
