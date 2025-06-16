@@ -22,21 +22,34 @@ The core features include:
 
 This project requires the following dependencies:
 
-- **Programming Language:** TypeScript  
-- **Package Manager:** npm  
+- **Programming Language:** TypeScript, Pyton
+- **Package Manager:** npm, pip
 
-## Installation
+
+# Easy build using Docker:
+## Navigate to project root directory and run:
+`docker-compose up`
+
+# Installation on Windows
 
 Build **ProjectManagerApp** from source and install dependencies:
 
-## navigate to the project directory
-cd ProjectManagerApp
+## Navigate to the project root directory
+`cd ProjectManagerApp`
 
-## install dependencies
-npm install
+## Install dependencies
+### From /frontend/
+`npm install`
+### From /backend/
+`pip install -r requirements.txt`
 
-## start the application
-npm start
+## Start the application
+### From /frontend/
+`npm start`
+### From /backend/
+`uvicorn main:app --host 0.0.0.0 --port 8000`
+
+### Now you can access the app on http://localhost:5173/
 
 ## run the test suite
-npm test
+`npm test`
