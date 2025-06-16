@@ -26,9 +26,12 @@ This project requires the following dependencies:
 - **Package Manager:** npm, pip
 
 
-# Easy build using Docker:
+# To build and run using docker
 ## Navigate to project root directory and run:
+
 `docker-compose up`
+- use option `--no-build` to use an exisiting image
+- use option `-d` to run in the background
 
 # Installation on Windows
 
