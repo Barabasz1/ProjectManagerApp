@@ -6,6 +6,8 @@ Everything related to backend is in <projectroot>/backend/
 /backend/
 |   request_structs/
 |   |   requests.py
+|   tests/
+|   |   test_utils.py
 |   const.py
 |   controller.py
 |   db_manager.py
@@ -21,6 +23,7 @@ Everything related to backend is in <projectroot>/backend/
 - db_manager.py - contains class DbManager responsible for creating, opening and maintaining connection to an SQL database file
 - utils.py - utility funtions used in various modules
 - const.py - const values and returns codes used in various modules
+- tests/test_utils.py - contains tests for utils.py that can be run using pytest 
 
 
 
@@ -54,3 +57,7 @@ Everything related to backend is in <projectroot>/backend/
 
 ### utils.py
 - Contains widely used functions - mostly datetime conversion and data parsing
+
+### tests/test_utils.py
+- Contains tests for utility functions found in utils.py
+- To run: navigate to /tests/ and run ```pytest```
