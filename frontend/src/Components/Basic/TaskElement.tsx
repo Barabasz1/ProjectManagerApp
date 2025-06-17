@@ -34,7 +34,11 @@ const TaskElement = ({task, isVisible=true}) => {
     const {IncreaseStatus, DecreaseStatus, removeTask, editTask} = useTasksContext()
     const {token} = useUserContext()
     const {teamData} = useTeamContext()
-      
+    const tab =["1 - Low Priority",
+                "2 - Medium-Low Priority",
+                "3 - Medium Priority",
+                "4 - Medium-High Priority",
+                "5 - High Priority"]
  
     const handleOpenEditDialog = () => {
       setEditTaskName(task.name);
@@ -125,7 +129,7 @@ const TaskElement = ({task, isVisible=true}) => {
             </div>
             <div className="mb-4 text-left w-full">
               <h3 className="font-medium text-indigo-800">Priority:</h3>
-              <p>{task.priority}</p>
+              <p>{tab[task.priority-1]}</p>
             </div>
             <div className="text-left w-full">
               <h3 className="font-medium text-indigo-800">Created on:</h3>

@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 
 import { useContext } from 'react';
 import { UserContext, useUserContext } from '../../Context/UserContext';
+import { useProjectContext } from '@/Context/ProjectsContext';
 
 const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
      
       const { user, setUser, logOut } = useUserContext();
+      const {SetSelectedProjectID} = useProjectContext()
+      
       
 
   return (
@@ -82,7 +85,9 @@ const NavigationMenu = ({ children }: { children: React.ReactNode }) => {
             '&:hover': { transform: 'translateY(-2px)' },
             transition: 'transform 0.2s'
           }}
-          onClick={() =>{setUser(-1)}}
+          onClick={() =>{logOut();
+            SetSelectedProjectID(-1);
+          }}
         >
           Log out
         </Button>
