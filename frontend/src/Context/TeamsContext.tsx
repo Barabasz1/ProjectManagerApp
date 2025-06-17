@@ -16,6 +16,12 @@ export const TeamDataProvider = ({ children }) => {
     console.log("fetch teams 2")
     console.log(token)
     console.log(project_id)
+
+    if(project_id ==-1)
+    {
+      setTeamData([]);
+      return 0;
+    }
     const response = await fetch(`http://localhost:8000/get_teams/${project_id}`, {
     method: "GET",
     headers: {
@@ -25,10 +31,15 @@ export const TeamDataProvider = ({ children }) => {
 
   if (!response.ok) {
     throw new Error("Failed to fetch teams");
+   
+    
   }
-
+  
+  
   const result = await response.json();
+    
   setTeamData(result)
+  console.log(result)
   };
 
   const removeTeam = async (idteam, token) => {

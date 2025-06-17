@@ -21,7 +21,7 @@ const ProperApp = () => {
  const {token, idUser } = useUserContext()
  const { selectedProjectID, fetchProjects} = useProjectContext()
  const {fetchTasksOfProejct} = useTasksContext()
- const {fetchUsers, } = useUsersContext()
+ const {fetchUsers } = useUsersContext()
  
 
  useEffect(()=>{
@@ -31,20 +31,21 @@ const ProperApp = () => {
       const userIDtoSend = idUser
       
       try {
+        console.log("przed wywolaniem")
         await fetchTeams(tokenToSend, projectId);
-       
+        console.log("po wywolaniu")
         await fetchTasksOfProejct(tokenToSend, projectId, userIDtoSend)
         await fetchUsers()
         
         
       } catch (error) {
-        console.error("Failed to load teams:", error);
+        console.error("Failed to load teams and projects and users:", error);
       }
     };
   
     
     loadTeamsAndTasks();
- }, [selectedProjectID])
+ }, [selectedProjectID, token])
 
 
  
@@ -62,7 +63,7 @@ const ProperApp = () => {
     };
     
     loadProjects();
- }, [])
+ }, [token])
 
   useEffect(()=>{
   const loadTeamsAndTasks = async () => {
@@ -84,7 +85,7 @@ const ProperApp = () => {
   
     
     loadTeamsAndTasks();
- }, [usersInNotProject, usersInProject])
+ }, [usersInNotProject, usersInProject, token])
  
 
 
